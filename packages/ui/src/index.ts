@@ -1,6 +1,6 @@
 export { cx } from "./cx";
 export { toneColor, toneText, type Tone } from "./tone";
-export { Button } from "./button";
+export { Button, buttonClass } from "./button";
 export { Slider } from "./slider";
 export { Readout, ReadoutRow, Badge } from "./readout";
 export { ForceRef, Live, Eyebrow, Hint } from "./prose";

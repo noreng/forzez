@@ -27,7 +27,7 @@ const data = IBM_Plex_Mono({
 
 export const metadata: Metadata = {
   title: { default: "forzez", template: "%s · forzez" },
-  description: "Statics you can see: interactive forces, trusses and equilibrium.",
+  description: "Real structures, calculated by physics and drawn line by line in ink. Bridges, arches, trusses.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

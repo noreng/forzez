@@ -21,17 +21,19 @@ const sizes = {
   md: "px-3.5 py-2.5 text-sm",
 };
 
-export function Button({ variant = "primary", size = "md", className, type = "button", ...props }: ButtonProps) {
-  return (
-    <button
-      type={type}
-      className={cx(
-        "inline-flex cursor-pointer items-center justify-center gap-1.5 rounded font-data leading-none whitespace-nowrap transition-colors duration-150 ease-fz disabled:cursor-default",
-        variants[variant],
-        sizes[size],
-        className,
-      )}
-      {...props}
-    />
+/**
+ * The button look as a class string, for links that should look like buttons
+ * (`<Link className={buttonClass("primary")}>`). Button itself uses it, so both stay in step.
+ */
+export function buttonClass(variant: keyof typeof variants = "primary", size: keyof typeof sizes = "md", className?: string) {
+  return cx(
+    "inline-flex cursor-pointer items-center justify-center gap-1.5 rounded font-data leading-none whitespace-nowrap transition-colors duration-150 ease-fz disabled:cursor-default",
+    variants[variant],
+    sizes[size],
+    className,
   );
+}
+
+export function Button({ variant = "primary", size = "md", className, type = "button", ...props }: ButtonProps) {
+  return <button type={type} className={buttonClass(variant, size, className)} {...props} />;
 }
