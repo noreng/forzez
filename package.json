@@ -8,6 +8,7 @@
   "scripts": {
     "dev": "pnpm --filter @forzez/web dev",
     "build": "pnpm --filter @forzez/web build",
-    "lint": "pnpm -r lint"
+    "lint": "pnpm -r lint && pnpm check:design",
+    "check:design": "node scripts/check-design.mjs"
   }
 }

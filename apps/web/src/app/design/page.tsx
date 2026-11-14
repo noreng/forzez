@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Eyebrow } from "@forzez/ui";
 import { fontWeight, radius, stroke, text, theme, type ColorRole } from "@forzez/tokens";
 
 export const metadata: Metadata = { title: "Design system" };
@@ -79,13 +80,13 @@ function Arrow({ y, w, cls, label }: { y: number; w: string; cls: string; label:
 export default function DesignPage() {
   return (
     <main className="mx-auto flex w-full max-w-5xl flex-col gap-14 px-4 pb-24 sm:px-8">
-      <div className="flex justify-between border-b border-rule-strong pt-4 pb-2.5 font-data text-xs uppercase tracking-[0.16em] text-muted">
+      <div className="flex justify-between border-b border-rule-strong pt-4 pr-12 pb-2.5 font-data text-sm text-muted">
         <span>forzez</span>
         <span>Design system</span>
       </div>
 
       <header className="flex flex-col gap-3">
-        <p className="font-data text-xs uppercase tracking-[0.16em] text-muted">Tokens · Euclid × Erők</p>
+        <Eyebrow>Tokens · Euclid × Erők</Eyebrow>
         <h1 className="font-display text-4xl leading-none">
           <span className="mr-3 text-force-1">I.</span>Tokens
         </h1>

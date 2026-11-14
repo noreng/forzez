@@ -15,7 +15,7 @@ Token source: [`packages/tokens/src/tokens.ts`](packages/tokens/src/tokens.ts).
 2. **The diagram is the hero.** Text explains what the diagram shows; it never
    competes with it. Keep chrome quiet: hairlines, paper, no shadows.
 3. **Numbers are data.** Every number with a unit is set in `font-data` with
-   tabular figures and a decimal comma for Hungarian copy (`7,5 kN`).
+   tabular figures. Copy is English: decimal point and a true minus (`−7.5 kN`).
 4. **Readable in both themes.** Every colour is a role with a light and a dark
    value. Never write a hex value in a component.
 
@@ -62,7 +62,7 @@ touches `font`/`fontWeight` in tokens and the `next/font` imports in
 - `font-display`, `font-text`, `font-data` set both family and the role's weight;
   add `font-semibold` etc. only for deliberate emphasis.
 - Type scale: `text-xs` … `text-4xl` (see tokens). Body is `text-base` (17px).
-- Eyebrows and running heads: `font-data text-xs uppercase tracking-[0.16em] text-muted`.
+- Eyebrows and running heads: `<Eyebrow>` (`font-data text-sm text-muted`), sentence case.
 - Always load the `latin-ext` subset (Hungarian ő, ű). Plex has no Greek on
   Google Fonts: Σ, α, Δ fall back to the system font. Set real formulas with a
   maths font when we build the formula component.
@@ -78,13 +78,52 @@ touches `font`/`fontWeight` in tokens and the `next/font` imports in
 
 ## Components
 
-Built in `packages/ui` (coming next). Until then, follow the patterns on `/design`:
-primary button = ink fill, `on-accent`-style paper text, `radius`; secondary = ink
-outline; ghost = underlined text. Controls use `font-data`.
+`@forzez/ui` (`packages/ui/src`). Use these before writing new markup:
 
-## Don'ts
+| Component | Use |
+| --- | --- |
+| `Button` | `variant` primary (ink fill) / secondary (ink outline) / ghost (underlined); `size` sm / md |
+| `Slider` | labelled range with live value; `tone` 1–4 colours it as that force, `"ink"` for neutral |
+| `Readout`, `ReadoutRow` | live values in a diagram corner (ΣFx, ΣFy, ΣM), right-aligned digits |
+| `Badge` | status: `ok` equilibrium, `bad` not in equilibrium, `warn` unstable |
+| `ForceRef` | a force named in text: colour bar + label (`<ForceRef tone={2}>F₂</ForceRef>`) |
+| `Live` | a number computed from the diagram, inline in text |
+| `Eyebrow`, `Hint` | label above a title; side note with a rule |
+| `ThemeToggle`, `ThemeScript` | light/dark switch (moon in light, sun in dark), fixed top right in the root layout; `ThemeScript` in `<head>` applies a saved choice before paint. No saved choice = follow the system |
+| `ForceArrow`, `DotGrid` | SVG: force arrow with head and label; dot grid behind a diagram |
 
-- No hex, rgb or named colours in components or pages. Add a role to tokens instead.
-- No shadows, gradients or rounded-lg cards. Radius is 2–3px, at most 6px.
-- No font families outside the three roles.
-- Don't use red/blue for anything that is not a force (or tension/compression).
+Reference page: `/lab/equilibrium` (the Equilibrium of forces explainer).
+
+## Anti-slop
+
+forzez should look like a well-made textbook, not like a generated landing page.
+These patterns give AI-made UI away; avoid them even when they look "polished".
+`pnpm check:design` catches the mechanical ones.
+
+**Type**
+
+- No UPPERCASE text: not in labels, eyebrows, badges, buttons, table heads or
+  headings. Use sentence case. (Checked: `uppercase`, `text-transform`.)
+- No letter-spaced small labels (`tracking-[0.16em]` and friends). Checked.
+- Headings in sentence case ("Force triangle", not "Force Triangle").
+- No font families outside the three roles; never name a family in a component.
+
+**Visuals**
+
+- No hex, rgb or named colours in components or pages. Add a role to tokens. Checked.
+- No shadows, gradients, glows, blur or glass. Checked.
+- Radius 2–3px, at most 6px. No pills, no `rounded-xl` cards. Checked.
+- No emoji, and no decorative icons next to headings or list items.
+- Red and blue mean forces (or tension and compression), never decoration.
+- No generic three-card feature grids, hero sections with a stock tagline, or
+  illustrations where a real diagram could be. The diagram is the hero.
+
+**Copy**
+
+- Plain, specific sentences. Say what the reader sees and does
+  ("Turn F₂ and watch which row breaks"), not what the product is.
+- No marketing words: *unlock, seamless, elevate, empower, delve, journey,
+  supercharge, game-changing, cutting-edge*.
+- No exclamation marks, no rhetorical questions as headings, no filler openers
+  ("In this section, we will…").
+- Numbers are real and computed from the model, never placeholder stats.

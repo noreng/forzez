@@ -13,6 +13,9 @@ importers:
       '@forzez/tokens':
         specifier: workspace:*
         version: link:../../packages/tokens
+      '@forzez/ui':
+        specifier: workspace:*
+        version: link:../../packages/ui
       next:
         specifier: 16.4.6
         version: 16.4.6(@babel/core@7.29.13)(@types/node@20.19.43)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
@@ -49,6 +52,19 @@ importers:
         version: 5.9.3
 
   packages/tokens: {}
+
+  packages/ui:
+    dependencies:
+      '@forzez/tokens':
+        specifier: workspace:*
+        version: link:../tokens
+    devDependencies:
+      '@types/react':
+        specifier: ^19
+        version: 19.3.0
+      react:
+        specifier: 19.3.0
+        version: 19.3.0
 
 packages:
 

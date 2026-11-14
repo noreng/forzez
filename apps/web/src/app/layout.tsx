@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Mono, IBM_Plex_Sans_Condensed, IBM_Plex_Serif } from "next/font/google";
+import { ThemeScript, ThemeToggle } from "@forzez/ui";
 import "./globals.css";
 
 // Font variables feed the --fz-font-* tokens (see @forzez/tokens): the "Plex" pairing.
@@ -31,10 +32,18 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
-      lang="hu"
+      lang="en"
+      suppressHydrationWarning
       className={`${display.variable} ${text.variable} ${data.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <head>
+        {/* applies a saved light/dark choice before first paint */}
+        <ThemeScript />
+      </head>
+      <body className="min-h-full flex flex-col">
+        {children}
+        <ThemeToggle className="fixed top-3 right-3 z-20 min-[860px]:top-4 min-[860px]:right-4" />
+      </body>
     </html>
   );
 }

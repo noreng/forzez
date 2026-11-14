@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "@forzez/tokens/tokens.css";
+@source "../../../../packages/ui/src";
 
 /*
  * Tailwind reads the forzez tokens. Tailwind's default colours and fonts are
@@ -8,6 +9,21 @@
  *   font-display, font-text, font-data
  * Never hardcode a colour; add a role to packages/tokens/src/tokens.ts instead.
  */
+/*
+ * dark: matches the same rules as tokens.css: an explicit data-theme="dark",
+ * or the system preference when no theme was chosen.
+ */
+@custom-variant dark {
+  &:where([data-theme="dark"], [data-theme="dark"] *) {
+    @slot;
+  }
+  @media (prefers-color-scheme: dark) {
+    &:where(:root:not([data-theme="light"]) *) {
+      @slot;
+    }
+  }
+}
+
 @theme inline {
   --color-*: initial;
   --color-transparent: transparent;
@@ -72,6 +88,12 @@
 @utility font-data {
   font-family: var(--fz-font-data);
   font-weight: var(--fz-font-data-weight);
+}
+
+/* Entrance for controls that appear mid-scroll (sliders). */
+@keyframes fz-rise {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
 }
 
 @layer base {
