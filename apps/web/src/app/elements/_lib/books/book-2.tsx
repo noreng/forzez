@@ -6,7 +6,7 @@ import { Area, Arrow, Body, Dash, Dot, Figure, Ground, Joint, Member, Path, Stro
 import { Cor, NW, Note, Ref, S } from "../proof";
 import type { Page } from "../types";
 
-const { r, b, k } = S;
+const { r, b, y, k, d } = S;
 
 export const BOOK_2: Page[] = [
   {
@@ -204,5 +204,163 @@ export const BOOK_2: Page[] = [
       </>
     ),
     refs: ["ax-1"],
+  },
+  {
+    slug: "ii-7", book: 2, n: 7, kind: "Theorem", short: "Parallel forces",
+    statement: "Two parallel forces pointing the same way act as one: as large as both together, on the line that divides the distance between them inversely as the forces.",
+    caption: "Two parallel forces, their resultant, and two equal rectangles.",
+    figure: (
+      // red 90 at 100, blue 60 at 400, resultant 150 at 220: 120 × 90 = 180 × 60
+      <Figure viewBox="40 80 420 270" label="A beam pressed down by a large red force near its left end and a smaller blue force near its right end. A dashed black force, as long as both, stands between them, nearer the red one. Below the beam a red rectangle and a blue rectangle of equal area meet on the dashed force's line">
+        <Area x={100} y={290} width={120} height={45} c="r" />
+        <Area x={220} y={290} width={180} height={30} c="b" />
+        <Dash x1={100} y1={254} x2={100} y2={290} />
+        <Dash x1={220} y1={254} x2={220} y2={290} />
+        <Dash x1={400} y1={254} x2={400} y2={290} />
+        <Member x1={60} y1={250} x2={440} y2={250} kind="beam" />
+        <Arrow x1={220} y1={96} x2={220} y2={232} c="k" dashed />
+        <Arrow x1={100} y1={156} x2={100} y2={232} c="r" />
+        <Arrow x1={400} y1={186} x2={400} y2={232} c="b" />
+      </Figure>
+    ),
+    proof: (
+      <>
+        <p>In size, {r} + {b} = {d}: parallel and pointing the same way, they add as lengths.</p>
+        <p>About the point where {d} stands, {r} turns the beam one way and {b} the other, and <Sym c="force-1" kind="rect" /> = <Sym c="force-2" kind="rect" />, so their turnings cancel <Ref to="ii-1" />. The resultant turns about any point as the two together do <Ref to="ii-2" />, here not at all; so it has no arm there, and passes through it.</p>
+        <Note>This is the lever of Proposition I turned over: hold the beam at that point with {d} reversed, and it balances.</Note>
+        <Cor>If the forces point opposite ways, the resultant is their difference and stands outside them, beyond the larger. If they are also equal, there is no resultant at all, only a couple <Ref to="ii-3" />.</Cor>
+      </>
+    ),
+    refs: ["ii-1", "ii-2", "ii-3"],
+  },
+  {
+    slug: "ii-8", book: 2, n: 8, kind: "Theorem", short: "Moving a force",
+    statement: "A force may be moved off its line to any point, if a couple is added whose turning is the rectangle of the force and the distance it was moved.",
+    caption: "A force moved sideways leaves a turn behind.",
+    figure: (
+      <Figure viewBox="20 50 530 300" label="Left: a body pressed down by a red force near its left end; at a second point to the right, an equal red force down and a dashed equal red force up have been added. A red rectangle below spans the distance between the two lines. Right: the same body with only the red force at the second point and a curved black arrow turning it">
+        <Body x={40} y={150} width={200} height={50} />
+        <Area x={70} y={300} width={120} height={40} c="r" />
+        <Dash x1={70} y1={200} x2={70} y2={300} />
+        <Arrow x1={70} y1={70} x2={70} y2={136} c="r" />
+        <Arrow x1={190} y1={70} x2={190} y2={136} c="r" />
+        <Arrow x1={190} y1={280} x2={190} y2={214} c="r" dashed />
+        <Body x={330} y={150} width={200} height={50} />
+        <Turn d="M456,136.4 A60 60 0 0 0 364,136.4" x={364} y={136.4} ux={-0.643} uy={0.766} />
+        <Arrow x1={480} y1={70} x2={480} y2={136} c="r" />
+      </Figure>
+    ),
+    proof: (
+      <>
+        <p>At the new point add {r} down and <Sym c="force-1" kind="dashed" label="dashed red force" /> up: equal, opposite and on one line, so the body never notices <Ref to="ax-3" />.</p>
+        <p>The old {r} and the dashed one are equal, opposite and parallel: a couple <Ref to="ii-3" />, whose turning <Sym c="ink" kind="arc" /> = <Sym c="force-1" kind="rect" />, the force times the distance between the two lines.</p>
+        <p>What remains is {r} at the new point, and the turn.</p>
+        <Note>Turn a nut with a spanner and the bolt feels both: a twist, and a push to the side.</Note>
+        <Cor>Read backwards: a force and a couple are one force, moved sideways until the rectangle is used up.</Cor>
+      </>
+    ),
+    refs: ["ax-3", "ii-3"],
+  },
+  {
+    slug: "ii-9", book: 2, n: 9, kind: "Problem", short: "Reduced to one",
+    statement: "To reduce any forces in a plane to one: draw them tip to tail for its size and direction; then draw their string polygon, whose first and last pieces meet on its line.",
+    caption: "Three forces, their force polygon, and the string that places the resultant.",
+    figure: (
+      // force polygon 440,60 480,110 430,145 466,200, pole 540,135; first and last string pieces meet at 195.8,191.9
+      <Figure viewBox="10 45 550 300" label="Left: a string with three knots carries a red, a blue and a yellow force pulling in different directions. Its first and last pieces, extended as dashed lines, meet below the string, and a dashed black force hangs from that point. Right: the three forces tip to tail with a dashed black side from start to end, and thin rays from a pole to every corner; each piece of the string is parallel to one ray">
+        <Dash x1={60} y1={90} x2={195.8} y2={191.9} />
+        <Dash x1={270} y1={126.7} x2={195.8} y2={191.9} />
+        <Path points="24,63 60,90 170,135.8 270,126.7 303.8,97" w={3} />
+        <Stroke x1={540} y1={135} x2={440} y2={60} w={1.5} />
+        <Stroke x1={540} y1={135} x2={480} y2={110} w={1.5} />
+        <Stroke x1={540} y1={135} x2={430} y2={145} w={1.5} />
+        <Stroke x1={540} y1={135} x2={466} y2={200} w={1.5} />
+        <Arrow x1={195.8} y1={191.9} x2={219.3} y2={318.1} c="k" dashed />
+        <Arrow x1={440} y1={60} x2={463.4} y2={186.2} c="k" dashed />
+        <Arrow x1={60} y1={90} x2={91.3} y2={129.1} c="r" />
+        <Arrow x1={170} y1={135.8} x2={131.5} y2={162.8} c="b" />
+        <Arrow x1={270} y1={126.7} x2={298.3} y2={170} c="y" />
+        <Arrow x1={440} y1={60} x2={471.3} y2={99.1} c="r" />
+        <Arrow x1={480} y1={110} x2={441.5} y2={137} c="b" />
+        <Arrow x1={430} y1={145} x2={458.3} y2={188.3} c="y" />
+        <Dot x={195.8} y={191.9} r={4} />
+        <Joint x={540} y={135} r={6} />
+      </Figure>
+    ),
+    proof: (
+      <>
+        <p>{r}{b}{y} tip to tail, and {d} from the start to the end: that is the size and direction of the one force <Ref to="i-2" label="I.2" />. It does not yet say where it acts.</p>
+        <p>For that, pick a pole, draw rays, and hang a string whose pieces run parallel to the rays, its knots on the lines of the forces <Ref to="ii-5" />. Each force parts into pulls along the two pieces at its knot. Along every inner piece, two equal and opposite pulls meet, and cancel <Ref to="ax-3" />.</p>
+        <p>Only the pulls along the first and the last piece are left. Two forces act as one through the point where their lines meet <Ref to="ax-2" />, and that one is {d}.</p>
+        <Note>Graphic statics in one figure: no numbers, only parallels. Culmann made it an engineer’s method in his <i>Die graphische Statik</i> (1866).</Note>
+      </>
+    ),
+    refs: ["ax-2", "ax-3", "i-2", "ii-5"],
+  },
+  {
+    slug: "ii-10", book: 2, n: 10, kind: "Theorem", short: "Balance in the plane",
+    statement: "Forces in a plane are in balance when their force polygon closes and their string polygon closes too.",
+    caption: "Four forces in balance: two closed polygons.",
+    figure: (
+      // force polygon 410,130 514,91 540,208 423,221 back to 410,130; pole 470,160; string sides ∥ rays
+      <Figure viewBox="10 15 550 360" label="Left: four forces, red, blue, yellow and black, push inward on the four corners of a closed quadrilateral string polygon. Right: the same four forces tip to tail close a quadrilateral, with thin rays from a pole inside it to each corner; each side of the string polygon is parallel to one ray">
+        <Path points="130,235 190.2,140.6 269.1,194.7 208,274" w={3} closed />
+        <Stroke x1={470} y1={160} x2={410} y2={130} w={1.5} />
+        <Stroke x1={470} y1={160} x2={514} y2={91} w={1.5} />
+        <Stroke x1={470} y1={160} x2={540} y2={208} w={1.5} />
+        <Stroke x1={470} y1={160} x2={423} y2={221} w={1.5} />
+        <Arrow x1={26} y1={274} x2={116.9} y2={239.9} c="r" />
+        <Arrow x1={164.2} y1={23.6} x2={187.2} y2={126.9} c="b" />
+        <Arrow x1={386.1} y1={181.7} x2={283} y2={193.2} c="y" />
+        <Arrow x1={221} y1={365} x2={210} y2={287.9} c="k" />
+        <Arrow x1={410} y1={130} x2={500.9} y2={95.9} c="r" />
+        <Arrow x1={514} y1={91} x2={537} y2={194.3} c="b" />
+        <Arrow x1={540} y1={208} x2={436.9} y2={219.5} c="y" />
+        <Arrow x1={423} y1={221} x2={412} y2={143.9} c="k" />
+        <Joint x={470} y={160} r={6} />
+      </Figure>
+    ),
+    proof: (
+      <>
+        <p>{r}{b}{y}{k} tip to tail come home, so together they push the body nowhere <Ref to="i-2" label="I.2" />. That alone still leaves room for a turn.</p>
+        <p>So draw the string polygon <Ref to="ii-9" />. Its first and last pieces run parallel to the same ray, for the force polygon closed; the two forces left along them are equal and opposite. On one line they cancel <Ref to="ax-1" />; apart, they make a couple <Ref to="ii-3" />.</p>
+        <p>Here the last piece runs into the first: the string closes, and nothing is left over.</p>
+        <Note>The two closings are the two conditions of balance in the plane: no push, and no turn.</Note>
+        <Cor>A closed force polygon with an open string polygon cannot move the body anywhere, but it turns it.</Cor>
+      </>
+    ),
+    refs: ["ax-1", "i-2", "ii-3", "ii-9"],
+  },
+  {
+    slug: "ii-11", book: 2, n: 11, kind: "Theorem", short: "Composite shapes",
+    statement: "The centre of gravity of a body made of pieces lies on the line joining the centres of the pieces, and divides it inversely as their weights.",
+    caption: "An L in two pieces, their weights, and the centre between them.",
+    figure: (
+      // red 80 × 260 = 20 800 at 140,170; blue 260 × 60 = 15 600 at 310,270; centre 212.9,212.9 (3 : 4 along the join)
+      <Figure viewBox="70 25 400 400" maxWidth="30rem" label="An L-shaped plate made of a tall red rectangle and a long blue one. A dashed line joins the centres of the two pieces; a black point on it, outside the plate in the corner of the L, is the centre of gravity. Below, a red weight and a smaller blue weight hang on the lines of their centres, and a dashed black weight as large as both hangs on the line of the black point">
+        <Area points="100,40 180,40 180,300 100,300" c="r" />
+        <Area points="180,240 440,240 440,300 180,300" c="b" />
+        <Dash x1={140} y1={170} x2={310} y2={270} knockout />
+        <Dash x1={140} y1={170} x2={140} y2={322} knockout />
+        <Dash x1={310} y1={270} x2={310} y2={322} knockout />
+        <Dash x1={212.9} y1={212.9} x2={212.9} y2={322} knockout />
+        <Arrow x1={212.9} y1={322} x2={212.9} y2={399} c="k" dashed />
+        <Arrow x1={140} y1={322} x2={140} y2={360} c="r" />
+        <Arrow x1={310} y1={322} x2={310} y2={347} c="b" />
+        <Wheel x={140} y={170} r={4} w={1.5} />
+        <Wheel x={310} y={270} r={4} w={1.5} />
+        <Dot x={212.9} y={212.9} r={6} />
+      </Figure>
+    ),
+    proof: (
+      <>
+        <p>Each piece is an even load, so its weight acts at its own middle, as large as its area <Ref to="ii-4" />: {r} at the red centre, {b} at the blue.</p>
+        <p>Two parallel weights act as one, {d}, as large as both, on the line that divides their distance inversely as they are <Ref to="ii-7" />. It crosses the dashed line between the centres at <Sym c="ink" kind="dot" label="centre of gravity" /></p>
+        <p>Turn the body as you will: the weights stay at the two centres, and the point that divides the dashed line stays where it is. Every plumb line passes through it, so it is the centre of gravity <Ref to="ii-6" />.</p>
+        <Note>The centre need not lie in the body: here it sits in the empty corner of the L.</Note>
+        <Cor>A hole is a piece of negative weight: its arrow points up, and the centre moves away from it along the same line.</Cor>
+      </>
+    ),
+    refs: ["ii-4", "ii-6", "ii-7"],
   },
 ];

@@ -1,9 +1,9 @@
 # The Elements of Statics — Contents
 
-✅ = draft plate on the canvas · ✏️ = sketched in chat, not on the canvas yet · ⬜ = not started
+✅ = written (a page on forzez.com/elements; the first 24 were drafted on the canvas) · ✏️ = sketched in chat, not on the canvas yet · ⬜ = not started
 Canvas: https://claude.ai/artifact/KrD89rVzRxVRh55MxfujWw · Plan and rules: `elements-of-statics.md`
 
-**Progress: 25 of 65** (+6 sketched in chat, 2026-10-27)
+**Progress: 53 of 65** (+5 sketched in chat, 2026-11-14). Books I–V are complete; front matter and side plates remain.
 
 The site's contents page is built from `apps/web/src/app/elements/_lib/plan.ts`; keep the two in step.
 
@@ -20,8 +20,8 @@ The site's contents page is built from `apps/web/src/app/elements/_lib/plan.ts`;
 - ✅ V. Lami's theorem
 - ✅ VI. The pulley
 - ✅ VII. Balance by counting (resolving along two lines): four forces on a square grid — blue (4,3), red (−2,3), black (−2,−2), yellow (0,−4); each split into unit steps drawn as short thick arrows; across 4 = 4, up/down 6 = 6. Drawn in the plain-modern (white, Hanken Grotesk) style: `KW-Prop-I-7.dc.html`. Page number still a placeholder.
-- ⬜ VIII. Components in any frame: turn the axes and the components change, the force does not (same arrow, same square on it — ties to Prop. III)
-- ⬜ IX. A weight hung on two strings
+- ✅ VIII. Components in any frame: turn the axes and the components change, the force does not (same arrow, same square on it — ties to Prop. III)
+- ✅ IX. A weight hung on two strings
 - ✅ Side plate: Stevin's wreath of spheres
 ## Book II — Forces in the plane
 - ✅ I. The lever
@@ -30,43 +30,43 @@ The site's contents page is built from `apps/web/src/app/elements/_lib/plan.ts`;
 - ✅ IV. Spread loads
 - ✅ V. The string polygon
 - ✅ VI. Centre of gravity by hanging
-- ⬜ VII. Resultant of parallel forces
-- ⬜ VIII. Moving a force: a force and a couple
-- ⬜ IX. Any set of forces reduced to one (a few arrows in any directions → force polygon gives size and direction, string polygon gives the line)
-- ⬜ X. Balance in the plane: both polygons close
-- ⬜ XI. Centre of gravity of composite shapes
+- ✅ VII. Resultant of parallel forces
+- ✅ VIII. Moving a force: a force and a couple
+- ✅ IX. Any set of forces reduced to one (a few arrows in any directions → force polygon gives size and direction, string polygon gives the line)
+- ✅ X. Balance in the plane: both polygons close
+- ✅ XI. Centre of gravity of composite shapes
 ## Book III — Bodies and supports
 - ✅ I. The friction cone
-- ⬜ II. Supports: pin, roller, fixed
+- ✅ II. Supports: pin, roller, fixed
 - ✅ III. The inclined roller: it can only answer square to its own slope (turn the roller, turn the reaction; the pin must follow)
-- ⬜ IV. The free body: a whole structure cut loose (loads + reactions; ΣFx = ΣFy = ΣM = 0, drawn as closed polygons)
-- ⬜ V. The three-force body: a ladder against a wall
-- ⬜ VI. Reactions of a simple beam
-- ⬜ VII. Determinate and indeterminate
-- ⬜ VIII. Toppling or sliding
+- ✅ IV. The free body: a whole structure cut loose (loads + reactions; ΣFx = ΣFy = ΣM = 0, drawn as closed polygons)
+- ✅ V. The three-force body: a ladder against a wall
+- ✅ VI. Reactions of a simple beam
+- ✅ VII. Determinate and indeterminate
+- ✅ VIII. Toppling or sliding
 - ✅ IX. Three supports that are not enough: their lines meet in one point (or are all parallel), and the body turns about it
-- ⬜ X. The Gerber beam: one hinge for every extra support, and the beam falls apart into simple pieces that each solve alone
-- ⬜ XI. The cantilever bridge: two anchored arms and a span hung between them (Forth Bridge human model, 1887)
+- ✅ X. The Gerber beam: one hinge for every extra support, and the beam falls apart into simple pieces that each solve alone
+- ✅ XI. The cantilever bridge: two anchored arms and a span hung between them (Forth Bridge human model, 1887)
 ## Book IV — Trusses
 - ✅ I. The method of joints
 - ✅ II. Why triangles: a rigid truss (a square without a diagonal is a mechanism)
-- ⬜ III. Members that carry nothing
-- ⬜ IV. Ritter's section
-- ✏️ V. Cremona's diagram — every joint polygon glued into one figure, each member drawn once. Smallest case sketched: triangular roof truss, apex load, 30° rafters → rafters = W (red), tie = 0.87 W (blue); the apex joint is the big triangle, each support joint is half of it.
+- ✅ III. Members that carry nothing
+- ✅ IV. Ritter's section
+- ✅ V. Cremona's diagram — every joint polygon glued into one figure, each member drawn once. Smallest case sketched: triangular roof truss, apex load, 30° rafters → rafters = W (red), tie = 0.87 W (blue); the apex joint is the big triangle, each support joint is half of it.
 - ✅ VI. Reverse the loads: every member keeps its size, red and blue swap
-- ⬜ VII. Double the load, double every member force
-- ⬜ VIII. Two loads together equal each load alone, added (superposition; candidate for a three-layer transparent overlay: load A + load B = A and B)
-- ⬜ IX. Warren, Pratt and Howe
-- ⬜ X. The bridge — every member from the four axioms
-- ⬜ XI. The lightest truss (Michell, 1904): red and blue members cross at right angles everywhere; the cantilever from a round support grows spirals (ties to the Forzez topology-optimisation generator)
+- ✅ VII. Double the load, double every member force
+- ✅ VIII. Two loads together equal each load alone, added (superposition; candidate for a three-layer transparent overlay: load A + load B = A and B)
+- ✅ IX. Warren, Pratt and Howe
+- ✅ X. The bridge — every member from the four axioms
+- ✅ XI. The lightest truss (Michell, 1904): red and blue members cross at right angles everywhere; the cantilever from a round support grows spirals (ties to the Forzez topology-optimisation generator)
 ## Book V — Cables and arches
-- ✏️ I. The hanging chain — four equal weights, load line + pole + five rays; each ray parallel to one cable segment, the horizontal ray is H. Pole sits on the side away from the cable's sag direction (first sketch had it on the wrong side). Moving the pole out → bigger H, flatter cable (the planned "drag the pole" interactive plate).
-- ⬜ II. The suspension cable
+- ✅ I. The hanging chain — four equal weights, load line + pole + five rays; each ray parallel to one cable segment, the horizontal ray is H. Pole sits on the side away from the cable's sag direction (first sketch had it on the wrong side). Moving the pole out → bigger H, flatter cable (the planned "drag the pole" interactive plate).
+- ✅ II. The suspension cable
 - ✅ III. The inverted chain is an arch
-- ⬜ IV. The thrust line
+- ✅ IV. The thrust line
 - ✅ V. The semicircle: a three-hinged half circle under a crown load; the thrust is half the load at crown and springings, but it runs along the chords, so the circle bends
-- ⬜ VI. Four hinges: how an arch fails
-- ⬜ VII. Gaudí's hanging model
+- ✅ VI. Four hinges: how an arch fails
+- ✅ VII. Gaudí's hanging model
 - ✅ VIII. The funicular truss: chain and arch in one, no thrust on the supports (Brunel's Royal Albert Bridge, 1859)
 ## Side plates
 - ⬜ Maxwell, 1864: reciprocal figures

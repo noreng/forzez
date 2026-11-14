@@ -10,14 +10,14 @@ export type PlanEntry = {
   title: string;
   /** Page slug once written ("i-1", "stevin"); "contents" for this page itself. */
   slug?: string;
-  /** For entries without a page: sketched in chat, or not started. */
+  /** How far an entry is while it has no page yet: sketched in chat, or not started. */
   status?: PlanStatus;
 };
 
 export type PlanSection = { id: string; title: string; subject?: string; entries: PlanEntry[] };
 
 const e = (mark: string, title: string, slug?: string, status: PlanStatus = "planned"): PlanEntry =>
-  ({ mark, title, slug, status: slug ? undefined : status });
+  ({ mark, title, slug, status });
 
 export const PLAN: PlanSection[] = [
   {
@@ -39,8 +39,8 @@ export const PLAN: PlanSection[] = [
       e("V", "Lami’s theorem", "i-5"),
       e("VI", "The pulley", "i-6"),
       e("VII", "Balance by counting", "i-7"),
-      e("VIII", "Components in any frame"),
-      e("IX", "A weight hung on two strings"),
+      e("VIII", "Components in any frame", "i-8"),
+      e("IX", "A weight hung on two strings", "i-9"),
       e("", "Plate: Stevin’s wreath of spheres", "stevin"),
     ],
   },
@@ -53,27 +53,27 @@ export const PLAN: PlanSection[] = [
       e("IV", "Spread loads", "ii-4"),
       e("V", "The string polygon", "ii-5"),
       e("VI", "Centre of gravity by hanging", "ii-6"),
-      e("VII", "Resultant of parallel forces"),
-      e("VIII", "Moving a force: a force and a couple"),
-      e("IX", "Any set of forces reduced to one"),
-      e("X", "Balance in the plane: both polygons close"),
-      e("XI", "Centre of gravity of composite shapes"),
+      e("VII", "Resultant of parallel forces", "ii-7"),
+      e("VIII", "Moving a force: a force and a couple", "ii-8"),
+      e("IX", "Any set of forces reduced to one", "ii-9"),
+      e("X", "Balance in the plane: both polygons close", "ii-10"),
+      e("XI", "Centre of gravity of composite shapes", "ii-11"),
     ],
   },
   {
     id: "book-3", title: "Book the third", subject: "Of bodies and supports",
     entries: [
       e("I", "The friction cone", "iii-1"),
-      e("II", "Supports: pin, roller, fixed"),
+      e("II", "Supports: pin, roller, fixed", "iii-2"),
       e("III", "The inclined roller", "iii-3"),
-      e("IV", "The free body: a whole structure cut loose"),
-      e("V", "The three-force body: a ladder against a wall"),
-      e("VI", "Reactions of a simple beam"),
-      e("VII", "Determinate and indeterminate"),
-      e("VIII", "Toppling or sliding"),
+      e("IV", "The free body: a whole structure cut loose", "iii-4"),
+      e("V", "The three-force body: a ladder against a wall", "iii-5"),
+      e("VI", "Reactions of a simple beam", "iii-6"),
+      e("VII", "Determinate and indeterminate", "iii-7"),
+      e("VIII", "Toppling or sliding", "iii-8"),
       e("IX", "Three supports that are not enough", "iii-9"),
-      e("X", "The Gerber beam"),
-      e("XI", "The cantilever bridge"),
+      e("X", "The Gerber beam", "iii-10"),
+      e("XI", "The cantilever bridge", "iii-11"),
     ],
   },
   {
@@ -81,27 +81,27 @@ export const PLAN: PlanSection[] = [
     entries: [
       e("I", "The method of joints", "iv-1"),
       e("II", "Why triangles", "iv-2"),
-      e("III", "Members that carry nothing"),
-      e("IV", "Ritter’s section"),
-      e("V", "Cremona’s diagram", undefined, "sketched"),
+      e("III", "Members that carry nothing", "iv-3"),
+      e("IV", "Ritter’s section", "iv-4"),
+      e("V", "Cremona’s diagram", "iv-5", "sketched"),
       e("VI", "Reverse the loads", "iv-6"),
-      e("VII", "Double the load, double every member force"),
-      e("VIII", "Two loads together: superposition"),
-      e("IX", "Warren, Pratt and Howe"),
-      e("X", "The bridge: every member from the four axioms"),
-      e("XI", "The lightest truss (Michell, 1904)"),
+      e("VII", "Double the load, double every member force", "iv-7"),
+      e("VIII", "Two loads together: superposition", "iv-8"),
+      e("IX", "Warren, Pratt and Howe", "iv-9"),
+      e("X", "The bridge: every member from the four axioms", "iv-10"),
+      e("XI", "The lightest truss (Michell, 1904)", "iv-11"),
     ],
   },
   {
     id: "book-5", title: "Book the fifth", subject: "Of cables and arches",
     entries: [
-      e("I", "The hanging chain", undefined, "sketched"),
-      e("II", "The suspension cable"),
+      e("I", "The hanging chain", "v-1", "sketched"),
+      e("II", "The suspension cable", "v-2"),
       e("III", "The inverted chain is an arch", "v-3"),
-      e("IV", "The thrust line"),
+      e("IV", "The thrust line", "v-4"),
       e("V", "The semicircle", "v-5"),
-      e("VI", "Four hinges: how an arch fails"),
-      e("VII", "Gaudí’s hanging model"),
+      e("VI", "Four hinges: how an arch fails", "v-6"),
+      e("VII", "Gaudí’s hanging model", "v-7"),
       e("VIII", "The funicular truss", "v-8"),
     ],
   },

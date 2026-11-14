@@ -224,4 +224,71 @@ export const BOOK_1: Page[] = [
     ),
     refs: [],
   },
+  {
+    slug: "i-8", book: 1, n: 8, kind: "Theorem", short: "Components in any frame",
+    statement: "If a force is split into two parts at right angles, the parts depend on the frame; but turn the frame as you will, they add to the same force, and their squares to the same square.",
+    caption: "One force, split in two frames.",
+    figure: (
+      // force 115 long; parts 69 and 92 upright, 110.4 and 32.2 turned (60, 80 and 96, 28 of 100)
+      <Figure viewBox="35 80 595 285" label="The same black force drawn twice. On the left it is split into a red part across and a blue part upright; on the right, in a turned frame, into a long red part and a short blue part. Each part carries a square in its colour, and the black square on the force is the same in both">
+        <Area points="150,281 219,281 219,350 150,350" c="r" />
+        <Area points="235,265 235,173 327,173 327,265" c="b" />
+        <Area points="137.2,255.4 206.2,163.4 114.2,94.4 45.2,186.4" c="k" />
+        <Area points="464.6,267.8 552.9,201.6 619.2,289.9 530.8,356.1" c="r" />
+        <Area points="556.1,179.2 536.8,153.4 562.6,134.1 581.9,159.8" c="b" />
+        <Area points="442.2,245.4 511.2,153.4 419.2,84.4 350.2,176.4" c="k" />
+        <RightAngle points="207,265 207,253 219,253" />
+        <RightAngle points="533.7,196 526.5,186.4 536.1,179.2" />
+        <Arrow x1={150} y1={265} x2={210.6} y2={184.2} c="k" />
+        <Arrow x1={150} y1={265} x2={205} y2={265} c="r" />
+        <Arrow x1={219} y1={265} x2={219} y2={187} c="b" />
+        <Dot x={150} y={265} />
+        <Arrow x1={455} y1={255} x2={515.6} y2={174.2} c="k" />
+        <Arrow x1={455} y1={255} x2={532.1} y2={197.2} c="r" />
+        <Arrow x1={543.3} y1={188.8} x2={532.4} y2={174.2} c="b" />
+        <Dot x={455} y={255} />
+      </Figure>
+    ),
+    proof: (
+      <>
+        <p>In the upright frame, {r} + {b} = {k} <Ref to="ax-2" />, and <Sym c="force-1" kind="square" /> + <Sym c="force-2" kind="square" /> = <Sym c="ink" kind="square" /> <Ref to="i-3" /></p>
+        <p>Turn the frame. A new {r} and a new {b}, of other sizes, still close a right-angled triangle on the same {k}; so their squares, of other sizes, still fill the same <Sym c="ink" kind="square" /></p>
+        <p>Sixty and eighty, or ninety-six and twenty-eight: each pair makes a hundred.</p>
+        <Cor>The parts belong to the frame, the force to the body. So choose the frame that makes the work short: along the slope and across it, as in <Ref to="i-4" />.</Cor>
+      </>
+    ),
+    refs: ["ax-2", "i-3", "i-4"],
+  },
+  {
+    slug: "i-9", book: 1, n: 9, kind: "Theorem", short: "Two strings",
+    statement: "If a weight hangs from a knot on two strings, the weight and the two pulls close a triangle whose sides run parallel to the strings; and the steeper string pulls the harder.",
+    caption: "A weight on two strings, and the triangle of the knot.",
+    figure: (
+      // weight 110; flat red string 32.3°, pull 66.2; steep blue string 53.1°, pull 93.3
+      <Figure viewBox="20 30 480 315" label="A weight hangs from a knot tied to two strings fixed to a ceiling, the left string flat and the right one steep. At the knot a yellow arrow points down along the cord, a red arrow along the flat string and a longer blue arrow along the steep one. Beside them the same three arrows close a triangle">
+        <Ground x1={30} x2={350} y={50} />
+        <Stroke x1={50} y1={50} x2={240} y2={170} />
+        <Stroke x1={330} y1={50} x2={240} y2={170} />
+        <Stroke x1={240} y1={170} x2={240} y2={290} />
+        <Weight x={215} y={290} width={50} height={40} />
+        <Arrow x1={240} y1={170} x2={240} y2={266} c="y" />
+        <Arrow x1={240} y1={170} x2={195.9} y2={142.1} c="r" />
+        <Arrow x1={240} y1={170} x2={287.6} y2={106.6} c="b" />
+        <Dot x={240} y={170} />
+        <Arrow x1={470} y1={60} x2={470} y2={156} c="y" />
+        <Arrow x1={470} y1={170} x2={425.9} y2={142.1} c="r" />
+        <Arrow x1={414} y1={134.6} x2={461.6} y2={71.2} c="b" />
+      </Figure>
+    ),
+    proof: (
+      <>
+        <p>The knot holds three forces: {y} the weight, and {r} and {b}, which a string can only give along itself. They close a triangle <Ref to="i-1" />.</p>
+        <p>So draw {y} to scale and, from its two ends, lines parallel to the two strings. Where they meet the triangle closes, and its other two sides are {r} and {b}.</p>
+        <p>Across, {r} and {b} must pull equally, for nothing else pulls sideways <Ref to="i-7" />. The flatter string gives more of its pull across, so it needs less pull; the steeper one needs more.</p>
+        <Note>Each pull is also as the sine of the angle between the other two <Ref to="i-5" />.</Note>
+        <Cor>Draw the strings flatter and the triangle grows long and thin: the pulls grow without end. No string pulled straight can carry a weight.</Cor>
+      </>
+    ),
+    refs: ["i-1", "i-5", "i-7"],
+  },
 ];

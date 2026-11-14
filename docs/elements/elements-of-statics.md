@@ -41,6 +41,8 @@ See `elements-of-statics-toc.md` for the full list. Axioms (4) → Book I forces
 - Palette: red #C2311F, blue #1F4E96, yellow #E3A81B on cream / #DB9C0F on white, ink #151515–#1B1A17 (proof on paper before freezing). On black: red #D63A24, blue #2F6BC9, yellow #F2B71C, text #EDE6D6, ground #1B1A18.
 - Byrne's style vocabulary: 4 colours × solid/dashed × thick/thin = 16 stroke styles. Keep to that set.
 ## Typography and page
+**Decided 2026-11-14 (supersedes the "current favourite" below):** the web edition keeps the direction now built on forzez.com: cream paper (`bg` token), IBM Plex (Sans Condensed titles, Serif text, Mono numbers), layout B · the spread, Q.E.D. for theorems and Q.E.F. for problems. Plain modern and the Paper / Byrne / Night themes stay ideas, not the plan. The logo is out of scope for now.
+
 - Reference: Kronecker Wallis, *Euclid's Elements. Completing Oliver Byrne's work* (designer Laia Guarro; 20 × 27 cm hardcover). Norbert likes its plain modern direction.
 - Current favourite (2026-10-26): white pages, neutral grotesk (Hanken Grotesk in the PoC), page ratio 20:27, diagram dominant, small text, ragged right, hierarchy by position and weight (400/500 only), running heads and folios small and grey. Proof end mark: a small black square.
 - Rejected: geometric/technical sans on top of an unchanged layout (big numeral + heavy rule + flex rows = template/homework look).

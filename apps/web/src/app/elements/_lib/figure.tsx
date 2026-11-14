@@ -165,6 +165,43 @@ export function Member({ x1, y1, x2, y2, kind, w = 7, dashed, opacity }: { x1: n
   return <line x1={x1} y1={y1} x2={x2} y2={y2} stroke={color} strokeWidth={kind === "beam" && w === 7 ? 8 : w} strokeOpacity={opacity} strokeDasharray={dashed ? "8 6" : undefined} strokeLinecap={kind === "member" ? "round" : undefined} />;
 }
 
+/** A curved member (Michell's spirals, a bent chord) as one polyline, coloured by its meaning. */
+export function MemberPath({ points, kind, w = 7 }: { points: [number, number][]; kind: "tension" | "compression" | "member"; w?: number }) {
+  return <polyline points={points.map((p) => p.join(",")).join(" ")} fill="none" stroke={cssVar(kind)} strokeWidth={w} strokeLinejoin="round" />;
+}
+
+/**
+ * A fixed (clamped) support: a wall face at x from y1 to y2, hatched on the side `side`
+ * (1 right, -1 left).
+ */
+export function Clamp({ x, y1, y2, side = 1, step = 12, depth = 12 }: { x: number; y1: number; y2: number; side?: 1 | -1; step?: number; depth?: number }) {
+  const n = Math.floor((y2 - y1) / step);
+  return (
+    <>
+      {Array.from({ length: n }, (_, i) => {
+        const yy = y1 + step * (i + 1);
+        return <Stroke key={i} x1={x} y1={yy} x2={x + side * depth} y2={yy - depth} w={1.5} />;
+      })}
+      <Ground x1={x} x2={x} y={y1} y2={y2} />
+    </>
+  );
+}
+
+/** A circular stone arch (half annulus) as a pale body: centre (x, y), inner and outer radius. */
+export function ArchRing({ x, y, ri, ro, step = 2 }: { x: number; y: number; ri: number; ro: number; step?: number }) {
+  const q = (v: number) => Math.round(v * 10) / 10;
+  const arc = (r: number) => Array.from({ length: 180 / step + 1 }, (_, i) => {
+    const a = Math.PI - (i * step * Math.PI) / 180;
+    return `${q(x + r * Math.cos(a))},${q(y - r * Math.sin(a))}`;
+  });
+  return <Body points={[...arc(ro), ...arc(ri).reverse()].join(" ")} />;
+}
+
+/** A circle outline in ink: `dashed` to ring a joint the proof talks about. */
+export function Circle({ x, y, r = 15, w = 1.2, dashed }: { x: number; y: number; r?: number; w?: number; dashed?: boolean }) {
+  return <circle cx={x} cy={y} r={r} fill="none" stroke={ink} strokeWidth={w} strokeDasharray={dashed ? "5 5" : undefined} />;
+}
+
 /** A pinned joint: a small paper ring. */
 export function Joint({ x, y, r = 7, w = 2.5 }: { x: number; y: number; r?: number; w?: number }) {
   return <circle cx={x} cy={y} r={r} fill={paper} stroke={ink} strokeWidth={w} />;
