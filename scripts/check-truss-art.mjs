@@ -1,4 +1,4 @@
-// Checks the net1/net2 generators in prototypes/truss-art-net/index.html without editing the prototype.
+// Checks the net1/net2 generators in prototypes/truzme-art-net/index.html without editing the prototype.
 // Pulls the code between /*CORE*/ and /*END*/, then for a sweep of recipes checks:
 //   - the solver returns a result (structure is stable),
 //   - equilibrium at every free node (residual should be ~rounding, ≤ 0.005 kN),
@@ -13,7 +13,7 @@ import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
-const html = readFileSync(join(root, "prototypes/truss-art-net/index.html"), "utf8");
+const html = readFileSync(join(root, "prototypes/truzme-art-net/index.html"), "utf8");
 const core = html.split("/*CORE*/")[1]?.split("/*END*/")[0];
 if (!core) throw new Error("CORE markers not found in the prototype");
 const { gen, gen2, solve, recipeOf } = new Function(`${core}; return { gen, gen2, solve, recipeOf };`)();

@@ -7,7 +7,7 @@ What happened in the claude.ai conversation that produced the `net1`/`net2` gene
 | Path | What |
 | --- | --- |
 | [`docs/specs/truzme-art-spec.md`](../specs/truzme-art-spec.md) | The original "Truzme Art" spec the conversation started from (`pts1`, unseeded prototypes, core rules). Historical: superseded where this note or the plan disagree. |
-| [`prototypes/truss-art-net/index.html`](../../prototypes/truss-art-net/index.html) | Frozen snapshot of the prototype (artifact version 2, 2026-10-12). Open in a browser. Don't edit; port. |
+| [`prototypes/truzme-art-net/index.html`](../../prototypes/truzme-art-net/index.html) | Frozen snapshot of the prototype (artifact version 2, 2026-10-12). Open in a browser. Don't edit; port. |
 | [`scripts/check-truss-art.mjs`](../../scripts/check-truss-art.mjs) | Runs the prototype's generator + solver in Node (extracts the code between `/*CORE*/` and `/*END*/`), checks stability and equilibrium over 702 recipes, prints fingerprints. `pnpm check:truss-art`, add `-- --svg out/` for previews. |
 
 Original artifact: https://claude.ai/artifact/8UXW91s8vFDmE2mRZ2xo18 (private).

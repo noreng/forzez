@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mini truss grid</title>
+<!-- Snapshot of an inline claude.ai chat widget (2026-10). Host CSS variables re-declared below so the page runs standalone. -->
+<style>
+:root{--text-primary:#1B1A17;--text-secondary:#5a574f;--text-muted:#a29d91;--bg:#fff;--bg-accent:#e6effb;--text-accent:#1F4E96;--border-accent:#1F4E96;--border:#d6d2c8;--font-mono:ui-monospace,SFMono-Regular,Menlo,monospace}
+@media (prefers-color-scheme:dark){:root{--text-primary:#EDE6D6;--text-secondary:#b9b2a3;--text-muted:#6d685e;--bg:#1B1A18;--bg-accent:#1d2e4a;--text-accent:#8fb4ee;--border-accent:#8fb4ee;--border:#3a3833}}
+body{margin:0;padding:16px;max-width:640px;margin-inline:auto;background:var(--bg);color:var(--text-primary);font:14px/1.4 system-ui,sans-serif}
+button{font:inherit;font-size:13px;padding:4px 10px;border:1px solid var(--border);border-radius:6px;background:transparent;color:var(--text-primary);cursor:pointer}
+input[type=checkbox]{accent-color:var(--text-accent)}
+.ti{display:none}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+</style>
+</head>
+<body>
+<style>
+#btns button.on{background:var(--bg-accent);color:var(--text-accent);border-color:var(--border-accent)}
+.row{display:flex;align-items:center;gap:10px;margin:0 0 6px}
+.row label.l{font-size:13px;color:var(--text-secondary);min-width:64px}
+.ck{font-size:13px;color:var(--text-secondary);display:flex;align-items:center;gap:4px}
+</style>
+<h2 class="sr-only">20x20-as rács mini háromszög-rácsos tartókból, a csúcsteher iránya és nagysága mintát ad, a rúderők színezve, Project code-ként másolható.</h2>
+<div style="display:flex;flex-wrap:wrap;gap:6px;margin:0 0 10px" id="btns"></div>
+<div class="row"><label class="l">Paraméter</label><input type="range" min="1" max="10" step="0.1" value="4" id="k" style="flex:1"><span id="kout" style="font-size:13px;min-width:28px">4</span></div>
+<div class="row"><label class="l">Dőlés</label><input type="range" min="0" max="1" step="0.05" value="0" id="lean" style="flex:1"><span id="lout" style="font-size:13px;min-width:28px">0</span></div>
+<div class="row" style="margin-bottom:10px;flex-wrap:wrap">
+<label class="ck"><input type="checkbox" id="hm">Magasság a teherrel</label>
+<label class="ck"><input type="checkbox" id="col" checked>Rúderők</label>
+<label class="ck"><input type="checkbox" id="rx">Reakciók</label>
+</div>
+<canvas id="cv" style="width:100%;display:block"></canvas>
+<div style="display:flex;align-items:center;gap:10px;margin-top:10px">
+<button id="copy"><i class="ti ti-copy" aria-hidden="true" style="margin-right:6px"></i>Project code másolása</button>
+<span id="msg" style="font-size:13px;color:var(--text-secondary)"></span>
+</div>
+<div id="info" style="font-size:12px;color:var(--text-muted);margin-top:6px"></div>
+<textarea id="fallback" readonly style="display:none;width:100%;height:120px;margin-top:8px;font-family:var(--font-mono);font-size:11px"></textarea>
+<script>
+const C=20,R=20,F=1,cv=document.getElementById('cv'),ctx=cv.getContext('2d');
+const P={
+'Örvény':(u,v,k)=>{const a=Math.atan2(v,u)+Math.PI/2,r=Math.hypot(u,v);return[a,Math.min(1,r*1.6)*Math.exp(-r*r*k/20)*1.6]},
+'Hullám':(u,v,k)=>[Math.sin(u*k+v*k*0.7)*1.4-Math.PI/2,0.55+0.45*Math.cos(v*k)],
+'Dipól':(u,v,k)=>{const d=0.15+k/40;let fx=0,fy=0;[[-d,1],[d,-1]].forEach(([x,q])=>{const dx=u-x,dy=v,r2=dx*dx+dy*dy+0.01;fx+=q*dx/Math.pow(r2,1.5);fy+=q*dy/Math.pow(r2,1.5)});return[Math.atan2(fy,fx),Math.min(1,Math.hypot(fx,fy)/30)]},
+'Áramlás':(u,v,k)=>{const a=Math.sin(u*k)+Math.cos(v*k*1.3)+Math.sin((u+v)*k*0.6);return[a*1.2,0.5+0.5*Math.sin(a*2)]},
+'Sugaras':(u,v,k)=>{const r=Math.hypot(u,v);return[Math.atan2(v,u),0.25+0.75*Math.abs(Math.sin(r*k*2))]},
+'Spirál':(u,v,k)=>{const r=Math.hypot(u,v);return[Math.atan2(v,u)+r*k,0.4+0.6*r]}
+};
+let cur='Hullám';
+const bw=document.getElementById('btns');
+Object.keys(P).forEach(n=>{const b=document.createElement('button');b.textContent=n;b.dataset.n=n;b.onclick=()=>{cur=n;draw()};bw.appendChild(b)});
+const r3=x=>{const v=Math.round(x*1000)/1000;return Object.is(v,-0)?0:v};
+function cells(){
+const k=+document.getElementById('k').value,lean=+document.getElementById('lean').value,hm=document.getElementById('hm').checked;
+const raw=[];let mx=0;
+for(let j=0;j<R;j++)for(let i=0;i<C;i++){const u=(i+0.5)/C*2-1,v=(j+0.5)/R*2-1;let[a,m]=P[cur](u,-v,k);m=Math.max(0,m);mx=Math.max(mx,m);raw.push({i,j,a,m})}
+return raw.map(({i,j,a,m})=>{
+m=mx>0?m/mx:0;
+const Y=R-1-j,h=hm?0.2+0.45*m:0.5,off=lean*0.3*Math.cos(a);
+const A={x:r3(i+0.2),y:r3(Y+0.15)},B={x:r3(i+0.8),y:r3(Y+0.15)},Cn={x:r3(i+0.5+off),y:r3(Y+0.15+h)};
+const Fx=r3(Math.cos(a)*m*F),Fy=r3(Math.sin(a)*m*F);
+const b=B.x-A.x,cx=Cn.x-A.x,cy=Cn.y-A.y;
+const By=(cy*Fx-cx*Fy)/b,Ax=-Fx,Ay=-Fy-By;
+const LA=Math.hypot(A.x-Cn.x,A.y-Cn.y),LB=Math.hypot(B.x-Cn.x,B.y-Cn.y);
+const ax=(A.x-Cn.x)/LA,ay=(A.y-Cn.y)/LA,bx=(B.x-Cn.x)/LB,by=(B.y-Cn.y)/LB,det=ax*by-bx*ay;
+const NA=(-Fx*by+Fy*bx)/det,NB=(-Fy*ax+Fx*ay)/det,NAB=NB*(cx-b)/LB;
+return{A,B,C:Cn,Fx,Fy,m,Ax,Ay,By,N:[NAB,NA,NB]}});
+}
+function arrow(x1,y1,x2,y2,c,w){const L=Math.hypot(x2-x1,y2-y1);if(L<1)return;ctx.strokeStyle=c;ctx.fillStyle=c;ctx.lineWidth=w;ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();const ux=(x2-x1)/L,uy=(y2-y1)/L,hl=Math.min(4,L*0.5);ctx.beginPath();ctx.moveTo(x2,y2);ctx.lineTo(x2-ux*hl-uy*hl*0.5,y2-uy*hl+ux*hl*0.5);ctx.lineTo(x2-ux*hl+uy*hl*0.5,y2-uy*hl-ux*hl*0.5);ctx.fill()}
+function draw(){
+document.getElementById('kout').textContent=(+document.getElementById('k').value).toFixed(1);
+document.getElementById('lout').textContent=(+document.getElementById('lean').value).toFixed(2);
+document.getElementById('msg').textContent='';document.getElementById('fallback').style.display='none';
+[...bw.children].forEach(b=>{const on=b.dataset.n===cur;b.classList.toggle('on',on);b.setAttribute('aria-pressed',on)});
+const col=document.getElementById('col').checked,rx=document.getElementById('rx').checked;
+const w=cv.clientWidth,h=w*R/C,dpr=window.devicePixelRatio||1;
+cv.width=w*dpr;cv.height=h*dpr;cv.style.height=h+'px';ctx.setTransform(dpr,0,0,dpr,0,0);
+const cs=getComputedStyle(document.body),fg=cs.getPropertyValue('--text-primary').trim()||'#222',mu=cs.getPropertyValue('--text-muted').trim()||'#999';
+ctx.clearRect(0,0,w,h);const s=w/C,X=p=>p.x*s,Yc=p=>(R-p.y)*s;ctx.lineCap='round';ctx.lineJoin='round';
+const cl=cells();let nmax=0;cl.forEach(c=>c.N.forEach(n=>nmax=Math.max(nmax,Math.abs(n))));
+cl.forEach(c=>{
+[[c.A,c.B],[c.A,c.C],[c.B,c.C]].forEach(([p,q],t)=>{const n=c.N[t],r=nmax?Math.abs(n)/nmax:0;
+ctx.strokeStyle=!col||r<0.01?mu:(n>0?'#378ADD':'#E24B4A');ctx.lineWidth=col?0.6+2.4*r:1.2;
+ctx.beginPath();ctx.moveTo(X(p),Yc(p));ctx.lineTo(X(q),Yc(q));ctx.stroke()});
+const al=0.3*s,fx=c.Fx/F*al,fy=-c.Fy/F*al,cx=X(c.C),cy=Yc(c.C);
+if(c.Fy>0)arrow(cx,cy,cx+fx,cy+fy,fg,1.2);else arrow(cx-fx,cy-fy,cx,cy,fg,1.2);
+if(rx){const ra=al;arrow(X(c.A)-c.Ax/F*ra,Yc(c.A)+c.Ay/F*ra,X(c.A),Yc(c.A),mu,0.8);arrow(X(c.B),Yc(c.B)+c.By/F*ra,X(c.B),Yc(c.B),mu,0.8)}
+ctx.fillStyle=fg;[c.A,c.B,c.C].forEach(p=>{ctx.beginPath();ctx.arc(X(p),Yc(p),1,0,7);ctx.fill()});
+});
+document.getElementById('info').textContent='400 tartó · 1200 csomópont · 1200 rúd · max '+F+' kN · kék húzás, piros nyomás';
+}
+function build(){
+const cl=cells(),nodes=[],members=[],supports=[],loads=[];
+cl.forEach((c,idx)=>{const n=idx*3;
+nodes.push({id:n+1,x:c.A.x,y:c.A.y},{id:n+2,x:c.B.x,y:c.B.y},{id:n+3,x:c.C.x,y:c.C.y});
+members.push({id:n+1,from:n+1,to:n+2,section:1,material:1},{id:n+2,from:n+1,to:n+3,section:1,material:1},{id:n+3,from:n+2,to:n+3,section:1,material:1});
+supports.push({id:idx*2+1,node:n+1,x:true,y:true},{id:idx*2+2,node:n+2,x:false,y:true});
+if(c.Fx!==0||c.Fy!==0){const L={id:loads.length+1,node:n+3,x:c.Fx,y:c.Fy};if(c.Fy>0)L.mode='pull';loads.push(L)}});
+const line=a=>a.map(o=>'    '+JSON.stringify(o)).join(',\n');
+return '{\n  "units": {"length":"m","sectionLength":"mm","force":"kN","materialStrength":"N/mm²","area":"mm²","density":"kg/m³"},\n  "nodes": [\n'+line(nodes)+'\n  ],\n  "members": [\n'+line(members)+'\n  ],\n  "supports": [\n'+line(supports)+'\n  ],\n  "nodalLoads": [\n'+line(loads)+'\n  ],\n  "materials": [{"id":1,"name":"S235","EModulus":210000,"fMax":235,"density":7850,"color":"#F9DC85"}],\n  "sections": [{"id":1,"name":"CHS 114.3×6","color":"#FF908D","sectionType":"pipe","outerDiameter":114.3,"thickness":6}],\n  "dimensions": []\n}';
+}
+document.getElementById('copy').onclick=()=>{
+const txt=build(),msg=document.getElementById('msg'),fb=document.getElementById('fallback');
+const fail=()=>{fb.value=txt;fb.style.display='block';fb.focus();fb.select();msg.textContent='Nem sikerült a vágólapra tenni. Jelöld ki és másold innen.'};
+try{navigator.clipboard.writeText(txt).then(()=>{msg.textContent='Másolva ('+Math.round(txt.length/1024)+' kB)'},fail)}catch(e){fail()}
+};
+['k','lean','hm','col','rx'].forEach(id=>document.getElementById(id).oninput=draw);
+window.addEventListener('resize',draw);draw();
+</script>
+</body>
+</html>
