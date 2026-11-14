@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bicycle wheel: spoke tension under load</title>
+<!-- Snapshot of an inline claude.ai chat widget (2026-10-27). Host CSS variables and text classes re-declared below so the page runs standalone. Everything inside <body> is the widget code, verbatim. -->
+<style>
+:root{--text-primary:#1B1A17;--text-secondary:#5a574f;--text-muted:#a29d91;--bg:#fff;--surface-1:#f3f1ec;--radius:8px}
+@media (prefers-color-scheme:dark){:root{--text-primary:#EDE6D6;--text-secondary:#b9b2a3;--text-muted:#6d685e;--bg:#1B1A18;--surface-1:#26241f}}
+body{margin:0;padding:16px;max-width:640px;margin-inline:auto;background:var(--bg);color:var(--text-primary);font:14px/1.4 system-ui,sans-serif}
+.th{font-size:14px;font-weight:500;fill:var(--text-primary)}
+.ts{font-size:12px;fill:var(--text-secondary)}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+</style>
+</head>
+<body>
+<h2 class="sr-only">Bicycle wheel with 36 prestressed spokes; a load slider shows the bottom spokes losing tension while the rim stays in compression.</h2>
+<style>
+.bw-ctl{display:flex;align-items:center;gap:10px;margin:6px 0}
+.bw-ctl label{font-size:13px;color:var(--text-secondary);min-width:84px}
+.bw-ctl output{font-size:13px;font-weight:500;min-width:62px;text-align:right}
+.bw-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:10px 0}
+.bw-card{background:var(--surface-1);border-radius:var(--radius);padding:8px 12px}
+.bw-card p{margin:0;font-size:12px;color:var(--text-secondary)}
+.bw-card div{font-size:18px;font-weight:500;color:var(--text-primary)}
+.bw-lg{font-size:12px;color:var(--text-secondary);display:flex;gap:14px;flex-wrap:wrap;margin:4px 0}
+</style>
+<div id="bw-root">
+<svg width="100%" viewBox="0 0 380 350" role="img"><title>Loaded bicycle wheel</title><desc>Spoke thickness shows tension; bottom spokes thin out under load.</desc>
+<defs><marker id="bw-ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M1 1L9 5L1 9z" fill="#EF9F27"/></marker></defs>
+<g id="bw-spokes"></g>
+<circle cx="190" cy="160" r="140" fill="none" stroke="#E24B4A" stroke-width="6"/>
+<circle cx="190" cy="160" r="11" fill="var(--surface-1)" stroke="var(--text-primary)" stroke-width="1.5"/>
+<line id="bw-wl" x1="190" y1="160" x2="190" y2="230" stroke="#EF9F27" stroke-width="4" marker-end="url(#bw-ah)"/>
+<line x1="60" y1="304" x2="320" y2="304" stroke="var(--text-muted)" stroke-width="1"/>
+<line id="bw-rl" x1="190" y1="345" x2="190" y2="310" stroke="#EF9F27" stroke-width="4" marker-end="url(#bw-ah)"/>
+</svg>
+<div class="bw-lg"><span style="color:#E24B4A">━ rim, compression</span><span style="color:#378ADD">━ spoke, tension</span><span style="color:#EF9F27">━ load and ground</span><span>┅ slack</span></div>
+<div class="bw-ctl"><label for="bw-load">Load W</label><input type="range" id="bw-load" min="0" max="4000" step="100" value="800" style="flex:1"><output id="bw-load-out">800 N</output></div>
+<div class="bw-ctl"><label for="bw-pre">Prestress T₀</label><input type="range" id="bw-pre" min="400" max="1500" step="50" value="1000" style="flex:1"><output id="bw-pre-out">1000 N</output></div>
+<div class="bw-cards">
+<div class="bw-card"><p>Bottom spoke</p><div id="bw-cb">–</div></div>
+<div class="bw-card"><p>Top spoke</p><div id="bw-ct">–</div></div>
+<div class="bw-card"><p>Rim compression</p><div id="bw-cr">–</div></div>
+<div class="bw-card"><p>Slack spokes</p><div id="bw-cs">–</div></div>
+</div>
+<svg width="100%" viewBox="0 0 380 120" role="img"><title>Tension per spoke</title><desc>Bar chart of the 36 spoke tensions around the wheel, top to bottom to top.</desc>
+<g id="bw-bars"></g>
+<line id="bw-base" x1="20" x2="360" y1="47" y2="47" stroke="var(--text-muted)" stroke-dasharray="3 3" stroke-width="1"/>
+<text class="ts" x="20" y="114">top</text>
+<text class="ts" x="190" y="114" text-anchor="middle">bottom</text>
+<text class="ts" x="360" y="114" text-anchor="end">top</text>
+</svg>
+</div>
+<script>
+(function(){
+var NS="http://www.w3.org/2000/svg",n=36,cx=190,cy=160,R=140,r0=11;
+function $(id){return document.getElementById(id);}
+var loadIn=$('bw-load'),preIn=$('bw-pre'),spokes=$('bw-spokes'),bars=$('bw-bars');
+var lines=[],rects=[],k,a,l,b;
+for(k=0;k<n;k++){
+ a=(90+k*10)*Math.PI/180;
+ l=document.createElementNS(NS,'line');
+ l.setAttribute('x1',(cx+r0*Math.cos(a)).toFixed(1));l.setAttribute('y1',(cy+r0*Math.sin(a)).toFixed(1));
+ l.setAttribute('x2',(cx+R*Math.cos(a)).toFixed(1));l.setAttribute('y2',(cy+R*Math.sin(a)).toFixed(1));
+ spokes.appendChild(l);lines.push(l);
+ b=document.createElementNS(NS,'rect');b.setAttribute('rx','1');bars.appendChild(b);rects.push(b);
+}
+function phi(i){var p=i*10;return p>180?p-360:p;}
+function update(){
+ var W=Number(loadIn.value),T0=Number(preIn.value),i,w=[],s=0,T=[],slack=0;
+ for(i=0;i<n;i++){var p=phi(i);w[i]=Math.exp(-Math.pow(p/20,2));s+=w[i]*Math.cos(p*Math.PI/180);}
+ var amp=W/s,uni=0.03*W;
+ for(i=0;i<n;i++){T[i]=T0-amp*w[i]+uni;if(T[i]<=0)slack++;}
+ var sc=Math.max(1500,T0+200);
+ for(i=0;i<n;i++){
+  var ln=lines[i];
+  if(T[i]<=0){ln.setAttribute('stroke','#888780');ln.setAttribute('stroke-dasharray','3 3');ln.setAttribute('stroke-width','1');}
+  else{ln.setAttribute('stroke','#378ADD');ln.removeAttribute('stroke-dasharray');ln.setAttribute('stroke-width',(0.3+3.2*T[i]/sc).toFixed(2));}
+ }
+ var bw=340/n,base=100,h=80;
+ for(i=0;i<n;i++){
+  var idx=(i+18)%n,t=Math.max(0,T[idx]),hh=h*t/sc,r=rects[i];
+  r.setAttribute('x',(20+i*bw+1).toFixed(1));r.setAttribute('width',(bw-2).toFixed(1));
+  r.setAttribute('y',(base-hh).toFixed(1));r.setAttribute('height',hh.toFixed(1));
+  r.setAttribute('fill',T[idx]<=0?'#888780':'#378ADD');
+ }
+ var by=(base-h*T0/sc).toFixed(1);$('bw-base').setAttribute('y1',by);$('bw-base').setAttribute('y2',by);
+ $('bw-wl').setAttribute('y2',(cy+Math.min(110,10+W/40)).toFixed(1));
+ $('bw-rl').setAttribute('y1',(310+Math.min(40,6+W/100)).toFixed(1));
+ $('bw-wl').style.opacity=W?1:0;$('bw-rl').style.opacity=W?1:0;
+ $('bw-load-out').textContent=W+' N';$('bw-pre-out').textContent=T0+' N';
+ $('bw-cb').textContent=Math.round(Math.max(0,T[0]))+' N';
+ $('bw-ct').textContent=Math.round(T[18])+' N';
+ $('bw-cr').textContent=(n*T0/(2*Math.PI)/1000).toFixed(1)+' kN';
+ $('bw-cs').textContent=String(slack);
+}
+loadIn.addEventListener('input',update);preIn.addEventListener('input',update);
+loadIn.addEventListener('change',update);preIn.addEventListener('change',update);
+update();
+})();
+</script>
+</body>
+</html>

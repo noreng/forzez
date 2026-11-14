@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Half-wheel bridge</title>
+<!-- Snapshot of an inline claude.ai chat widget (2026-10-27). Host CSS variables and text classes re-declared below so the page runs standalone. Everything inside <body> is the widget code, verbatim. -->
+<style>
+:root{--text-primary:#1B1A17;--text-secondary:#5a574f;--text-muted:#a29d91;--bg:#fff;--surface-1:#f3f1ec;--radius:8px}
+@media (prefers-color-scheme:dark){:root{--text-primary:#EDE6D6;--text-secondary:#b9b2a3;--text-muted:#6d685e;--bg:#1B1A18;--surface-1:#26241f}}
+body{margin:0;padding:16px;max-width:640px;margin-inline:auto;background:var(--bg);color:var(--text-primary);font:14px/1.4 system-ui,sans-serif}
+.th{font-size:14px;font-weight:500;fill:var(--text-primary)}
+.ts{font-size:12px;fill:var(--text-secondary)}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+</style>
+</head>
+<body>
+<svg width="100%" viewBox="0 0 380 385" role="img"><title>Semicircular bridge as half a wheel</title><desc>A semicircular arch with six radial ties to a central hub carrying the load; below, the hub force polygon: six equal tie pulls closed by the load.</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+<g stroke="#378ADD" stroke-width="2">
+<line x1="190" y1="180" x2="296.3" y2="151.5"/><line x1="190" y1="180" x2="267.8" y2="102.2"/><line x1="190" y1="180" x2="218.5" y2="73.7"/><line x1="190" y1="180" x2="161.5" y2="73.7"/><line x1="190" y1="180" x2="112.2" y2="102.2"/><line x1="190" y1="180" x2="83.7" y2="151.5"/>
+</g>
+<polyline points="300,180 296.3,151.5 267.8,102.2 218.5,73.7 161.5,73.7 112.2,102.2 83.7,151.5 80,180" fill="none" stroke="#E24B4A" stroke-width="5" stroke-linejoin="round"/>
+<polygon points="80,180 72,194 88,194" fill="none" stroke="var(--text-primary)" stroke-width="1.5"/>
+<polygon points="300,180 292,194 308,194" fill="none" stroke="var(--text-primary)" stroke-width="1.5"/>
+<g fill="var(--surface-1)" stroke="var(--text-primary)" stroke-width="1.2">
+<circle cx="296.3" cy="151.5" r="3"/><circle cx="267.8" cy="102.2" r="3"/><circle cx="218.5" cy="73.7" r="3"/><circle cx="161.5" cy="73.7" r="3"/><circle cx="112.2" cy="102.2" r="3"/><circle cx="83.7" cy="151.5" r="3"/>
+</g>
+<line x1="190" y1="180" x2="190" y2="222" stroke="#EF9F27" stroke-width="4" marker-end="url(#arrow)"/>
+<circle cx="190" cy="180" r="5" fill="var(--surface-1)" stroke="var(--text-primary)" stroke-width="1.5"/>
+<g stroke="#378ADD" stroke-width="2" fill="none" marker-end="url(#arrow)">
+<line x1="160" y1="360" x2="189" y2="352.2"/><line x1="189" y1="352.2" x2="210.2" y2="331"/><line x1="210.2" y1="331" x2="218" y2="302"/><line x1="218" y1="302" x2="210.2" y2="273"/><line x1="210.2" y1="273" x2="189" y2="251.8"/><line x1="189" y1="251.8" x2="160" y2="244"/>
+</g>
+<line x1="160" y1="244" x2="160" y2="360" stroke="#EF9F27" stroke-width="3" marker-end="url(#arrow)"/>
+<text class="ts" x="236" y="296">Six equal pulls</text>
+<text class="ts" x="236" y="314">closed by the load</text>
+<text class="th" x="190" y="30" text-anchor="middle">Arch = rim, hub hangs</text>
+</svg>
+</body>
+</html>

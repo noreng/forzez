@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hanging chain: pole and rays</title>
+<!-- Snapshot of an inline claude.ai chat widget (2026-10-27). Host CSS variables and text classes re-declared below so the page runs standalone. Everything inside <body> is the widget code, verbatim. -->
+<style>
+:root{--text-primary:#1B1A17;--text-secondary:#5a574f;--text-muted:#a29d91;--bg:#fff;--surface-1:#f3f1ec;--radius:8px}
+@media (prefers-color-scheme:dark){:root{--text-primary:#EDE6D6;--text-secondary:#b9b2a3;--text-muted:#6d685e;--bg:#1B1A18;--surface-1:#26241f}}
+body{margin:0;padding:16px;max-width:640px;margin-inline:auto;background:var(--bg);color:var(--text-primary);font:14px/1.4 system-ui,sans-serif}
+.th{font-size:14px;font-weight:500;fill:var(--text-primary)}
+.ts{font-size:12px;fill:var(--text-secondary)}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+</style>
+</head>
+<body>
+<svg width="100%" viewBox="0 0 380 345" role="img"><title>Funicular cable and force diagram</title><desc>Top: cable carrying four equal loads. Bottom: load line with a pole on its right and five rays; each ray is parallel to one cable segment.</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+<polyline points="65,40 115,84 165,106 215,106 265,84 315,40" fill="none" stroke="#378ADD" stroke-width="4" stroke-linejoin="round"/>
+<polygon points="65,40 57,28 73,28" fill="none" stroke="var(--text-primary)" stroke-width="1.5"/>
+<polygon points="315,40 307,28 323,28" fill="none" stroke="var(--text-primary)" stroke-width="1.5"/>
+<g stroke="#EF9F27" stroke-width="3" marker-end="url(#arrow)">
+<line x1="115" y1="88" x2="115" y2="118"/><line x1="165" y1="110" x2="165" y2="140"/><line x1="215" y1="110" x2="215" y2="140"/><line x1="265" y1="88" x2="265" y2="118"/>
+</g>
+<g fill="var(--surface-1)" stroke="var(--text-primary)" stroke-width="1.2"><circle cx="115" cy="84" r="3"/><circle cx="165" cy="106" r="3"/><circle cx="215" cy="106" r="3"/><circle cx="265" cy="84" r="3"/></g>
+<g stroke="#378ADD" stroke-width="2">
+<line x1="238.2" y1="250" x2="170" y2="190"/><line x1="238.2" y1="250" x2="170" y2="220"/><line x1="238.2" y1="250" x2="170" y2="250"/><line x1="238.2" y1="250" x2="170" y2="280"/><line x1="238.2" y1="250" x2="170" y2="310"/>
+</g>
+<line x1="170" y1="190" x2="170" y2="310" stroke="#EF9F27" stroke-width="4"/>
+<g fill="var(--text-primary)"><circle cx="170" cy="220" r="2.5"/><circle cx="170" cy="250" r="2.5"/><circle cx="170" cy="280" r="2.5"/></g>
+<circle cx="238.2" cy="250" r="4" fill="var(--surface-1)" stroke="var(--text-primary)" stroke-width="1.5"/>
+<text class="ts" x="248" y="254">pole</text>
+<text class="ts" x="160" y="254" text-anchor="end">load line</text>
+<text class="ts" x="204" y="266" text-anchor="middle">H</text>
+<text class="ts" x="190" y="336" text-anchor="middle">Rays parallel to segments</text>
+</svg>
+</body>
+</html>

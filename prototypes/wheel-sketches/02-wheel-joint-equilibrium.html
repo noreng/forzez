@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wheel: hub and rim node equilibrium</title>
+<!-- Snapshot of an inline claude.ai chat widget (2026-10-27). Host CSS variables and text classes re-declared below so the page runs standalone. Everything inside <body> is the widget code, verbatim. -->
+<style>
+:root{--text-primary:#1B1A17;--text-secondary:#5a574f;--text-muted:#a29d91;--bg:#fff;--surface-1:#f3f1ec;--radius:8px}
+@media (prefers-color-scheme:dark){:root{--text-primary:#EDE6D6;--text-secondary:#b9b2a3;--text-muted:#6d685e;--bg:#1B1A18;--surface-1:#26241f}}
+body{margin:0;padding:16px;max-width:640px;margin-inline:auto;background:var(--bg);color:var(--text-primary);font:14px/1.4 system-ui,sans-serif}
+.th{font-size:14px;font-weight:500;fill:var(--text-primary)}
+.ts{font-size:12px;fill:var(--text-secondary)}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+</style>
+</head>
+<body>
+<svg width="100%" viewBox="0 0 380 230" role="img"><title>Joint equilibrium in a wheel</title><desc>Left: hub spoke forces form a closed polygon. Right: rim node with two compression forces and one spoke tension.</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+<g stroke="#378ADD" stroke-width="2" fill="none" marker-end="url(#arrow)">
+<line x1="140" y1="110" x2="134.6" y2="130"/><line x1="134.6" y1="130" x2="120" y2="144.6"/><line x1="120" y1="144.6" x2="100" y2="150"/><line x1="100" y1="150" x2="80" y2="144.6"/><line x1="80" y1="144.6" x2="65.4" y2="130"/><line x1="65.4" y1="130" x2="60" y2="110"/><line x1="60" y1="110" x2="65.4" y2="90"/><line x1="65.4" y1="90" x2="80" y2="75.4"/><line x1="80" y1="75.4" x2="100" y2="70"/><line x1="100" y1="70" x2="120" y2="75.4"/><line x1="120" y1="75.4" x2="134.6" y2="90"/><line x1="134.6" y1="90" x2="140" y2="110"/>
+</g>
+<path d="M214 104 Q280 62 346 104" fill="none" stroke="#E24B4A" stroke-width="1" stroke-dasharray="3 3"/>
+<line x1="226" y1="97" x2="271" y2="83" stroke="#E24B4A" stroke-width="3" marker-end="url(#arrow)"/>
+<line x1="334" y1="97" x2="289" y2="83" stroke="#E24B4A" stroke-width="3" marker-end="url(#arrow)"/>
+<line x1="280" y1="86" x2="280" y2="140" stroke="#378ADD" stroke-width="3" marker-end="url(#arrow)"/>
+<circle cx="280" cy="80" r="4" fill="var(--surface-1)" stroke="var(--text-primary)" stroke-width="1.5"/>
+<text class="th" x="100" y="182" text-anchor="middle">Hub</text>
+<text class="ts" x="100" y="200" text-anchor="middle">Pulls close: ΣF = 0</text>
+<text class="th" x="280" y="182" text-anchor="middle">Rim node</text>
+<text class="ts" x="280" y="200" text-anchor="middle">T = 2N·sin(π/n)</text>
+<text class="ts" x="190" y="224" text-anchor="middle">36 spokes, 12 drawn · angles exaggerated</text>
+</svg>
+</body>
+</html>
