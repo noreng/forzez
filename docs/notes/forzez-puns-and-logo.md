@@ -43,6 +43,34 @@
 
 Favourites: Form follows Forzez (manifesto), Hold your forzez (launch), Meet the Workforzez (about), For every Forzez, an equal and opposite wall.
 
+## Z-words on the site (proposal, 2026-10-15)
+Not decided. Conflicts with the navigation in `forzez-site-models.md` (Studio · Editions · Make your own · Shop · Notes · About, 2026-10-26), which is newer; reconcile before building the nav.
+
+**Rule:** a z only goes where English already says "z" (plural -es / -ies). Say it aloud and the pun is invisible, like Forzez itself ("forces"). Spoken, nobody hears the joke; written, it carries the brand.
+
+**Candidates**
+- **Seriez** — collections. "Seriez 01 — Arches". The strongest one.
+- **Piecez** — all pieces, gallery.
+- **Sketchez** — lab / work in progress, generator drafts.
+- **Releasez** — drops, new generator versions.
+- **Puzzlez** — "Crack the Forze Code", "Which member fails first?".
+- **Bridgez** — a series name ("Bridgez of Budapest").
+- **Bracez** — braced / truss sub-series, if one more is needed.
+- **Prizez** — giveaways, waitlist draws.
+- **Newz** — footer or newsletter subject only; cheap anywhere more prominent.
+
+**Where no z goes**
+- Product level: **Sheet No. 017, Print, Original.** Engineering-drawing vocabulary carries the credibility.
+- Series titles: "Seriez 01 — Archez" is two z's in one line. Too much.
+- **Kidz** — Kidz Bop territory, reads as a kids' brand.
+
+**Density:** at most one z-word per screen outside the logo. The z is seasoning, not the meal.
+
+**Sitemap options**
+- **Strict (recommended):** main nav *Seriez · Gallery · Code · About*. One z in the menu, so it reads as a joke, not a typo. "Meet the Workforzez" is the About page title; Piecez and Sketchez move to the footer.
+- **Loose:** main nav Seriez · Piecez · Forze Code; secondary Sketchez · Puzzlez · Meet the Workforzez; footer Releasez · Feel the Forzez · Apply load (cart). Only if the whole voice stays this playful, product pages included.
+- Either way, below Seriez: Sheet No. 017 · Print · Original.
+
 ## Logo (3 variants made, thick-stroke Bauhaus)
 Colour meaning (decided 2026-10-13): red = compression, blue = tension, yellow = load.
 1. **Truss Z's** — the two Z's are truss panels: black chords + pins, first diagonal red (compression), second blue (tension), O = yellow disc. → **main wordmark** (header, prints).
