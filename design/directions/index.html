@@ -1,0 +1,392 @@
+<title>Forzez Directions</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Display&family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: page chrome on a quiet neutral; each direction is a self-contained
+   specimen whose look comes only from the tokens on its [data-dir] wrapper. */
+:root{
+  --pg-bg:#ECE9E1; --pg-surface:#F7F5EF; --pg-ink:#1D1C19; --pg-muted:#67635A; --pg-rule:#D3CEC2;
+  --pg-serif:"Newsreader",Georgia,serif;
+  --pg-mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){ --pg-bg:#0F0F0D; --pg-surface:#181815; --pg-ink:#E8E5DC; --pg-muted:#9C978B; --pg-rule:#2E2C27; color-scheme:dark }
+}
+:root[data-theme="dark"]{ --pg-bg:#0F0F0D; --pg-surface:#181815; --pg-ink:#E8E5DC; --pg-muted:#9C978B; --pg-rule:#2E2C27; color-scheme:dark }
+
+/* ---------- direction tokens ---------- */
+[data-dir="a"]{ /* Euclid: Byrne's colours in place of letters */
+  --paper:#F4EEDF; --surface:#FAF6EA; --ink:#1B1A17; --muted:#5C574C; --rule:#CFC5AE; --rule-strong:#1B1A17; --grid:#E2D8C2; --body:rgba(27,26,23,.08);
+  --f1:#C2311F; --f2:#1F4E96; --f3:#E3A81B; --f3-text:#8F6200; --res:#1B1A17; --ok:#1F4E96; --bad:#C2311F; --accent:#C2311F;
+  --font-display:"Libre Caslon Display",Georgia,serif; --font-text:"Libre Caslon Text",Georgia,serif;
+  --font-ui:"Libre Caslon Text",Georgia,serif; --font-data:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  --ui-case:uppercase; --ui-track:.14em; --ui-size:12px; --radius:0px; --stroke:5; --head-align:center; --numeral:inline; --flabel:none; --fbar:inline-block;
+}
+[data-dir="b"]{ /* Euclid × Erők: Byrne palette, screen-first text and data */
+  --paper:#F5F2EA; --surface:#FCFBF7; --ink:#1B1A17; --muted:#5E5A50; --rule:#D9D3C4; --rule-strong:#1B1A17; --grid:#E3DED1; --body:rgba(27,26,23,.07);
+  --f1:#C2311F; --f2:#1F4E96; --f3:#D99A0E; --f3-text:#8A5F00; --res:#1B1A17; --ok:#2C7A3D; --bad:#B42335; --accent:#1F4E96;
+  --font-display:"Libre Caslon Display",Georgia,serif; --font-text:"Newsreader",Georgia,serif;
+  --font-ui:"JetBrains Mono",ui-monospace,Menlo,monospace; --font-data:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  --ui-case:none; --ui-track:0; --ui-size:12.5px; --radius:3px; --stroke:3.6; --head-align:left; --numeral:inline; --flabel:inline; --fbar:inline-block;
+}
+[data-dir="c"]{ /* Erők: calm explainer, scroll-driven */
+  --paper:#F1F2EE; --surface:#FBFBF8; --ink:#1B1F24; --muted:#5E656D; --rule:#D5D8D0; --rule-strong:#1B1F24; --grid:#DADDD5; --body:#FBFBF8;
+  --f1:#2D59D1; --f2:#C9531C; --f3:#0C8580; --f3-text:#0C7570; --res:#1B1F24; --ok:#2C7A3D; --bad:#B42335; --accent:#2D59D1;
+  --font-display:"Newsreader",Georgia,serif; --font-text:"Newsreader",Georgia,serif;
+  --font-ui:"JetBrains Mono",ui-monospace,Menlo,monospace; --font-data:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  --ui-case:none; --ui-track:0; --ui-size:12.5px; --radius:3px; --stroke:2.6; --head-align:left; --numeral:none; --flabel:inline; --fbar:none;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]) [data-dir="a"]{ --paper:#16140F; --surface:#1E1B15; --ink:#EDE5D0; --muted:#A49B86; --rule:#3A3429; --rule-strong:#EDE5D0; --grid:#2A251D; --body:rgba(237,229,208,.07);
+    --f1:#E5573F; --f2:#6E95DA; --f3:#EDB938; --f3-text:#EDB938; --res:#EDE5D0; --ok:#6E95DA; --bad:#E5573F; --accent:#E5573F }
+  :root:not([data-theme="light"]) [data-dir="b"]{ --paper:#141310; --surface:#1B1A16; --ink:#EAE6DC; --muted:#A09B8F; --rule:#312E28; --rule-strong:#EAE6DC; --grid:#262420; --body:rgba(234,230,220,.06);
+    --f1:#E5573F; --f2:#7399DC; --f3:#EBB43A; --f3-text:#EBB43A; --res:#EAE6DC; --ok:#6BC47F; --bad:#FF6B7D; --accent:#7399DC }
+  :root:not([data-theme="light"]) [data-dir="c"]{ --paper:#121518; --surface:#181C20; --ink:#E6E8E3; --muted:#9AA1A8; --rule:#2B3137; --rule-strong:#E6E8E3; --grid:#232A30; --body:#181C20;
+    --f1:#7F9DFF; --f2:#FF8B52; --f3:#3CC4B8; --f3-text:#3CC4B8; --res:#E6E8E3; --ok:#6BC47F; --bad:#FF6B7D; --accent:#7F9DFF }
+}
+:root[data-theme="dark"] [data-dir="a"]{ --paper:#16140F; --surface:#1E1B15; --ink:#EDE5D0; --muted:#A49B86; --rule:#3A3429; --rule-strong:#EDE5D0; --grid:#2A251D; --body:rgba(237,229,208,.07);
+  --f1:#E5573F; --f2:#6E95DA; --f3:#EDB938; --f3-text:#EDB938; --res:#EDE5D0; --ok:#6E95DA; --bad:#E5573F; --accent:#E5573F }
+:root[data-theme="dark"] [data-dir="b"]{ --paper:#141310; --surface:#1B1A16; --ink:#EAE6DC; --muted:#A09B8F; --rule:#312E28; --rule-strong:#EAE6DC; --grid:#262420; --body:rgba(234,230,220,.06);
+  --f1:#E5573F; --f2:#7399DC; --f3:#EBB43A; --f3-text:#EBB43A; --res:#EAE6DC; --ok:#6BC47F; --bad:#FF6B7D; --accent:#7399DC }
+:root[data-theme="dark"] [data-dir="c"]{ --paper:#121518; --surface:#181C20; --ink:#E6E8E3; --muted:#9AA1A8; --rule:#2B3137; --rule-strong:#E6E8E3; --grid:#232A30; --body:#181C20;
+  --f1:#7F9DFF; --f2:#FF8B52; --f3:#3CC4B8; --f3-text:#3CC4B8; --res:#E6E8E3; --ok:#6BC47F; --bad:#FF6B7D; --accent:#7F9DFF }
+
+/* ---------- page chrome ---------- */
+*{box-sizing:border-box}
+body{background:var(--pg-bg);color:var(--pg-ink);font-family:var(--pg-serif);font-size:17px;line-height:1.5;-webkit-font-smoothing:antialiased}
+.page{max-width:1240px;margin-inline:auto;padding-block:28px 64px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:40px}
+.top{display:flex;flex-wrap:wrap;gap:16px 32px;align-items:flex-end;justify-content:space-between}
+.top h1{font-family:var(--pg-serif);font-weight:400;font-size:clamp(2rem,5vw,2.8rem);line-height:1.05;margin:0;letter-spacing:-.01em}
+.top p{margin:.4em 0 0;color:var(--pg-muted);max-width:38rem}
+.kicker{font-family:var(--pg-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--pg-muted)}
+.theme{display:flex;border:1px solid var(--pg-rule);border-radius:4px;overflow:hidden;font-family:var(--pg-mono);font-size:12px}
+.theme button{all:unset;cursor:pointer;padding:7px 12px;color:var(--pg-muted)}
+.theme button[aria-pressed="true"]{background:var(--pg-ink);color:var(--pg-bg)}
+.theme button:focus-visible,.tabs button:focus-visible,.card-open:focus-visible{outline:2px solid var(--pg-ink);outline-offset:2px}
+.section-h{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px 20px;border-bottom:1px solid var(--pg-rule);padding-bottom:8px}
+.section-h h2{margin:0;font-weight:400;font-size:1.35rem}
+
+/* ---------- comparison cards ---------- */
+.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+@media (max-width:900px){.cards{grid-template-columns:minmax(0,1fr)}}
+.card{background:var(--paper);color:var(--ink);font-family:var(--font-text);border:1px solid var(--pg-rule);display:flex;flex-direction:column;min-width:0}
+.card-head{display:flex;justify-content:space-between;gap:8px;padding:12px 16px 10px;border-bottom:1px solid var(--rule-strong);font-family:var(--font-ui);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.card-head b{color:var(--ink);font-weight:600}
+.pick{color:var(--accent)!important}
+.card svg{display:block;width:100%;height:auto;aspect-ratio:16/10;background:var(--surface);border-bottom:1px solid var(--rule)}
+.card-body{padding:14px 16px 16px;display:flex;flex-direction:column;gap:12px;flex:1}
+.card-title{font-family:var(--font-display);font-weight:400;font-size:2rem;line-height:1.05;margin:0;text-align:var(--head-align)}
+.card-body p{margin:0;font-size:15px;line-height:1.5}
+.card-note{color:var(--muted);font-style:italic}
+.card-foot{margin-top:auto;display:flex;flex-direction:column;gap:12px}
+.fonts{font-family:var(--font-data);font-size:11px;color:var(--muted);line-height:1.6}
+.card-open{all:unset;cursor:pointer;font-family:var(--pg-mono);font-size:12px;color:var(--pg-muted);padding:10px 16px;border-top:1px solid var(--pg-rule);background:var(--pg-surface)}
+.card-open:hover{color:var(--pg-ink)}
+
+/* ---------- specimen components (all token-driven) ---------- */
+.btns{display:flex;flex-wrap:wrap;gap:8px}
+.btn{font-family:var(--font-ui);font-size:var(--ui-size);letter-spacing:var(--ui-track);text-transform:var(--ui-case);line-height:1;padding:10px 14px;border-radius:var(--radius);border:1px solid var(--ink);background:var(--ink);color:var(--paper);cursor:pointer;transition:opacity .15s,background .15s}
+.btn:hover{opacity:.86}
+.btn.secondary{background:transparent;color:var(--ink)}
+.btn.ghost{background:transparent;color:var(--ink);border-color:transparent;text-decoration:underline;text-underline-offset:3px;padding-inline:6px}
+.btn:disabled{opacity:.4;cursor:default}
+.btn:focus-visible,.seg button:focus-visible,.ctl input:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.swatches{display:flex;gap:6px;flex-wrap:wrap}
+.sw{width:26px;height:26px;border-radius:var(--radius);border:1px solid var(--rule)}
+.fref{white-space:nowrap}
+.fref i{display:var(--fbar);width:1.25em;height:.28em;vertical-align:.22em;margin-right:.18em;background:currentColor;font-style:normal}
+.fref span{display:var(--flabel);font-weight:600}
+.c1{color:var(--f1)}.c2{color:var(--f2)}.c3{color:var(--f3-text)}
+
+/* ---------- detail ---------- */
+.tabs{display:flex;flex-wrap:wrap;gap:6px;font-family:var(--pg-mono);font-size:12px}
+.tabs button{all:unset;cursor:pointer;padding:7px 12px;border:1px solid var(--pg-rule);border-radius:4px;color:var(--pg-muted)}
+.tabs button[aria-pressed="true"]{border-color:var(--pg-ink);color:var(--pg-ink);background:var(--pg-surface)}
+.spec{background:var(--paper);color:var(--ink);font-family:var(--font-text);border:1px solid var(--pg-rule)}
+.run{display:flex;justify-content:space-between;gap:12px;padding:12px clamp(16px,3vw,28px) 10px;border-bottom:1px solid var(--rule-strong);font-family:var(--font-ui);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.spec-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr)}
+@media (max-width:860px){.spec-grid{grid-template-columns:minmax(0,1fr)}}
+.stage{background:var(--surface);border-right:1px solid var(--rule);display:flex;flex-direction:column;min-width:0}
+@media (max-width:860px){.stage{border-right:0;border-bottom:1px solid var(--rule)}}
+.stage-svg{position:relative}
+.stage-svg svg{display:block;width:100%;height:auto;aspect-ratio:4/3}
+.readout{position:absolute;top:12px;left:14px;font-family:var(--font-data);font-size:11.5px;line-height:1.7;color:var(--muted);font-variant-numeric:tabular-nums;pointer-events:none}
+.readout b{color:var(--ink);font-weight:600;display:inline-block;min-width:6ch;text-align:right}
+.badge{display:inline-block;margin-top:4px;padding:2px 8px;border-radius:var(--radius);font-family:var(--font-ui);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;color:var(--paper);background:var(--ok)}
+.badge.bad{background:var(--bad)}
+.seg{position:absolute;top:12px;right:14px;display:flex;border:1px solid var(--rule-strong);border-radius:var(--radius);overflow:hidden;background:var(--surface)}
+.seg button{all:unset;cursor:pointer;font-family:var(--font-ui);font-size:11px;letter-spacing:var(--ui-track);text-transform:var(--ui-case);padding:6px 10px;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+.controls{display:grid;gap:6px;padding:12px 16px 14px;border-top:1px solid var(--rule)}
+.ctl{display:grid;grid-template-columns:9ch minmax(0,1fr) 6ch;align-items:center;gap:12px;font-family:var(--font-data);font-size:12px}
+.ctl label{white-space:nowrap}
+.ctl output{text-align:right;font-variant-numeric:tabular-nums}
+.ctl input{width:100%;margin:0;height:28px}
+.prose{padding:clamp(20px,3.5vw,40px);display:flex;flex-direction:column;gap:16px;min-width:0}
+.eyebrow{font-family:var(--font-ui);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+.prose h3{font-family:var(--font-display);font-weight:400;font-size:clamp(2.4rem,6vw,3.4rem);line-height:1;margin:0;text-wrap:balance;letter-spacing:-.01em}
+.numeral{display:var(--numeral);font-family:var(--font-display);color:var(--f1);margin-right:.25em}
+.lede{margin:0;color:var(--muted);font-style:italic;font-size:1.1rem}
+.prose p{margin:0;font-size:1.05rem;line-height:1.6;max-width:36rem}
+.live{font-family:var(--font-data);font-size:.82em;font-variant-numeric:tabular-nums;background:color-mix(in srgb,var(--ink) 7%,transparent);padding:.05em .35em;border-radius:3px;white-space:nowrap}
+.hint{font-family:var(--font-data);font-size:.78rem;color:var(--muted);border-left:2px solid var(--rule);padding-left:.8em}
+.ctab{border-collapse:collapse;font-family:var(--font-data);font-size:.8rem;font-variant-numeric:tabular-nums}
+.ctab th,.ctab td{padding:4px 18px 4px 0;text-align:right}
+.ctab th:first-child,.ctab td:first-child{text-align:left}
+.ctab th{color:var(--muted);font-weight:400;border-bottom:1px solid var(--rule)}
+.ctab .sum td{border-top:1px solid var(--rule-strong);font-weight:600}
+.tokens{border-top:1px solid var(--rule);padding:16px clamp(16px,3vw,28px) 20px;display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px 16px}
+.tok{display:flex;gap:10px;align-items:center;font-family:var(--font-data);font-size:11px;min-width:0}
+.tok .sw{flex:none}
+.tok div{min-width:0;overflow-wrap:anywhere}
+.tok b{display:block;color:var(--ink);font-weight:600}
+.tok span{color:var(--muted)}
+.typescale{border-top:1px solid var(--rule);padding:16px clamp(16px,3vw,28px) 22px;display:flex;flex-direction:column;gap:6px}
+.ts{display:grid;grid-template-columns:12ch minmax(0,1fr);gap:16px;align-items:baseline}
+.ts span{font-family:var(--font-data);font-size:11px;color:var(--muted)}
+
+/* ---------- svg ---------- */
+.dot{fill:var(--grid)}
+.bodyshape{fill:var(--body);stroke:var(--ink);stroke-width:1.4}
+[data-dir="a"] .bodyshape,[data-dir="b"] .bodyshape{stroke:none}
+.loa{fill:none;stroke-width:1;stroke-dasharray:3 5}
+.k1{stroke:var(--f1);fill:var(--f1)}.k2{stroke:var(--f2);fill:var(--f2)}.k3{stroke:var(--f3);fill:var(--f3)}.kr{stroke:var(--res);fill:var(--res)}
+.arr line{stroke-linecap:butt}
+.arr path{stroke:none}
+.kr line{stroke-dasharray:6 4}
+.lbl{font-family:var(--font-data);font-size:10px;stroke:none}
+.pfill{fill:var(--ink);opacity:.06}
+@media (prefers-reduced-motion:reduce){.btn{transition:none}}
+</style>
+
+<div class="page">
+  <header class="top">
+    <div>
+      <div class="kicker">forzez design system · step 1</div>
+      <h1>Three directions</h1>
+      <p>How much Euclid, how much Erők? The same content and components in three token sets: pure Elements of Statics, a blend, and pure Erők egyensúlya.</p>
+    </div>
+    <div class="theme" role="group" aria-label="Theme">
+      <button type="button" data-theme-set="auto" aria-pressed="true">Auto</button>
+      <button type="button" data-theme-set="light" aria-pressed="false">Light</button>
+      <button type="button" data-theme-set="dark" aria-pressed="false">Dark</button>
+    </div>
+  </header>
+
+  <section style="display:flex;flex-direction:column;gap:16px">
+    <div class="section-h"><h2>Side by side</h2><span class="kicker">same scene, three token sets</span></div>
+    <div class="cards" id="cards"></div>
+  </section>
+
+  <section style="display:flex;flex-direction:column;gap:16px">
+    <div class="section-h">
+      <h2>Up close</h2>
+      <div class="tabs" role="group" aria-label="Direction" id="tabs">
+        <button type="button" data-pick="a" aria-pressed="false">A · Euclid</button>
+        <button type="button" data-pick="b" aria-pressed="true">B · Euclid × Erők</button>
+        <button type="button" data-pick="c" aria-pressed="false">C · Erők</button>
+      </div>
+    </div>
+
+    <article class="spec" id="spec" data-dir="b">
+      <div class="run"><span>forzez · Statika</span><span>I. fejezet</span></div>
+      <div class="spec-grid">
+        <div class="stage">
+          <div class="stage-svg">
+            <svg id="big" viewBox="-160 -120 320 240" role="img" aria-label="Három erő egy testen, a harmadik iránya csúszkával állítható"></svg>
+            <div class="readout" aria-live="polite">
+              <div>ΣF<sub>x</sub> <b id="ro-x">0,00</b> kN</div>
+              <div>ΣF<sub>y</sub> <b id="ro-y">0,00</b> kN</div>
+              <div class="badge" id="badge">egyensúly</div>
+            </div>
+            <div class="seg" role="group" aria-label="Nézet">
+              <button type="button" id="v-body" aria-pressed="true">Testen</button>
+              <button type="button" id="v-chain" aria-pressed="false">Láncban</button>
+            </div>
+          </div>
+          <div class="controls">
+            <div class="ctl">
+              <label for="s-ang" class="c3">F₃ irány</label>
+              <input type="range" id="s-ang" min="200" max="330" step="1">
+              <output id="o-ang"></output>
+            </div>
+            <div class="ctl">
+              <label for="s-mag" class="c3">F₃ kN</label>
+              <input type="range" id="s-mag" min="0" max="14" step="0.1">
+              <output id="o-mag"></output>
+            </div>
+          </div>
+        </div>
+
+        <div class="prose">
+          <div class="eyebrow">Statika · Egyensúly</div>
+          <h3><span class="numeral">III.</span>Három erő</h3>
+          <p class="lede">Ha a vektorlánc bezárul, a test nyugalomban marad.</p>
+          <p><span class="fref c1"><i></i><span>F₁</span></span>, <span class="fref c2"><i></i><span>F₂</span></span> és <span class="fref c3"><i></i><span>F₃</span></span> hatásvonala egy pontban metszi egymást. Fordítsd el <span class="fref c3"><i></i><span>F₃</span></span>-at, és az eredő azonnal megjelenik: most R = <span class="live" id="live-r">0,0</span> kN.</p>
+          <table class="ctab" aria-label="Erők összetevői">
+            <thead><tr><th></th><th>F<sub>x</sub></th><th>F<sub>y</sub></th></tr></thead>
+            <tbody>
+              <tr class="c1"><td>F₁</td><td id="t1x"></td><td id="t1y"></td></tr>
+              <tr class="c2"><td>F₂</td><td id="t2x"></td><td id="t2y"></td></tr>
+              <tr class="c3"><td>F₃</td><td id="t3x"></td><td id="t3y"></td></tr>
+              <tr class="sum"><td>Σ</td><td id="tsx"></td><td id="tsy"></td></tr>
+            </tbody>
+          </table>
+          <p class="hint">egyensúly: ΣF<sub>x</sub> = 0, ΣF<sub>y</sub> = 0, ΣM = 0</p>
+          <div class="btns">
+            <button class="btn" type="button">Következő lépés</button>
+            <button class="btn secondary" type="button" id="reset">Vissza egyensúlyba</button>
+            <button class="btn ghost" type="button">Megosztás</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="typescale" id="typescale"></div>
+      <div class="tokens" id="tokens"></div>
+    </article>
+  </section>
+</div>
+
+<script>
+(() => {
+const DIRS = {
+  a:{name:'A · Euclid', note:'Byrne’s colours in place of letters. Caslon throughout, square corners, thick strokes. Most distinctive, least screen-native.', fonts:'Libre Caslon Display / Libre Caslon Text / JetBrains Mono (data)', shape:'rect', labels:false},
+  b:{name:'B · Euclid × Erők', pick:true, note:'Byrne palette and Caslon titles, with Newsreader for reading and JetBrains Mono for controls and numbers.', fonts:'Libre Caslon Display / Newsreader / JetBrains Mono', shape:'rect', labels:true},
+  c:{name:'C · Erők', note:'The calm explainer look as it is today: Newsreader and mono, cool neutrals, blue / orange / teal forces.', fonts:'Newsreader / JetBrains Mono', shape:'disk', labels:true},
+};
+const F1=[8,20], F2=[7,140];
+const rad=d=>d*Math.PI/180;
+const fmt=(v,d=1)=>v.toFixed(d).replace('.',',').replace(/^-(0,0+)$/,'$1');
+const eq=(()=>{ let x=0,y=0; for(const [m,a] of [F1,F2]){x+=m*Math.cos(rad(a));y+=m*Math.sin(rad(a));} let a=Math.atan2(-y,-x)*180/Math.PI; if(a<0)a+=360; return [Math.hypot(x,y),a]; })();
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+let uid=0;
+
+function sceneSVG(host, st, opt){
+  const cs=getComputedStyle(host), sw=parseFloat(cs.getPropertyValue('--stroke'))||3;
+  const id='d'+(uid++), SC=opt.sc||10, s=opt.body?30:24, chain=st.chain;
+  const fs=[[...F1,'1'],[...F2,'2'],[st.mag,st.ang,'3']].map(([m,a,k])=>{const ux=Math.cos(rad(a)),uy=Math.sin(rad(a));return {m,a,k,ux,uy,fx:m*ux,fy:m*uy};});
+  let Rx=0,Ry=0; fs.forEach(q=>{Rx+=q.fx;Ry+=q.fy;});
+  const R=Math.hypot(Rx,Ry);
+  const verts=[[0,0]]; fs.forEach(q=>{const [x,y]=verts[verts.length-1]; verts.push([x+q.fx*SC,y+q.fy*SC]);});
+  const cx=verts.reduce((a,v)=>a+v[0],0)/verts.length, cy=verts.reduce((a,v)=>a+v[1],0)/verts.length;
+  const ox=-cx*chain, oy=-cy*chain;
+  let o=`<defs><pattern id="${id}" width="20" height="20" patternUnits="userSpaceOnUse" x="-10" y="-10"><circle class="dot" cx="10" cy="10" r="0.9"/></pattern></defs><rect x="-400" y="-400" width="800" height="800" fill="url(#${id})"/>`;
+  const bo=1-chain*0.9;
+  o+= opt.shape==='rect'
+    ? `<rect class="bodyshape" x="-28" y="-22" width="56" height="44" opacity="${bo}"/>`
+    : `<circle class="bodyshape" r="26" opacity="${bo}"/>`;
+  fs.forEach(q=>{ o+=`<line class="loa k${q.k}" style="fill:none" opacity="${(1-chain)*0.7}" x1="${-q.ux*400}" y1="${q.uy*400}" x2="${q.ux*400}" y2="${-q.uy*400}"/>`; });
+  if(chain>0.01) o+=`<polygon class="pfill" opacity="${chain}" points="${verts.map(v=>`${v[0]+ox},${-(v[1]+oy)}`).join(' ')}"/>`;
+  const arrow=(k,x1,y1,x2,y2,w,label)=>{
+    const dx=x2-x1,dy=y2-y1,L=Math.hypot(dx,dy); if(L<1) return '';
+    const ux=dx/L,uy=dy/L,h=Math.min(L*0.5,4+w*2.6),hw=h*0.5+w*0.25,bx=x2-ux*h,by=y2-uy*h;
+    let t=`<g class="arr k${k}"><line x1="${x1}" y1="${-y1}" x2="${bx+ux*0.5}" y2="${-(by+uy*0.5)}" style="stroke-width:${w}"/><path d="M${x2},${-y2}L${bx-uy*hw},${-(by+ux*hw)}L${bx+uy*hw},${-(by-ux*hw)}Z"/>`;
+    if(label){const lx=x2+ux*8-uy*9, ly=y2+uy*8+ux*9; t+=`<text class="lbl" x="${lx}" y="${-ly+3.5}" text-anchor="${ux>0.35?'start':ux<-0.35?'end':'middle'}">${label}</text>`;}
+    return t+'</g>';
+  };
+  fs.forEach((q,i)=>{
+    const tx=q.ux*s*(1-chain)+(ox+verts[i][0])*chain, ty=q.uy*s*(1-chain)+(oy+verts[i][1])*chain;
+    o+=arrow(q.k,tx,ty,tx+q.fx*SC,ty+q.fy*SC,sw, opt.labels?`F${'₁₂₃'[i]} ${fmt(q.m)} kN`:'');
+  });
+  if(R>0.05) o+=arrow('r',ox,oy,ox+Rx*SC,oy+Ry*SC,Math.max(1.6,sw*0.55), opt.labels?`R ${fmt(R)}`:'');
+  return {svg:o, fs, Rx, Ry, R};
+}
+
+/* ---------- cards ---------- */
+const cards=document.getElementById('cards');
+for(const k of ['a','b','c']){
+  const d=DIRS[k];
+  const el=document.createElement('article');
+  el.className='card'; el.dataset.dir=k;
+  el.innerHTML=`<div class="card-head"><b>${d.name}</b>${d.pick?'<span class="pick">suggested</span>':'<span></span>'}</div>
+    <svg viewBox="-150 -94 300 188" role="img" aria-label="Három erő egyensúlyban"></svg>
+    <div class="card-body">
+      <h3 class="card-title"><span class="numeral">I.</span>Egyensúly</h3>
+      <p><span class="fref c1"><i></i><span>F₁</span></span>, <span class="fref c2"><i></i><span>F₂</span></span> és <span class="fref c3"><i></i><span>F₃</span></span>: ha a láncuk bezárul, a test nyugalomban marad.</p>
+      <p class="card-note">${d.note}</p>
+      <div class="card-foot">
+        <div class="btns"><button class="btn" type="button">Kezdjük</button><button class="btn secondary" type="button">Részletek</button></div>
+        <div class="swatches" aria-hidden="true">${['paper','surface','ink','muted','f1','f2','f3'].map(t=>`<span class="sw" style="background:var(--${t})"></span>`).join('')}</div>
+        <div class="fonts">${d.fonts}</div>
+      </div>
+    </div>
+    <button class="card-open" type="button" data-pick="${k}">Open up close ↓</button>`;
+  cards.appendChild(el);
+}
+function drawCards(){
+  document.querySelectorAll('.card').forEach(c=>{
+    const d=DIRS[c.dataset.dir];
+    c.querySelector('svg').innerHTML=sceneSVG(c,{mag:eq[0],ang:eq[1],chain:0},{shape:d.shape,labels:false,sc:8.5}).svg;
+  });
+}
+
+/* ---------- detail ---------- */
+const spec=document.getElementById('spec'), big=document.getElementById('big');
+const sAng=document.getElementById('s-ang'), sMag=document.getElementById('s-mag');
+const st={ang:eq[1],mag:eq[0],chain:0,chainT:0};
+sAng.value=st.ang; sMag.value=st.mag;
+const $=id=>document.getElementById(id);
+function drawDetail(){
+  const d=DIRS[spec.dataset.dir];
+  const r=sceneSVG(spec,st,{shape:d.shape,labels:d.labels,body:true,sc:8});
+  big.innerHTML=r.svg;
+  $('o-ang').textContent=fmt(st.ang,0)+'°'; $('o-mag').textContent=fmt(st.mag,1);
+  $('ro-x').textContent=fmt(r.Rx,2); $('ro-y').textContent=fmt(r.Ry,2);
+  const moving=r.R>0.05;
+  $('badge').textContent=moving?'gyorsul':'egyensúly'; $('badge').classList.toggle('bad',moving);
+  $('live-r').textContent=fmt(r.R,1);
+  r.fs.forEach((q,i)=>{$('t'+(i+1)+'x').textContent=fmt(q.fx);$('t'+(i+1)+'y').textContent=fmt(q.fy);});
+  $('tsx').textContent=fmt(r.Rx); $('tsy').textContent=fmt(r.Ry);
+  $('reset').disabled=!moving;
+}
+function drawMeta(){
+  const cs=getComputedStyle(spec);
+  const v=n=>cs.getPropertyValue('--'+n).trim();
+  const toks=[['paper','háttér'],['surface','felület'],['ink','szöveg'],['muted','halvány'],['rule','vonal'],['f1','erő 1'],['f2','erő 2'],['f3','erő 3'],['res','eredő'],['ok','egyensúly'],['bad','hiba']];
+  $('tokens').innerHTML=toks.map(([t,l])=>`<div class="tok"><span class="sw" style="background:var(--${t})"></span><div><b>--${t}</b><span>${v(t)} · ${l}</span></div></div>`).join('');
+  const first=s=>s.split(',')[0].replace(/"/g,'');
+  $('typescale').innerHTML=`
+    <div class="ts"><span>display</span><div style="font-family:var(--font-display);font-size:2rem;line-height:1.1">Egyensúly · ${first(v('font-display'))}</div></div>
+    <div class="ts"><span>text</span><div style="font-family:var(--font-text);font-size:1.05rem">Két erő akkor tart egyensúlyt, ha egyenlő nagyok és ellentétes irányúak. · ${first(v('font-text'))}</div></div>
+    <div class="ts"><span>ui</span><div style="font-family:var(--font-ui);font-size:var(--ui-size);letter-spacing:var(--ui-track);text-transform:var(--ui-case)">Vissza egyensúlyba · ${first(v('font-ui'))}</div></div>
+    <div class="ts"><span>data</span><div style="font-family:var(--font-data);font-size:.85rem;font-variant-numeric:tabular-nums">ΣFx = −0,00 kN  ΣM = 12,40 kNm · ${first(v('font-data'))}</div></div>`;
+}
+function pick(k){
+  spec.dataset.dir=k;
+  document.querySelectorAll('#tabs button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.pick===k)));
+  drawDetail(); drawMeta();
+}
+document.querySelectorAll('[data-pick]').forEach(b=>b.addEventListener('click',()=>{
+  pick(b.dataset.pick);
+  if(b.classList.contains('card-open')) spec.scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'});
+}));
+sAng.addEventListener('input',()=>{st.ang=+sAng.value;drawDetail();});
+sMag.addEventListener('input',()=>{st.mag=+sMag.value;drawDetail();});
+$('reset').addEventListener('click',()=>{st.ang=eq[1];st.mag=eq[0];sAng.value=st.ang;sMag.value=st.mag;drawDetail();});
+let raf=0;
+function setChain(t){
+  st.chainT=t;
+  $('v-body').setAttribute('aria-pressed',String(t===0)); $('v-chain').setAttribute('aria-pressed',String(t===1));
+  if(reduce){st.chain=t;drawDetail();return;}
+  cancelAnimationFrame(raf);
+  const step=()=>{ st.chain+= (st.chainT-st.chain)*0.16; if(Math.abs(st.chainT-st.chain)<0.003) st.chain=st.chainT; drawDetail(); if(st.chain!==st.chainT) raf=requestAnimationFrame(step); };
+  raf=requestAnimationFrame(step);
+}
+$('v-body').addEventListener('click',()=>setChain(0));
+$('v-chain').addEventListener('click',()=>setChain(1));
+
+/* ---------- theme ---------- */
+document.querySelectorAll('[data-theme-set]').forEach(b=>b.addEventListener('click',()=>{
+  const t=b.dataset.themeSet;
+  if(t==='auto') document.documentElement.removeAttribute('data-theme'); else document.documentElement.setAttribute('data-theme',t);
+  document.querySelectorAll('[data-theme-set]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));
+  redraw();
+}));
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change',redraw);
+function redraw(){ drawCards(); drawDetail(); drawMeta(); }
+redraw();
+document.fonts && document.fonts.ready.then(redraw);
+})();
+</script>

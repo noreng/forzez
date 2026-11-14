@@ -1,0 +1,159 @@
+/* GENERATED from src/tokens.ts — do not edit by hand. Run: pnpm --filter @forzez/tokens build */
+
+:root {
+  color-scheme: light;
+  --fz-font-display: var(--nf-display, "IBM Plex Sans Condensed"), "Arial Narrow", system-ui, sans-serif;
+  --fz-font-text: var(--nf-text, "IBM Plex Serif"), Georgia, "Times New Roman", serif;
+  --fz-font-data: var(--nf-data, "IBM Plex Mono"), ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --fz-font-display-weight: 600;
+  --fz-font-text-weight: 400;
+  --fz-font-data-weight: 400;
+  --fz-text-xs: 0.75rem;
+  --fz-text-sm: 0.875rem;
+  --fz-text-base: 1.0625rem;
+  --fz-text-md: 1.1875rem;
+  --fz-text-lg: 1.4375rem;
+  --fz-text-xl: 1.875rem;
+  --fz-text-2xl: 2.5rem;
+  --fz-text-3xl: 3.25rem;
+  --fz-text-4xl: 4.25rem;
+  --fz-space-1: 4px;
+  --fz-space-2: 8px;
+  --fz-space-3: 12px;
+  --fz-space-4: 16px;
+  --fz-space-5: 24px;
+  --fz-space-6: 32px;
+  --fz-space-7: 48px;
+  --fz-space-8: 64px;
+  --fz-radius-sm: 2px;
+  --fz-radius: 3px;
+  --fz-radius-lg: 6px;
+  --fz-stroke-hair: 1;
+  --fz-stroke-force: 3.6;
+  --fz-stroke-resultant: 2;
+  --fz-stroke-member: 9;
+  --fz-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --fz-dur-fast: 120ms;
+  --fz-dur: 200ms;
+  --fz-dur-slow: 350ms;
+  --fz-bg: #F5F2EA;
+  --fz-surface: #FCFBF7;
+  --fz-sunken: #EDE9DF;
+  --fz-ink: #1B1A17;
+  --fz-muted: #5E5A50;
+  --fz-rule: #D9D3C4;
+  --fz-rule-strong: #1B1A17;
+  --fz-grid: #E3DED1;
+  --fz-body: rgba(27, 26, 23, 0.07);
+  --fz-accent: #1F4E96;
+  --fz-on-accent: #FCFBF7;
+  --fz-focus: #1F4E96;
+  --fz-ok: #2C7A3D;
+  --fz-bad: #B42335;
+  --fz-warn: #8A5F00;
+  --fz-force-1: #C2311F;
+  --fz-force-2: #1F4E96;
+  --fz-force-3: #D99A0E;
+  --fz-force-3-text: #8A5F00;
+  --fz-force-4: #0C8580;
+  --fz-resultant: #1B1A17;
+  --fz-tension: #1F4E96;
+  --fz-compression: #C2311F;
+  --fz-load: #D99A0E;
+  --fz-reaction: #0C8580;
+  --fz-member: #D9D3C4;
+}
+
+/* Explicit light, also for a subtree inside a dark page */
+[data-theme="light"] {
+  color-scheme: light;
+  --fz-bg: #F5F2EA;
+  --fz-surface: #FCFBF7;
+  --fz-sunken: #EDE9DF;
+  --fz-ink: #1B1A17;
+  --fz-muted: #5E5A50;
+  --fz-rule: #D9D3C4;
+  --fz-rule-strong: #1B1A17;
+  --fz-grid: #E3DED1;
+  --fz-body: rgba(27, 26, 23, 0.07);
+  --fz-accent: #1F4E96;
+  --fz-on-accent: #FCFBF7;
+  --fz-focus: #1F4E96;
+  --fz-ok: #2C7A3D;
+  --fz-bad: #B42335;
+  --fz-warn: #8A5F00;
+  --fz-force-1: #C2311F;
+  --fz-force-2: #1F4E96;
+  --fz-force-3: #D99A0E;
+  --fz-force-3-text: #8A5F00;
+  --fz-force-4: #0C8580;
+  --fz-resultant: #1B1A17;
+  --fz-tension: #1F4E96;
+  --fz-compression: #C2311F;
+  --fz-load: #D99A0E;
+  --fz-reaction: #0C8580;
+  --fz-member: #D9D3C4;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --fz-bg: #141310;
+    --fz-surface: #1B1A16;
+    --fz-sunken: #0F0E0C;
+    --fz-ink: #EAE6DC;
+    --fz-muted: #A09B8F;
+    --fz-rule: #312E28;
+    --fz-rule-strong: #EAE6DC;
+    --fz-grid: #262420;
+    --fz-body: rgba(234, 230, 220, 0.06);
+    --fz-accent: #7399DC;
+    --fz-on-accent: #141310;
+    --fz-focus: #7399DC;
+    --fz-ok: #6BC47F;
+    --fz-bad: #FF6B7D;
+    --fz-warn: #EBB43A;
+    --fz-force-1: #E5573F;
+    --fz-force-2: #7399DC;
+    --fz-force-3: #EBB43A;
+    --fz-force-3-text: #EBB43A;
+    --fz-force-4: #3CC4B8;
+    --fz-resultant: #EAE6DC;
+    --fz-tension: #7399DC;
+    --fz-compression: #E5573F;
+    --fz-load: #EBB43A;
+    --fz-reaction: #3CC4B8;
+    --fz-member: #312E28;
+  }
+}
+
+/* Explicit dark, also for a subtree inside a light page */
+[data-theme="dark"] {
+  color-scheme: dark;
+  --fz-bg: #141310;
+  --fz-surface: #1B1A16;
+  --fz-sunken: #0F0E0C;
+  --fz-ink: #EAE6DC;
+  --fz-muted: #A09B8F;
+  --fz-rule: #312E28;
+  --fz-rule-strong: #EAE6DC;
+  --fz-grid: #262420;
+  --fz-body: rgba(234, 230, 220, 0.06);
+  --fz-accent: #7399DC;
+  --fz-on-accent: #141310;
+  --fz-focus: #7399DC;
+  --fz-ok: #6BC47F;
+  --fz-bad: #FF6B7D;
+  --fz-warn: #EBB43A;
+  --fz-force-1: #E5573F;
+  --fz-force-2: #7399DC;
+  --fz-force-3: #EBB43A;
+  --fz-force-3-text: #EBB43A;
+  --fz-force-4: #3CC4B8;
+  --fz-resultant: #EAE6DC;
+  --fz-tension: #7399DC;
+  --fz-compression: #E5573F;
+  --fz-load: #EBB43A;
+  --fz-reaction: #3CC4B8;
+  --fz-member: #312E28;
+}

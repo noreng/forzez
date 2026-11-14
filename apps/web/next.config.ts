@@ -1,9 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
   cacheComponents: true,
   partialPrefetching: true,
+  // Workspace packages ship TypeScript source.
+  transpilePackages: ["@forzez/tokens"],
   turbopack: {
     rules: {
       "*.css": {

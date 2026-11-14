@@ -1,0 +1,15 @@
+{
+  "name": "@forzez/tokens",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "forzez design tokens: colours, type, space, strokes. Source of truth is src/tokens.ts; tokens.css is generated.",
+  "exports": {
+    ".": "./src/index.ts",
+    "./tokens.css": "./tokens.css"
+  },
+  "scripts": {
+    "build": "node scripts/build-css.ts",
+    "check": "node scripts/build-css.ts --check"
+  }
+}

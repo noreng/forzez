@@ -1,0 +1,328 @@
+<title>Forzez Font Pairings</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:wght@600&family=IBM+Plex+Serif:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;600&family=Big+Shoulders+Display:wght@100..900&family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&family=Martian+Mono:wdth,wght@75..112.5,100..800&family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&family=Space+Mono:wght@400;700&family=Recursive:slnt,wght,CASL,CRSV,MONO@-15..0,300..1000,0..1,0..1,0..1&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@200..900&family=Geologica:slnt,wght,CRSV,SHRP@-12..0,100..900,0..1,0..100&family=Overpass+Mono:wght@300..700&family=Gloock&family=Literata:ital,opsz,wght@0,7..72,400;0,7..72,600;1,7..72,400&family=Xanh+Mono:ital@0;1&family=STIX+Two+Text:ital@1&family=Young+Serif&family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=Courier+Prime:wght@400;700&family=Syne:wght@400..800&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=Victor+Mono:ital,wght@0,100..700;1,100..700&family=Ubuntu+Sans+Mono:wght@400..700&family=Doto:wght@100..900&family=Libre+Caslon+Display&family=Newsreader:ital,opsz,wght@0,6..72,400;1,6..72,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: two-column wall of identical specimens; only the three font roles change.
+   Colours are the chosen Euclid × Erők tokens, fixed for every card. */
+:root{
+  --bg:#F5F2EA; --surface:#FCFBF7; --sunken:#EDE9DF; --ink:#1B1A17; --muted:#5E5A50; --rule:#D9D3C4; --rule-strong:#1B1A17; --grid:#E3DED1;
+  --f1:#C2311F; --f2:#1F4E96; --f3:#D99A0E; --f3-text:#8A5F00; --ok:#2C7A3D; --accent:#1F4E96;
+  --chrome:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){ --bg:#141310; --surface:#1B1A16; --sunken:#0F0E0C; --ink:#EAE6DC; --muted:#A09B8F; --rule:#312E28; --rule-strong:#EAE6DC; --grid:#262420;
+    --f1:#E5573F; --f2:#7399DC; --f3:#EBB43A; --f3-text:#EBB43A; --ok:#6BC47F; --accent:#7399DC; color-scheme:dark }
+}
+:root[data-theme="dark"]{ --bg:#141310; --surface:#1B1A16; --sunken:#0F0E0C; --ink:#EAE6DC; --muted:#A09B8F; --rule:#312E28; --rule-strong:#EAE6DC; --grid:#262420;
+  --f1:#E5573F; --f2:#7399DC; --f3:#EBB43A; --f3-text:#EBB43A; --ok:#6BC47F; --accent:#7399DC; color-scheme:dark }
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:"IBM Plex Serif",Georgia,serif;font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+.page{max-width:1280px;margin-inline:auto;padding-block:28px 64px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:36px}
+.kicker{font-family:var(--chrome);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.top{display:flex;flex-wrap:wrap;gap:16px 32px;align-items:flex-end;justify-content:space-between}
+.top h1{font-family:"IBM Plex Sans Condensed",sans-serif;font-weight:600;font-size:clamp(2rem,5vw,2.8rem);line-height:1.05;margin:4px 0 0;letter-spacing:-.01em}
+.top p{margin:.5em 0 0;color:var(--muted);max-width:40rem}
+.bar{display:flex;flex-wrap:wrap;gap:10px}
+.seg{display:flex;border:1px solid var(--rule);border-radius:3px;overflow:hidden;font-family:var(--chrome);font-size:12px}
+.seg button{all:unset;cursor:pointer;padding:7px 11px;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.seg button:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.section-h{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:8px 16px;border-bottom:1px solid var(--rule-strong);padding-bottom:8px}
+.section-h h2{margin:0;font-family:var(--chrome);font-weight:600;font-size:13px;letter-spacing:.12em;text-transform:uppercase}
+
+/* ---------- cards ---------- */
+.wall{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+@media (max-width:880px){.wall{grid-template-columns:minmax(0,1fr)}}
+.card{background:var(--surface);border:1px solid var(--rule);display:flex;flex-direction:column;min-width:0}
+.card[hidden]{display:none!important}
+.card.ref{border-style:dashed}
+.chead{display:flex;justify-content:space-between;gap:10px;padding:10px 16px 8px;border-bottom:1px solid var(--rule-strong);font-family:var(--chrome);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.chead b{color:var(--ink);font-weight:600}
+.tag{white-space:nowrap}
+.cbody{padding:18px 18px 16px;display:flex;flex-direction:column;gap:12px;font-family:var(--text);font-size:var(--text-size,17px);font-variation-settings:var(--text-fvs,normal)}
+.eyebrow{font-family:var(--ui);font-variation-settings:var(--ui-fvs,normal);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.title{font-family:var(--title);font-weight:var(--title-w,400);font-size:var(--title-size,2.6rem);letter-spacing:var(--title-track,-.01em);line-height:1.02;font-variation-settings:var(--title-fvs,normal);text-transform:var(--title-case,none);margin:0;text-wrap:balance}
+.title .num{color:var(--f1);margin-right:.22em}
+.lede{margin:0;font-style:italic;color:var(--muted);font-size:1.06em}
+.body{margin:0;line-height:1.58}
+.fr{font-family:var(--data);font-variation-settings:var(--data-fvs,normal);font-size:.82em;font-weight:600;white-space:nowrap}
+.fr i{display:inline-block;width:1.1em;height:.26em;vertical-align:.2em;margin-right:.2em;background:currentColor}
+.c1{color:var(--f1)}.c2{color:var(--f2)}.c3{color:var(--f3-text)}
+.math{font-family:var(--math,var(--text));font-size:1.08em;background:var(--sunken);padding:8px 12px;border-radius:3px;overflow-x:auto;white-space:nowrap}
+.math var{font-style:italic}
+.math .op{font-family:var(--text);font-style:normal;padding-inline:.2em}
+.math sub{font-size:.68em}
+.split{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:14px;align-items:start}
+@media (max-width:520px){.split{grid-template-columns:minmax(0,1fr)}}
+.stage{background:var(--bg);border:1px solid var(--rule);display:block;width:100%;max-width:100%;height:auto;aspect-ratio:4/3;overflow:hidden}
+.cbody,.split>*{min-width:0}
+.lbl{font-family:var(--data);font-variation-settings:var(--data-fvs,normal);font-size:10.5px}
+.readout{font-family:var(--data);font-variation-settings:var(--data-fvs,normal);font-size:13px;font-variant-numeric:var(--data-num,tabular-nums);display:flex;flex-direction:column;gap:2px}
+.readout div{display:flex;justify-content:space-between;gap:8px;border-bottom:1px solid var(--rule);padding-block:3px}
+.readout span{color:var(--muted)}
+.readout b{font-weight:600}
+.readout .badge{color:var(--surface)}
+.badge{align-self:flex-start;margin-top:6px;font-family:var(--ui);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;color:var(--surface);background:var(--ok);padding:2px 8px;border-radius:2px}
+.btns{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.btn{font-family:var(--ui);font-variation-settings:var(--ui-fvs,normal);font-size:var(--ui-size,13px);font-weight:var(--ui-w,400);line-height:1;padding:9px 13px;border-radius:3px;border:1px solid var(--ink);background:var(--ink);color:var(--surface);cursor:pointer}
+.btn.sec{background:transparent;color:var(--ink)}
+.btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.slider{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:center;font-family:var(--ui);font-size:12.5px}
+.slider input{width:100%;margin:0;accent-color:var(--f3)}
+.slider output{font-family:var(--data);font-variation-settings:var(--data-fvs,normal);font-variant-numeric:tabular-nums}
+.cfoot{margin-top:auto;border-top:1px solid var(--rule);padding:10px 16px 12px;display:grid;grid-template-columns:auto minmax(0,1fr);gap:2px 12px;font-family:var(--chrome);font-size:11px;color:var(--muted)}
+.cfoot b{color:var(--ink);font-weight:600}
+
+/* ---------- mixer ---------- */
+.mixer{display:grid;grid-template-columns:minmax(200px,260px) minmax(0,1fr);gap:16px;align-items:start}
+@media (max-width:760px){.mixer{grid-template-columns:minmax(0,1fr)}}
+.picks{display:flex;flex-direction:column;gap:12px;position:sticky;top:12px}
+.picks label{display:flex;flex-direction:column;gap:4px;font-family:var(--chrome);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.picks select{font-family:var(--chrome);font-size:13px;letter-spacing:0;text-transform:none;color:var(--ink);background:var(--surface);border:1px solid var(--rule-strong);border-radius:3px;padding:8px 10px;width:100%}
+.picks select:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.picks label:first-child{padding-bottom:12px;border-bottom:1px solid var(--rule)}
+#mx-card .cbody{padding:22px 24px 18px}
+/* ---------- numbers wall ---------- */
+.nums{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:12px}
+.ntile{background:var(--surface);border:1px solid var(--rule);padding:12px 14px 14px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.ntile.ref{border-style:dashed}
+.ntile .name{font-family:var(--chrome);font-size:11px;color:var(--muted);display:flex;justify-content:space-between;gap:8px}
+.ntile .name b{color:var(--ink);font-weight:600}
+.ntile .big{font-size:30px;line-height:1.15;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden}
+.ntile .big .u{color:var(--muted);font-size:.6em;margin-left:.15em}
+.ntile .digits{font-size:20px;letter-spacing:.04em;white-space:nowrap;overflow:hidden}
+.ntile .tbl{font-size:13.5px;font-variant-numeric:tabular-nums;display:grid;grid-template-columns:auto auto;justify-content:space-between;gap:1px 16px;border-top:1px solid var(--rule);padding-top:6px}
+.ntile .tbl span:nth-child(odd){color:var(--muted)}
+.ntile .tbl span:nth-child(even){text-align:right}
+.ntile .note{font-family:"IBM Plex Serif",serif;font-size:13px;color:var(--muted);margin-top:2px}
+</style>
+
+<div class="page">
+  <header class="top">
+    <div>
+      <div class="kicker">forzez design system · fonts</div>
+      <h1>Font pairings</h1>
+      <p>Round 2: eight pairings with more character, each with its own numbers font. Three roles per pairing: title, reading text, numbers/maths. Colours stay the chosen Euclid × Erők palette.</p>
+    </div>
+    <div class="bar">
+      <div class="seg" role="group" aria-label="Filter">
+        <button type="button" data-filter="all" aria-pressed="true">All</button>
+        <button type="button" data-filter="sans" aria-pressed="false">Sans</button>
+        <button type="button" data-filter="serif" aria-pressed="false">Serif</button>
+        <button type="button" data-filter="mixed" aria-pressed="false">Mixed</button>
+      </div>
+      <div class="seg" role="group" aria-label="Theme">
+        <button type="button" data-theme-set="auto" aria-pressed="true">Auto</button>
+        <button type="button" data-theme-set="light" aria-pressed="false">Light</button>
+        <button type="button" data-theme-set="dark" aria-pressed="false">Dark</button>
+      </div>
+    </div>
+  </header>
+
+  <section style="display:flex;flex-direction:column;gap:14px">
+    <div class="section-h"><h2>Mix your own</h2><span class="kicker">pick each role from the list</span></div>
+    <div class="mixer">
+      <div class="picks">
+        <label>Start from<select id="mx-start"></select></label>
+        <label>Title<select id="mx-title"></select></label>
+        <label>Text<select id="mx-text"></select></label>
+        <label>Numbers<select id="mx-data"></select></label>
+      </div>
+      <article class="card" id="mx-card"></article>
+    </div>
+  </section>
+
+  <section style="display:flex;flex-direction:column;gap:14px">
+    <div class="section-h"><h2>Pairings</h2><span class="kicker">title · text · numbers</span></div>
+    <div class="wall" id="wall"></div>
+  </section>
+
+  <section style="display:flex;flex-direction:column;gap:14px">
+    <div class="section-h"><h2>Numbers only</h2><span class="kicker">13 number fonts, large, side by side</span></div>
+    <div class="nums" id="nums"></div>
+  </section>
+</div>
+
+<script>
+(() => {
+const V = [
+  {n:'1', name:'Plex', kind:'mixed', tag:'sans title · serif text',
+   title:'"IBM Plex Sans Condensed",sans-serif', tw:600, ts:'2.7rem', tt:'-.02em',
+   text:'"IBM Plex Serif",Georgia,serif', ui:'"IBM Plex Mono",monospace', data:'"IBM Plex Mono",monospace',
+   names:['IBM Plex Sans Condensed','IBM Plex Serif','IBM Plex Mono'],
+   why:'The IBM baseline: engineering-drawing title, sturdy serif, Plex Mono numbers. Safe, but the least distinctive here.'},
+  {n:'2', name:'Drafting', kind:'sans', tag:'industrial sans',
+   title:'"Big Shoulders Display",sans-serif', tw:800, ts:'3.1rem', tt:'0', tcase:'uppercase',
+   text:'"Archivo",sans-serif', textFvs:'"wdth" 100', textSize:'16.5px', ui:'"Archivo",sans-serif', uiw:700, uiFvs:'"wdth" 115',
+   data:'"Martian Mono",monospace', dataFvs:'"wdth" 100',
+   names:['Big Shoulders Display','Archivo','Martian Mono'],
+   why:'Chicago-style condensed caps, like stencilled lettering on a steel beam. Wide, square Martian Mono reads like an instrument panel.'},
+  {n:'3', name:'Bricolage', kind:'sans', tag:'quirky grotesk',
+   title:'"Bricolage Grotesque",sans-serif', tw:800, ts:'2.7rem', tt:'-.04em', titleFvs:'"opsz" 96, "wdth" 85',
+   text:'"Bricolage Grotesque",sans-serif', textFvs:'"opsz" 14', textSize:'16.5px', ui:'"Bricolage Grotesque",sans-serif', uiw:600,
+   data:'"Space Mono",monospace',
+   names:['Bricolage Grotesque','Bricolage Grotesque (text size)','Space Mono'],
+   why:'Big sizes get ink traps and odd, lively curves; at text size it calms down. Space Mono adds a 1970s geometric feel.'},
+  {n:'4', name:'Recursive', kind:'sans', tag:'one variable family',
+   title:'"Recursive",sans-serif', tw:900, ts:'2.6rem', tt:'-.02em', titleFvs:'"CASL" 1, "MONO" 0',
+   text:'"Recursive",sans-serif', textFvs:'"CASL" 0, "MONO" 0', textSize:'16px', ui:'"Recursive",monospace', uiw:600, uiFvs:'"CASL" 1, "MONO" 1',
+   data:'"Recursive",monospace', dataFvs:'"CASL" 0, "MONO" 1',
+   names:['Recursive · casual','Recursive · linear','Recursive · mono'],
+   why:'One font with a casual (brush) axis and a mono axis. Titles look hand-lettered like a whiteboard, numbers stay crisp.'},
+  {n:'5', name:'Sharp', kind:'sans', tag:'wide display · sharp text',
+   title:'"Unbounded",sans-serif', tw:700, ts:'2.15rem', tt:'-.02em',
+   text:'"Geologica",sans-serif', textFvs:'"SHRP" 0', textSize:'16px', ui:'"Geologica",sans-serif', uiw:600, uiFvs:'"SHRP" 100',
+   data:'"Overpass Mono",monospace',
+   names:['Unbounded','Geologica','Overpass Mono'],
+   why:'A wide, round, confident title. Geologica has a sharpness axis (used on the buttons). Overpass comes from US highway signs.'},
+  {n:'6', name:'Textbook', kind:'serif', tag:'didone · maths in STIX',
+   title:'"Gloock",serif', tw:400, ts:'2.8rem', tt:'-.01em',
+   text:'"Literata",Georgia,serif', ui:'"Xanh Mono",monospace', data:'"Xanh Mono",monospace', math:'"STIX Two Text",serif',
+   names:['Gloock','Literata','Xanh Mono · STIX Two (maths)'],
+   why:'A sharp, heavy Didone over a calm book face. Xanh Mono is a serif mono: numbers look printed, not coded.'},
+  {n:'7', name:'Euclid', kind:'serif', tag:'old style · typewriter numbers',
+   title:'"Young Serif",serif', tw:400, ts:'2.55rem', tt:'-.015em',
+   text:'"EB Garamond",Garamond,serif', textSize:'18.5px', ui:'"Courier Prime",monospace', uiw:700, data:'"Courier Prime",monospace',
+   names:['Young Serif','EB Garamond','Courier Prime'],
+   why:'Closest to Byrne’s printed page, with the numbers set like a 1950s calculation sheet.'},
+  {n:'8', name:'Extended', kind:'mixed', tag:'wide sans title · serif text',
+   title:'"Syne",sans-serif', tw:800, ts:'2.5rem', tt:'-.02em',
+   text:'"Source Serif 4",Georgia,serif', ui:'"Victor Mono",monospace', uiw:600, data:'"Victor Mono",monospace',
+   names:['Syne','Source Serif 4','Victor Mono'],
+   why:'Syne gets wider as it gets bolder, so titles feel like a poster. Victor Mono is narrow, with a cursive italic.'},
+  {n:'0', name:'Current', kind:'serif', tag:'for reference', ref:true,
+   title:'"Libre Caslon Display",serif', tw:400, ts:'2.7rem', tt:'-.01em',
+   text:'"Newsreader",Georgia,serif', ui:'"JetBrains Mono",monospace', data:'"JetBrains Mono",monospace',
+   names:['Libre Caslon Display','Newsreader','JetBrains Mono'],
+   why:'What tokens use today.'},
+];
+
+const scene = `<svg class="stage" viewBox="-110 -82 220 165" role="img" aria-label="Three forces in equilibrium">
+  <defs><pattern id="P" width="16" height="16" patternUnits="userSpaceOnUse" x="-8" y="-8"><circle cx="8" cy="8" r=".8" fill="var(--grid)"/></pattern></defs>
+  <rect x="-200" y="-200" width="400" height="400" fill="url(#P)"/>
+  <rect x="-20" y="-15" width="40" height="30" fill="var(--ink)" fill-opacity=".07"/>
+  ${[[8,20,'f1','F₁ 8.0 kN'],[7,140,'f2','F₂ 7.0 kN'],[6.84,264.3,'f3','F₃ 6.8 kN']].map(([m,a,c,l])=>{
+    const r=a*Math.PI/180, ux=Math.cos(r), uy=-Math.sin(r), s=22, L=m*6.4, x1=ux*s, y1=uy*s, x2=ux*(s+L), y2=uy*(s+L), h=12, w=6, bx=x2-ux*h, by=y2-uy*h;
+    const lx=x2+ux*6-uy*8, ly=y2+uy*6+ux*8;
+    return `<line x1="${x1}" y1="${y1}" x2="${bx}" y2="${by}" stroke="var(--${c})" stroke-width="3.6"/>
+      <path d="M${x2},${y2}L${bx-uy*w},${by+ux*w}L${bx+uy*w},${by-ux*w}Z" fill="var(--${c})"/>
+      <text class="lbl" x="${lx}" y="${ly+3}" fill="var(--${c==='f3'?'f3-text':c})" text-anchor="${ux>.35?'start':ux<-.35?'end':'middle'}">${l}</text>`;}).join('')}
+</svg>`;
+
+const wall = document.getElementById('wall');
+function fillCard(el,v,i){
+  el.removeAttribute('style');
+  const s=el.style, set=(k,val)=>{ if(val!==undefined) s.setProperty(k,val); };
+  set('--title',v.title); set('--title-w',v.tw); set('--title-size',v.ts); set('--title-track',v.tt); set('--title-case',v.tcase); set('--title-fvs',v.titleFvs);
+  set('--text',v.text); set('--text-fvs',v.textFvs); set('--text-size',v.textSize);
+  set('--ui',v.ui); set('--ui-w',v.uiw); set('--ui-fvs',v.uiFvs);
+  set('--data',v.data); set('--data-fvs',v.dataFvs); set('--data-num',v.dataNum); set('--math',v.math);
+  el.innerHTML=`
+    <div class="chead"><b>${v.n} · ${v.name}</b><span class="tag">${v.tag}</span></div>
+    <div class="cbody">
+      <div class="eyebrow">Statics · Chapter III</div>
+      <h3 class="title"><span class="num">III.</span>Equilibrium of forces</h3>
+      <p class="lede">If the force polygon closes, the body stays at rest.</p>
+      <p class="body">Two forces balance when they are equal, opposite and act along one line. Try it: rotate <span class="fr c3"><i></i>F₃</span> and watch the triangle open. <span style="color:var(--muted)">(Accents: Győr, Bűvös, ŐŰ.)</span></p>
+      <div class="math" aria-label="sum of horizontal forces"><var>ΣF</var><sub>x</sub><span class="op">=</span><var>F</var><sub>1</sub>cos<var>α</var><span class="op">+</span><var>F</var><sub>2</sub>cos<var>β</var><span class="op">+</span><var>F</var><sub>3</sub>cos<var>γ</var><span class="op">=</span>0</div>
+      <div class="split">
+        ${scene}
+        <div class="readout">
+          <div><span>ΣF<sub>x</sub></span><b>0.00 kN</b></div>
+          <div><span>ΣF<sub>y</sub></span><b>−0.00 kN</b></div>
+          <div><span>ΣM</span><b>12.40 kNm</b></div>
+          <div><span>α</span><b>264.3°</b></div>
+          <span class="badge">equilibrium</span>
+        </div>
+      </div>
+      <div class="slider"><label for="r${i}" class="c3">F₃ angle</label><input type="range" id="r${i}" min="200" max="330" value="264"><output for="r${i}">264°</output></div>
+      <div class="btns"><button class="btn" type="button">Next step</button><button class="btn sec" type="button">Restore equilibrium</button></div>
+    </div>
+    <div class="cfoot">
+      <span>title</span><b>${v.names[0]}</b>
+      <span>text</span><b>${v.names[1]}</b>
+      <span>numbers</span><b>${v.names[2]}</b>
+      <span></span><span style="font-family:var(--text);font-variation-settings:var(--text-fvs,normal);font-size:13px;margin-top:4px">${v.why}</span>
+    </div>`;
+  const r=el.querySelector('input'), o=el.querySelector('output');
+  r.addEventListener('input',()=>{o.textContent=r.value+'°';});
+}
+V.forEach((v,i)=>{
+  const el=document.createElement('article');
+  el.className='card'+(v.ref?' ref':''); el.dataset.kind=v.kind;
+  fillCard(el,v,i); wall.appendChild(el);
+});
+
+// [name, css family, variation settings, extra css, used in, note]
+const N=[
+  ['IBM Plex Mono','"IBM Plex Mono",monospace','','','1','Neutral and precise. The safe default.'],
+  ['Martian Mono','"Martian Mono",monospace','','','2','Wide and square, like an instrument panel.'],
+  ['Space Mono','"Space Mono",monospace','','','3','Geometric 1970s shapes, round and quirky.'],
+  ['Recursive Mono · linear','"Recursive",monospace','"MONO" 1, "CASL" 0','','4','Clean but softer than Plex.'],
+  ['Recursive Mono · casual','"Recursive",monospace','"MONO" 1, "CASL" 1','','—','Brush-written, like numbers on a whiteboard.'],
+  ['Overpass Mono','"Overpass Mono",monospace','','','5','From the US highway-sign alphabet.'],
+  ['Xanh Mono','"Xanh Mono",monospace','','','6','A serif mono with contrast: printed, not coded.'],
+  ['Courier Prime','"Courier Prime",monospace','','','7','Typewriter. Old calculation sheets.'],
+  ['Victor Mono','"Victor Mono",monospace','','','8','Narrow and tall, with a cursive italic.'],
+  ['Ubuntu Sans Mono','"Ubuntu Sans Mono",monospace','','','—','Ubuntu’s curvy, humanist shapes.'],
+  ['EB Garamond · old-style figures','"EB Garamond",serif','','font-variant-numeric:oldstyle-nums tabular-nums;','—','Figures that rise and fall, as in Byrne’s book. Not a mono.'],
+  ['Doto','"Doto",monospace','','font-weight:700;','—','Dot-matrix display. Only for big live readouts.'],
+  ['JetBrains Mono','"JetBrains Mono",monospace','','','now','Current, for reference.',true],
+];
+document.getElementById('nums').innerHTML=N.map(([n,f,fvs,x,used,note,ref])=>{
+  const st=`font-family:${f};${fvs?`font-variation-settings:${fvs};`:''}${x}`.replace(/"/g,"'");
+  return `<div class="ntile${ref?' ref':''}"><div class="name"><b>${n}</b><span>${used==='—'?'extra':used==='now'?'current':'in '+used}</span></div>
+  <div class="big" style="${st}">−7.25<span class="u">kN</span></div>
+  <div class="digits" style="${st}">0123456789</div>
+  <div class="tbl" style="${st}"><span>F₁ · O0 Il1</span><span>8.04 kN</span><span>ΣM</span><span>−12.40 kNm</span><span>α</span><span>37.5°</span></div>
+  <div class="note">${note}</div></div>`;}).join('');
+
+
+// ---------- mixer ----------
+const uniq=(arr,key)=>arr.filter((x,i)=>arr.findIndex(y=>key(y)===key(x))===i);
+const TITLES=uniq(V.map(v=>({label:`${v.names[0]} (${v.n})`,title:v.title,tw:v.tw,ts:v.ts,tt:v.tt,tcase:v.tcase,titleFvs:v.titleFvs})),t=>t.title+t.titleFvs);
+const TEXTS=uniq(V.map(v=>({label:`${v.names[1]} (${v.n})`,text:v.text,textFvs:v.textFvs,textSize:v.textSize,math:v.math})),t=>t.text+t.textFvs);
+const NUMS=N.map(([n,f,fvs,x])=>({label:n,data:f,dataFvs:fvs||undefined,dataNum:/oldstyle/.test(x)?'oldstyle-nums tabular-nums':undefined}));
+const $=id=>document.getElementById(id);
+const opts=(sel,list)=>{sel.innerHTML=list.map((o,i)=>`<option value="${i}">${o.label}</option>`).join('');};
+opts($('mx-title'),TITLES); opts($('mx-text'),TEXTS); opts($('mx-data'),NUMS);
+$('mx-start').innerHTML='<option value="">Custom</option>'+V.map((v,i)=>`<option value="${i}">${v.n} · ${v.name}</option>`).join('');
+const mx=$('mx-card');
+function renderMix(){
+  const t=TITLES[$('mx-title').value], x=TEXTS[$('mx-text').value], d=NUMS[$('mx-data').value];
+  const v={...t,...x,...d,n:'✎',name:'Your mix',tag:'custom',ui:d.data,uiFvs:d.dataFvs,uiw:600,
+    names:[t.label.replace(/ \(\w\)$/,''),x.label.replace(/ \(\w\)$/,''),d.label],
+    why:'Buttons and labels follow the numbers font.'};
+  fillCard(mx,v,'mx');
+  try{localStorage.setItem('fz-mix',JSON.stringify([$('mx-title').value,$('mx-text').value,$('mx-data').value]));}catch(e){}
+}
+function applyPairing(i){
+  const v=V[i];
+  $('mx-title').value=TITLES.findIndex(t=>t.title===v.title&&t.titleFvs===v.titleFvs);
+  $('mx-text').value=TEXTS.findIndex(t=>t.text===v.text&&t.textFvs===v.textFvs);
+  const k=NUMS.findIndex(d=>d.data===v.data&&(d.dataFvs||'')===(v.dataFvs?v.dataFvs.replace(/"CASL" 0, "MONO" 1/,'"MONO" 1, "CASL" 0'):''));
+  $('mx-data').value=k<0?NUMS.findIndex(d=>d.data===v.data):k;
+}
+let saved=null; try{saved=JSON.parse(localStorage.getItem('fz-mix'));}catch(e){}
+if(Array.isArray(saved)&&saved.length===3){ $('mx-title').value=saved[0]; $('mx-text').value=saved[1]; $('mx-data').value=saved[2]; if($('mx-title').selectedIndex<0) applyPairing(0); }
+else { applyPairing(1); $('mx-start').value='1'; }
+['mx-title','mx-text','mx-data'].forEach(id=>$(id).addEventListener('change',()=>{$('mx-start').value='';renderMix();}));
+$('mx-start').addEventListener('change',e=>{ if(e.target.value!==''){applyPairing(+e.target.value);} renderMix(); });
+renderMix();
+
+document.querySelectorAll('[data-filter]').forEach(b=>b.addEventListener('click',()=>{
+  const f=b.dataset.filter;
+  document.querySelectorAll('[data-filter]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));
+  document.querySelectorAll('#wall .card').forEach(c=>{c.hidden = f!=='all' && c.dataset.kind!==f;});
+}));
+document.querySelectorAll('[data-theme-set]').forEach(b=>b.addEventListener('click',()=>{
+  const t=b.dataset.themeSet;
+  if(t==='auto') document.documentElement.removeAttribute('data-theme'); else document.documentElement.setAttribute('data-theme',t);
+  document.querySelectorAll('[data-theme-set]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));
+}));
+})();
+</script>
