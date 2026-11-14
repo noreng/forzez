@@ -33,6 +33,8 @@ Next.js here is v16 — read `apps/web/AGENTS.md` and the docs in `node_modules/
   - `forzez-generative-plan.md`: generative art thesis, net1/net2 recipes, determinism rules, ideas backlog.
   - `truss-art-net-session.md`: how net1/net2 were built (algorithms, hash channels, recipe grammar, verification,
     fingerprints, porting caveats). Prototype: `prototypes/truzme-art-net/`; check: `pnpm check:truss-art`.
+    Ported to `apps/web/src/app/studio/_lib/` (net.ts, supports.ts = pts1); `pnpm check:studio` proves the port matches the prototypes
+    (702 net recipes, the recorded fingerprints, the pts1 golden hash). Change generator arithmetic only as a new version.
   - `wheel-sketches-session.md`: bicycle wheel, wagon wheel, half-wheel bridge, spider web, spoked roof, Pantheon,
     Cremona, hanging chain — formulas, checks, mistakes, an open half-wheel geometry fix. Widgets: `prototypes/wheel-sketches/`.
   - `forzez-films.md`: films as live code (`frame(recipe, t)`), synth, render tool, frame QA.

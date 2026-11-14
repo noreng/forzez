@@ -8,6 +8,7 @@ import { LogoMark, cx } from "@forzez/ui";
 const SECTIONS = [
   { href: "/elements", label: "Elements" },
   { href: "/articles", label: "Articles" },
+  { href: "/studio", label: "Studio" },
 ];
 
 /** The way around from every page: home mark plus the sections, fixed top left (the theme switch is top right). */

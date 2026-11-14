@@ -59,8 +59,8 @@ export default function Home() {
           <Row kicker="Articles" title="Statics you can play with" href="/articles">
             One structure per article, with a diagram you can push. {PUBLISHED[0].title} is up; the bicycle wheel and the hanging rope are next.
           </Row>
-          <Row kicker="Studio" title="Series 01: Arches" status="in the works">
-            Real structures, calculated by the engine behind Truzme and plotted in ink by our family.
+          <Row kicker="Studio" title="Structures the solver draws" href="/studio">
+            Generative trusses: a seed makes the structure, the solver colours it. Series 01: Arches, plotted in ink, comes from here.
           </Row>
           <Row kicker="Films" title="Forzez Films No. 001" status="in the works">
             Films that run as code. The first: thirteen minutes of ink in thirty seconds.

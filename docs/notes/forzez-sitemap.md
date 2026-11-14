@@ -1,8 +1,9 @@
 # Forzez — site structure (draft, 2026-11-14)
 
 **Decided 2026-11-14:** Articles is the one essay section (Lab and the planned Notes fold into it, interactive or not). The menu uses plain names: **Studio**, not Seriez.
-Built: `/articles` with shelves, `/articles/equilibrium` (moved from `/lab/equilibrium`), the menu Elements · Articles,
-a single hero button on the home page. The rest is still a draft. Reconciles `forzez-site-models.md` (catalogue: lines × formats, 2026-10-26),
+Built: `/articles` with shelves, `/articles/equilibrium` (moved from `/lab/equilibrium`), a single hero button on the home page,
+and (2026-11-14) `/studio` with the two ported generators, `/studio/net` (net1/net2) and `/studio/supports` (pts1), so the menu is
+Elements · Articles · Studio. The rest is still a draft. Reconciles `forzez-site-models.md` (catalogue: lines × formats, 2026-10-26),
 the z-word rule in `forzez-puns-and-logo.md`, `forzez-films.md`, the wallpaper ideas in `forzez-generative-plan.md`,
 the wheel and cable sketches (`wheel-sketches-session.md`, `docs/elements/cable-plates.md`) with what is built
 (`/`, `/elements`, `/lab/equilibrium`, `/design`). Inspiration notes from abakcus.com and Bauhaus Posters are at the end.
@@ -32,7 +33,8 @@ The same subject can live in both. The bicycle wheel is a side plate (still figu
 | Wheel widget 09 (chain, pole, rays) | Elements V.I interactive plate ("drag the pole") |
 | Cable "form and force" series (4 steps) | article: *The hanging rope* |
 | Cable drafts A–E | Elements plates (Book V or side plates, placement open in `cable-plates.md`) |
-| net1/net2 generator | Studio: *Make your own* (the tool behind the pieces), not an article |
+| net1/net2 generator | Studio: `/studio/net` (built), the tool behind the pieces, not an article |
+| pts1 seeded supports | Studio: `/studio/supports` (built), frozen reference generator |
 
 ## Sections and URLs
 
@@ -41,7 +43,7 @@ The same subject can live in both. The bicycle wheel is a side plate (still figu
 | Home | `/` | yes |
 | Editions | `/elements`, `/elements/v-3` (later `/beauty-of-trusses`) | Elements yes |
 | Articles | `/articles`, `/articles/bicycle-wheel` | one (as `/lab/equilibrium`) |
-| Studio | `/studio`, `/studio/arches`, `/studio/017`, `/studio/make` | no |
+| Studio | `/studio`, `/studio/net`, `/studio/supports` (generators); later `/studio/arches`, `/studio/017` | index and two generators |
 | Films | `/films`, `/films/001` | no |
 | Wallpapers | `/wallpapers` (a filtered view of Studio pieces and plates) | no |
 | About | `/about` ("Meet the Workforzez") | no |
@@ -60,9 +62,8 @@ at most one per screen. A section enters the menu once it has something in it.
 
 | Stage | Menu |
 | --- | --- |
-| Now | Elements · Articles |
-| Bicycle wheel + first films | Elements · Articles · Films |
-| Series 01 | Elements · Articles · Studio · Films |
+| Now | Elements · Articles · Studio (the generators came before Series 01) |
+| Bicycle wheel + first films | Elements · Articles · Studio · Films |
 | Later | the same, About and Newsletter on the right (Abakcus-style split), Shop when it opens |
 
 - "Elements" while there is one edition; "Editions" with the second book.
