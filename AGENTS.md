@@ -31,6 +31,8 @@ Next.js here is v16 — read `apps/web/AGENTS.md` and the docs in `node_modules/
   - `forzez-roadmap.md`: next steps and guardrails (Truzme stays school-safe, no shop before demand).
   - `forzez-stack.md`: proposed stack (Cloudflare, Stripe, plotter station). Says Astro; the repo is Next.js, and the repo wins.
   - `forzez-generative-plan.md`: generative art thesis, net1/net2 recipes, determinism rules, ideas backlog.
+  - `truss-art-net-session.md`: how net1/net2 were built (algorithms, hash channels, recipe grammar, verification,
+    fingerprints, porting caveats). Prototype: `prototypes/truzme-art-net/`; check: `pnpm check:truss-art`.
   - `forzez-films.md`: films as live code (`frame(recipe, t)`), synth, render tool, frame QA.
   - `forzez-site-models.md`: catalogue structure (Studio / Editions / Custom × formats), product vocabulary, business models.
   - `brand-naming.md`, `forzez-puns-and-logo.md`: brand copy, microcopy, taglines, logo variants.

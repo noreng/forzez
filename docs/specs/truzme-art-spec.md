@@ -5,6 +5,7 @@ Origin: written in the claude.ai Truzme project before the art direction moved t
 **Read with `docs/notes/forzez-generative-plan.md`, which supersedes parts of this:**
 - Home: Forzez (forzez.com), not a `/art` page on truzme.com. Truzme stays school-safe; Forzez links one way ("Powered by Truzme").
 - Thesis got stricter: *the physics designs it, not just paints it.* `pts1` fails that test (a pin on a loaded node only mirrors the load) and stays a reference, not a flagship. The connected generators `net1` / `net2` came after this spec.
+- How net1/net2 were built (algorithms, verification, porting caveats): `docs/notes/truss-art-net-session.md`.
 - Colour convention: compression red, tension blue (decided 2026-10-13). The mini-truss prototype already used it.
 
 The determinism rules and the frozen `pts1` reference below still hold.
