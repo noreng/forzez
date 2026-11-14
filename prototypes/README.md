@@ -16,10 +16,12 @@ Snapshots of claude.ai artifacts, imported read-only on 2026-11-14. "Last update
 | [pts1-seeded-supports](pts1-seeded-supports/) | pts1 seeded supports (chat widget) | none: inline chat widget, 2026-10-12 | 2026-10-12 | Single HTML page, wrapped standalone | Open `index.html` in a browser |
 | [reaction-grid](reaction-grid/) | Reaction grid (chat widget) | none: inline chat widget, 2026-10-04 | 2026-10-04 | Single HTML page, wrapped standalone | Open `index.html` in a browser |
 | [mini-truss-grid](mini-truss-grid/) | Mini truss grid (chat widget) | none: inline chat widget, 2026-10-04 | 2026-10-04 | Single HTML page, wrapped standalone | Open `index.html` in a browser |
+| [wheel-sketches](wheel-sketches/) | Wheel and ring sketches (9 chat widgets) | none: inline chat widgets, 2026-10-27 | 2026-10-27 | Nine single HTML pages + `index.html` | Open `index.html` in a browser. Record: [`docs/notes/wheel-sketches-session.md`](../docs/notes/wheel-sketches-session.md) |
 
 Notes
 
 - Design and Docs artifacts were created from claude.ai Artifact types. Only the user's own content was copied; the type runtime (`artifact-type/**`, the type's `SKILL.md` and `index.html`) was skipped.
 - The Docs exports render date and mention chips as plain text.
-- The three "chat widget" rows were inline widgets in a claude.ai chat, never published as artifacts (added 2026-11-14). Their code is verbatim; only a page wrapper was added that re-declares the chat host's CSS variables and hides its icon font. UI text is Hungarian, as in the chat. Spec: `docs/specs/truzme-art-spec.md`.
+- The three earlier "chat widget" rows (pts1, reaction-grid, mini-truss-grid) were inline widgets in a claude.ai chat, never published as artifacts (added 2026-11-14). Their code is verbatim; only a page wrapper was added that re-declares the chat host's CSS variables and hides its icon font. UI text is Hungarian, as in the chat. Spec: `docs/specs/truzme-art-spec.md`.
 - `pts1-seeded-supports` is a frozen generator: its output must never change (golden check in the spec).
+- `wheel-sketches` (added 2026-11-14): nine inline chat widgets from 2026-10-27, code verbatim, English UI. The wrapper re-declares the host variables (`--text-*`, `--surface-1`, `--radius`) and the `.th`/`.ts` text classes. Colours are the chat palette, not tokens. Widget 04 (half-wheel bridge) has a known geometry error; see the session record.

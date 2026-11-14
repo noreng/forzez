@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pantheon dome: hoop forces</title>
+<!-- Snapshot of an inline claude.ai chat widget (2026-10-27). Host CSS variables and text classes re-declared below so the page runs standalone. Everything inside <body> is the widget code, verbatim. -->
+<style>
+:root{--text-primary:#1B1A17;--text-secondary:#5a574f;--text-muted:#a29d91;--bg:#fff;--surface-1:#f3f1ec;--radius:8px}
+@media (prefers-color-scheme:dark){:root{--text-primary:#EDE6D6;--text-secondary:#b9b2a3;--text-muted:#6d685e;--bg:#1B1A18;--surface-1:#26241f}}
+body{margin:0;padding:16px;max-width:640px;margin-inline:auto;background:var(--bg);color:var(--text-primary);font:14px/1.4 system-ui,sans-serif}
+.th{font-size:14px;font-weight:500;fill:var(--text-primary)}
+.ts{font-size:12px;fill:var(--text-secondary)}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+</style>
+</head>
+<body>
+<h2 class="sr-only">Hemispherical dome in plan and section: meridians in compression, hoops in compression above 51.8 degrees from the crown and in tension below, oculus ring in compression.</h2>
+<svg width="100%" viewBox="0 0 380 450" role="img"><title>Dome hoop forces</title><desc>Plan: red inner hoops and oculus ring, blue outer hoops. Section: arc red above the 51.8 degree line, blue below.</desc>
+<g id="pd-g"></g>
+<line x1="70" y1="358.2" x2="310" y2="358.2" stroke="var(--text-muted)" stroke-width="1" stroke-dasharray="4 4"/>
+<text class="ts" x="66" y="350" text-anchor="start">51.8°</text>
+<text class="ts" x="296" y="334">Hoops push</text>
+<text class="ts" x="300" y="408">Hoops pull</text>
+</svg>
+<script>
+(function(){var NS="http://www.w3.org/2000/svg",g=document.getElementById('pd-g'),cx=190,cy=150,R=125;
+function el(t,at){var e=document.createElementNS(NS,t);for(var p in at)e.setAttribute(p,at[p]);g.appendChild(e);return e;}
+var rad=Math.PI/180,k,phi;
+for(k=0;k<16;k++){var a=k*22.5*rad;el('line',{x1:(cx+R*Math.sin(12*rad)*Math.cos(a)).toFixed(1),y1:(cy+R*Math.sin(12*rad)*Math.sin(a)).toFixed(1),x2:(cx+R*Math.cos(a)).toFixed(1),y2:(cy+R*Math.sin(a)).toFixed(1),stroke:'#E24B4A','stroke-width':0.8});}
+for(phi=22;phi<=90;phi+=8.5){var t=phi>51.8;el('circle',{cx:cx,cy:cy,r:(R*Math.sin(phi*rad)).toFixed(1),fill:'none',stroke:t?'#378ADD':'#E24B4A','stroke-width':phi>=89?3:1.3});}
+el('circle',{cx:cx,cy:cy,r:(R*Math.sin(12*rad)).toFixed(1),fill:'none',stroke:'#E24B4A','stroke-width':5});
+var sx=190,sy=420,SR=100;
+function arc(p1,p2,col){var pts=[];for(var p=p1;p<=p2+0.01;p+=1){pts.push((sx+SR*Math.sin(p*rad)).toFixed(1)+','+(sy-SR*Math.cos(p*rad)).toFixed(1));}
+el('polyline',{points:pts.join(' '),fill:'none',stroke:col,'stroke-width':6,'stroke-linecap':'butt'});
+pts=[];for(p=p1;p<=p2+0.01;p+=1){pts.push((sx-SR*Math.sin(p*rad)).toFixed(1)+','+(sy-SR*Math.cos(p*rad)).toFixed(1));}
+el('polyline',{points:pts.join(' '),fill:'none',stroke:col,'stroke-width':6,'stroke-linecap':'butt'});}
+arc(12,51.8,'#E24B4A');arc(51.8,90,'#378ADD');
+el('line',{x1:70,y1:sy,x2:310,y2:sy,stroke:'var(--text-muted)','stroke-width':1});
+})();
+</script>
+</body>
+</html>

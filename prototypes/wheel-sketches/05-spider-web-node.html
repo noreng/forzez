@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spider web node</title>
+<!-- Snapshot of an inline claude.ai chat widget (2026-10-27). Host CSS variables and text classes re-declared below so the page runs standalone. Everything inside <body> is the widget code, verbatim. -->
+<style>
+:root{--text-primary:#1B1A17;--text-secondary:#5a574f;--text-muted:#a29d91;--bg:#fff;--surface-1:#f3f1ec;--radius:8px}
+@media (prefers-color-scheme:dark){:root{--text-primary:#EDE6D6;--text-secondary:#b9b2a3;--text-muted:#6d685e;--bg:#1B1A18;--surface-1:#26241f}}
+body{margin:0;padding:16px;max-width:640px;margin-inline:auto;background:var(--bg);color:var(--text-primary);font:14px/1.4 system-ui,sans-serif}
+.th{font-size:14px;font-weight:500;fill:var(--text-primary)}
+.ts{font-size:12px;fill:var(--text-secondary)}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+</style>
+</head>
+<body>
+<h2 class="sr-only">Spider web with twelve radials and a spiral; below, the force polygon of one web node: outer radial, spiral, inner radial, spiral.</h2>
+<svg id="sw" width="100%" viewBox="0 0 380 410" role="img"><title>Spider web node equilibrium</title><desc>All members in tension. At one node, the outer radial pull equals the inner radial pull plus the inward pull of the two spiral threads.</desc>
+<defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker></defs>
+<g id="sw-g"></g>
+<g stroke="#378ADD" stroke-width="2.5" fill="none" marker-end="url(#arrow)">
+<line x1="190" y1="375" x2="190" y2="305"/>
+<line x1="190" y1="304.3" x2="228.6" y2="314.7"/>
+<line x1="228.6" y1="314.7" x2="228.6" y2="364.7"/>
+<line x1="228.6" y1="364.7" x2="190" y2="375"/>
+</g>
+<text class="ts" x="182" y="344" text-anchor="end">outer radial</text>
+<text class="ts" x="238" y="344">inner radial</text>
+<text class="ts" x="190" y="400" text-anchor="middle">Spiral takes the difference</text>
+</svg>
+<script>
+(function(){var NS="http://www.w3.org/2000/svg",g=document.getElementById('sw-g'),cx=190,cy=150,k,a,r;
+function el(t,at){var e=document.createElementNS(NS,t);for(var p in at)e.setAttribute(p,at[p]);g.appendChild(e);return e;}
+for(k=0;k<12;k++){a=(-90+30*k)*Math.PI/180;el('line',{x1:cx,y1:cy,x2:(cx+120*Math.cos(a)).toFixed(1),y2:(cy+120*Math.sin(a)).toFixed(1),stroke:'#378ADD','stroke-width':1.5});}
+[30,45,60,75,90,105,120].forEach(function(r){var pts=[];for(k=0;k<12;k++){a=(-90+30*k)*Math.PI/180;pts.push((cx+r*Math.cos(a)).toFixed(1)+','+(cy+r*Math.sin(a)).toFixed(1));}
+el('polygon',{points:pts.join(' '),fill:'none',stroke:'#378ADD','stroke-width':r==120?2.5:0.8});});
+el('circle',{cx:190,cy:75,r:5,fill:'#EF9F27',stroke:'none'});
+el('circle',{cx:cx,cy:cy,r:4,fill:'var(--surface-1)',stroke:'var(--text-primary)','stroke-width':1.2});
+})();
+</script>
+</body>
+</html>
