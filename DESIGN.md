@@ -87,12 +87,24 @@ touches `font`/`fontWeight` in tokens and the `next/font` imports in
 | `Readout`, `ReadoutRow` | live values in a diagram corner (ΣFx, ΣFy, ΣM), right-aligned digits |
 | `Badge` | status: `ok` equilibrium, `bad` not in equilibrium, `warn` unstable |
 | `ForceRef` | a force named in text: colour bar + label (`<ForceRef tone={2}>F₂</ForceRef>`) |
+| `Sym` | Byrne symbol in text: a coloured bar for a force, dashed for a resultant, a square, a wedge for an angle. Has a spoken label |
 | `Live` | a number computed from the diagram, inline in text |
 | `Eyebrow`, `Hint` | label above a title; side note with a rule |
 | `ThemeToggle`, `ThemeScript` | light/dark switch (moon in light, sun in dark), fixed top right in the root layout; `ThemeScript` in `<head>` applies a saved choice before paint. No saved choice = follow the system |
 | `ForceArrow`, `DotGrid` | SVG: force arrow with head and label; dot grid behind a diagram |
 
-Reference page: `/lab/equilibrium` (the Equilibrium of forces explainer).
+Reference pages: `/lab/equilibrium` (scroll explainer) and `/elements` (the book).
+
+## The Elements pages
+
+`/elements` is *The Elements of Statics*, one page per proposition, in layout **B · the spread**
+(chosen in `design/elements/`): text and proof on the left page, the figure alone on the right.
+Below 1000px it folds into layout A, with the figure first and the text under it.
+
+- Content lives in `apps/web/src/app/elements/_lib/content.tsx`: statement, figure, proof, refs.
+- Proofs use `Sym` in place of letters, `(Ax. II)`-style `Ref` links, and end in Q.E.D.
+- Figures keep the prototypes' coordinates (`prototypes/elements-of-statics`); draw with
+  `Arrow`, `Dash`, `Dot` from `_lib/figure.tsx` so colours stay on tokens.
 
 ## Anti-slop
 

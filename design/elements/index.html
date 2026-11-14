@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Elements Page Layouts</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:wght@600&family=IBM+Plex+Serif:ital,wght@0,400;0,600;1,400&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<style>
+/* Colours are the forzez tokens (packages/tokens). Pages are sized in page units:
+   --u = one unit of a 720-wide page, so every page scales like a printed sheet. */
+:root{
+  --bg:#F5F2EA; --surface:#FCFBF7; --sunken:#EDE9DF; --ink:#1B1A17; --muted:#5E5A50; --rule:#D9D3C4; --body:rgba(27,26,23,.07);
+  --f1:#C2311F; --f2:#1F4E96; --f3:#D99A0E; --f3t:#8A5F00; --accent:#1F4E96;
+  --display:"IBM Plex Sans Condensed","Arial Narrow",system-ui,sans-serif;
+  --text:"IBM Plex Serif",Georgia,serif;
+  --data:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){ --bg:#141310; --surface:#1B1A16; --sunken:#0F0E0C; --ink:#EAE6DC; --muted:#A09B8F; --rule:#312E28; --body:rgba(234,230,220,.06);
+    --f1:#E5573F; --f2:#7399DC; --f3:#EBB43A; --f3t:#EBB43A; --accent:#7399DC; color-scheme:dark }
+}
+:root[data-theme="dark"]{ --bg:#141310; --surface:#1B1A16; --sunken:#0F0E0C; --ink:#EAE6DC; --muted:#A09B8F; --rule:#312E28; --body:rgba(234,230,220,.06);
+  --f1:#E5573F; --f2:#7399DC; --f3:#EBB43A; --f3t:#EBB43A; --accent:#7399DC; color-scheme:dark }
+
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--sunken);color:var(--ink);font-family:var(--text);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1360px;margin-inline:auto;padding:28px max(16px,env(safe-area-inset-right)) 72px max(16px,env(safe-area-inset-left));display:flex;flex-direction:column;gap:32px}
+.top{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:16px 32px}
+.top .eyebrow{font-family:var(--data);font-size:13px;color:var(--muted)}
+.top h1{font-family:var(--display);font-weight:600;font-size:clamp(2rem,5vw,2.75rem);line-height:1.05;margin:6px 0 0}
+.top p{margin:.5em 0 0;color:var(--muted);max-width:44rem}
+.seg{display:flex;border:1px solid var(--rule);border-radius:3px;overflow:hidden;font-family:var(--data);font-size:13px;background:var(--surface)}
+.seg button{all:unset;cursor:pointer;padding:7px 12px;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.seg button:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:28px 24px;align-items:start}
+@media (max-width:1000px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:640px){.grid{grid-template-columns:minmax(0,1fr)}}
+.study{display:flex;flex-direction:column;gap:10px;min-width:0}
+.study.wide{grid-column:1/-1}
+.label{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px}
+.label b{font-family:var(--display);font-weight:600;font-size:20px}
+.label span{font-size:14px;color:var(--muted)}
+.study.wide .frame{max-width:1100px}
+
+/* ---------- a page ---------- */
+.frame{container-type:inline-size;width:100%}
+.sheet{--u:calc(100cqw / 720);position:relative;aspect-ratio:720/1020;background:var(--bg);border:1px solid var(--rule);overflow:hidden;display:flex;flex-direction:column;font-size:calc(16 * var(--u));line-height:1.6}
+.spread .sheet{--u:calc(100cqw / 1440);aspect-ratio:1440/1020;flex-direction:row}
+.half{flex:1 1 0;min-width:0;display:flex;flex-direction:column;position:relative}
+.half + .half{border-left:1px solid var(--rule)}
+.sheet p{margin:0}
+.u{font-size:calc(var(--s) * var(--u))}
+
+.runhead{font-style:italic;color:var(--muted);font-size:calc(13 * var(--u))}
+.ptitle{font-family:var(--display);font-weight:600;line-height:1.05;margin:0}
+.kind{font-style:italic}
+.folio{font-family:var(--data);color:var(--muted);font-size:calc(12 * var(--u))}
+.qed{font-family:var(--display);font-weight:600}
+.drop::first-letter{float:left;font-family:var(--display);font-weight:600;color:var(--f1);font-size:calc(64 * var(--u));line-height:.82;padding:calc(5 * var(--u)) calc(10 * var(--u)) 0 0}
+.ax{font-style:italic;color:var(--muted)}
+
+/* Byrne symbols: a short coloured bar stands in for a force */
+.sym{display:inline-block;width:2.2em;height:.32em;border-radius:1px;vertical-align:.18em;margin-inline:.12em}
+.sym.r{background:var(--f1)} .sym.b{background:var(--f2)} .sym.y{background:var(--f3)}
+.sym.d{height:0;border-top:.16em dashed var(--ink);vertical-align:.3em}
+.proof{display:flex;flex-direction:column;gap:.55em}
+
+svg.dia{display:block;width:100%;height:auto;overflow:visible}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div>
+      <div class="eyebrow">forzez · The Elements of Statics</div>
+      <h1>Page layouts for Book I, Prop. I</h1>
+      <p>The four layout directions from the Elements prototype, redrawn with the current forzez tokens: IBM Plex, the Byrne colours, sentence case. Same proposition on every page, so only the layout differs.</p>
+    </div>
+    <div class="seg" role="group" aria-label="Theme">
+      <button type="button" data-t="auto" aria-pressed="true">Auto</button>
+      <button type="button" data-t="light" aria-pressed="false">Light</button>
+      <button type="button" data-t="dark" aria-pressed="false">Dark</button>
+    </div>
+  </header>
+
+  <div class="grid">
+    <section class="study">
+      <div class="label"><b>A · The page</b><span>a classic book page, centred, the text under the figure</span></div>
+      <div class="frame"><div class="sheet" id="A"></div></div>
+    </section>
+    <section class="study">
+      <div class="label"><b>C · The plate</b><span>the figure is the page; one line of text</span></div>
+      <div class="frame"><div class="sheet" id="C"></div></div>
+    </section>
+    <section class="study">
+      <div class="label"><b>D · The grid</b><span>Swiss three-column grid, figure on top</span></div>
+      <div class="frame"><div class="sheet" id="D"></div></div>
+    </section>
+    <section class="study wide">
+      <div class="label"><b>B · The spread</b><span>two facing pages: text and proof left, figure alone on the right</span></div>
+      <div class="frame spread"><div class="sheet" id="B"></div></div>
+    </section>
+  </div>
+</div>
+
+<script>
+(() => {
+// Book I, Prop. I: a body held by three forces whose lines of action meet in one point,
+// and beside it the same three forces placed tip to tail, closing a triangle.
+let n = 0;
+function figure({ triangle = true, crop = false } = {}) {
+  const id = 'm' + (++n);
+  const vb = triangle ? (crop ? '20 60 540 340' : '0 0 580 420') : '20 60 360 340';
+  const mk = (c) => `<marker id="${id}${c}" viewBox="0 0 10 10" refX="3" refY="5" markerWidth="3" markerHeight="3" orient="auto"><path d="M0,0L10,5L0,10z" fill="var(--${c})"/></marker>`;
+  const arrow = (x1, y1, x2, y2, c) => `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="var(--${c})" stroke-width="6" marker-end="url(#${id}${c})"/>`;
+  return `<svg class="dia" viewBox="${vb}" role="img" aria-label="A body held by a red, a blue and a yellow force whose dashed lines of action meet in one point${triangle ? '; beside it the same three forces placed tip to tail close a triangle' : ''}">
+    <defs>${mk('f1')}${mk('f2')}${mk('f3')}</defs>
+    <polygon points="115,135 255,145 225,255 170,265 110,200" fill="var(--body)" stroke="var(--rule)" stroke-width="1"/>
+    <g stroke="var(--ink)" stroke-width="1.2" stroke-dasharray="5 5">
+      <line x1="180" y1="190" x2="120" y2="140"/><line x1="180" y1="190" x2="250" y2="150"/><line x1="180" y1="190" x2="172" y2="262"/>
+    </g>
+    ${arrow(120,140,41,74,'f1')}${arrow(250,150,343,97,'f2')}${arrow(172,262,161.5,386,'f3')}
+    <circle cx="180" cy="190" r="5" fill="var(--ink)"/>
+    ${triangle ? arrow(500,300,414.8,229,'f1') + arrow(404,220,503.8,162.9,'f2') + arrow(516,156,501.5,286.1,'f3') : ''}
+  </svg>`;
+}
+
+const S = (c) => `<span class="sym ${c}" aria-hidden="true"></span>`;
+const statement = 'If three forces, not parallel, hold a body in balance, their lines of action meet in one point; and drawn one after another, the three forces close a triangle.';
+const proof = `<div class="proof">
+  <p>${S('r')} + ${S('b')} = ${S('d')} <span class="ax">(Ax. II)</span></p>
+  <p>${S('d')} + ${S('y')} = 0, for the body is in balance.</p>
+  <p>Therefore ${S('y')} lies on the line of ${S('d')} <span class="ax">(Ax. I)</span> and passes through the point where ${S('r')} and ${S('b')} meet.</p>
+  <p>And placed tip to tail, ${S('r')}${S('b')}${S('y')} end where they began.</p>
+</div>`;
+const axioms = `<p class="ax" style="font-size:calc(13 * var(--u));line-height:1.55">Ax. I. Two forces hold a body in balance when they are equal, opposite, and on one line.</p>
+  <p class="ax" style="font-size:calc(13 * var(--u));line-height:1.55">Ax. II. Two forces at a point act as one: the diagonal of the parallelogram they span.</p>`;
+const u = (v) => `calc(${v} * var(--u))`;
+
+// A · The page
+document.getElementById('A').style.padding = `${u(72)} ${u(96)} 0`;
+document.getElementById('A').innerHTML = `
+  <p class="runhead" style="text-align:center">Book the first. Of forces at a point.</p>
+  <h2 class="ptitle" style="text-align:center;font-size:${u(30)};margin-top:${u(40)}">Proposition I.</h2>
+  <p class="kind" style="text-align:center;margin-top:${u(4)}">Theorem.</p>
+  <div style="margin:${u(26)} ${u(-16)} 0">${figure()}</div>
+  <p class="drop" style="margin-top:${u(26)};text-align:justify;hyphens:auto;font-style:italic">${statement}</p>
+  <div style="margin-top:${u(22)};font-size:${u(15)}">${proof}</div>
+  <p class="qed" style="text-align:right;margin-top:${u(14)};font-size:${u(16)}">Q.E.D.</p>
+  <div style="flex:1"></div>
+  <p class="folio" style="text-align:center;margin-bottom:${u(48)}">1</p>`;
+
+// C · The plate
+document.getElementById('C').style.padding = `0 ${u(56)}`;
+document.getElementById('C').style.alignItems = 'center';
+document.getElementById('C').innerHTML = `
+  <div style="flex:1"></div>
+  <div style="width:100%">${figure({ crop: true })}</div>
+  <div style="flex:.5"></div>
+  <h2 class="ptitle" style="text-align:center;font-size:${u(34)}">Three forces</h2>
+  <p style="text-align:center;font-style:italic;color:var(--muted);margin-top:${u(10)};max-width:${u(470)}">In balance, they meet in one point and close a triangle.</p>
+  <p style="margin-top:${u(26)};font-size:${u(18)}">${S('r')} + ${S('b')} + ${S('y')} = 0</p>
+  <div style="flex:1"></div>
+  <p class="folio" style="text-align:center;margin-bottom:${u(48)}">Book the first, Proposition I</p>`;
+
+// D · The grid
+const cols = `display:grid;grid-template-columns:repeat(3,minmax(0,1fr));column-gap:${u(28)}`;
+document.getElementById('D').style.padding = `${u(56)} ${u(56)} ${u(48)}`;
+document.getElementById('D').innerHTML = `
+  <div style="${cols};font-size:${u(13)};color:var(--muted);border-top:1px solid var(--ink);padding-top:${u(10)}">
+    <span>The Elements of Statics</span><span>Book the first: forces at a point</span><span>Proposition I</span>
+  </div>
+  <div style="margin-top:${u(40)}">${figure()}</div>
+  <div style="flex:1"></div>
+  <div style="${cols};border-top:1px solid var(--ink);padding-top:${u(14)};align-items:start;font-size:${u(14)};line-height:1.5">
+    <div style="display:flex;flex-direction:column;gap:${u(10)}">
+      <h2 class="ptitle" style="font-size:${u(26)}">Proposition I.</h2>
+      <p class="kind" style="margin-top:${u(-6)}">Theorem.</p>
+      <p>${statement}</p>
+    </div>
+    <div style="font-size:${u(13.5)}">${proof}<p class="qed" style="margin-top:${u(10)}">Q.E.D.</p></div>
+    <div style="display:flex;flex-direction:column;gap:${u(8)}">${axioms}</div>
+  </div>
+  <div style="${cols};margin-top:${u(32)}"><span class="folio">1</span></div>`;
+
+// B · The spread
+document.getElementById('B').innerHTML = `
+  <div class="half" style="padding:0 ${u(80)} 0 ${u(150)}">
+    <p class="runhead" style="margin-top:${u(64)}">The Elements of Statics</p>
+    <h2 class="ptitle" style="font-size:${u(32)};margin-top:${u(48)}">Proposition I.</h2>
+    <p class="kind" style="margin-top:${u(4)}">Theorem.</p>
+    <p class="drop" style="margin-top:${u(30)};font-size:${u(17)};text-align:justify;hyphens:auto">${statement}</p>
+    <div style="margin-top:${u(28)};font-size:${u(15)}">${proof}</div>
+    <p class="qed" style="text-align:right;margin-top:${u(14)};font-size:${u(16)}">Q.E.D.</p>
+    <div style="flex:1"></div>
+    <div style="display:flex;flex-direction:column;gap:${u(6)};border-top:1px solid var(--rule);padding-top:${u(12)};width:${u(320)}">${axioms}</div>
+    <p class="folio" style="margin:${u(28)} 0 ${u(48)}">2</p>
+  </div>
+  <div class="half" style="padding:0 ${u(150)} 0 ${u(80)}">
+    <p class="runhead" style="margin-top:${u(64)};text-align:right">Book the first. Of forces at a point.</p>
+    <div style="flex:1"></div>
+    ${figure()}
+    <p style="margin-top:${u(24)};text-align:center;font-style:italic;color:var(--muted);font-size:${u(14)}">Three forces in balance, and their triangle.</p>
+    <div style="flex:1.4"></div>
+    <p class="folio" style="text-align:right;margin-bottom:${u(48)}">3</p>
+  </div>`;
+
+document.querySelectorAll('[data-t]').forEach((b) => b.addEventListener('click', () => {
+  const t = b.dataset.t;
+  if (t === 'auto') document.documentElement.removeAttribute('data-theme'); else document.documentElement.setAttribute('data-theme', t);
+  document.querySelectorAll('[data-t]').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+}));
+})();
+</script>
+</body>
+</html>

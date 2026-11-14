@@ -16,6 +16,9 @@ export default function Home() {
         <span className="h-1.5 w-10 self-center bg-ink" />
       </div>
       <div className="flex flex-wrap gap-6 font-data text-sm">
+        <Link href="/elements" className="text-accent underline underline-offset-4">
+          The Elements of Statics →
+        </Link>
         <Link href="/lab/equilibrium" className="text-accent underline underline-offset-4">
           Equilibrium of forces →
         </Link>
