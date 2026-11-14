@@ -11,7 +11,6 @@ Snapshots of claude.ai artifacts, imported read-only on 2026-11-14. "Last update
 | [michell-truss-generator](michell-truss-generator/) | Michell Truss Generator | https://claude.ai/artifact/Y3YyMvtYAezBkpSpXHQwHD | 2026-10-09 | Single HTML page | Open `index.html` in a browser |
 | [inclined-roller-supports](../docs/specs/inclined-roller-supports.md) | Inclined roller supports | https://claude.ai/artifact/DzUaLyApAxkCMfC391veK7 | 2026-10-10 | Docs-type document, exported as Markdown | Moved to `docs/specs/` |
 | [stability-forces-spec](../docs/specs/stability-forces-spec.md) | Stability + Forces panels — spec | https://claude.ai/artifact/9gMK2UQ1P6NFgXN5bxMS1m | 2026-09-25 | Docs-type document, exported as Markdown | Moved to `docs/specs/` |
-| [uszik-vagy-sullyed](uszik-vagy-sullyed/) | Úszik vagy süllyed? | https://claude.ai/artifact/ERXHYGruMm3Ug9xpQ9bqAS | 2026-10-23 | Single HTML page | Open `index.html` in a browser |
 | [canvas-render-labor](canvas-render-labor/) | Canvas Render Labor | https://claude.ai/artifact/R7YRRr8aC5g28EoVWKVnE4 | 2026-10-20 | Single HTML page | Open `index.html` in a browser |
 
 Notes
