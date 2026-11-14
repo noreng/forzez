@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>pts1 seeded supports</title>
+<!-- Snapshot of an inline claude.ai chat widget (2026-10). Host CSS variables re-declared below so the page runs standalone. -->
+<style>
+:root{--text-primary:#1B1A17;--text-secondary:#5a574f;--text-muted:#a29d91;--bg:#fff;--bg-accent:#e6effb;--text-accent:#1F4E96;--border-accent:#1F4E96;--border:#d6d2c8;--font-mono:ui-monospace,SFMono-Regular,Menlo,monospace}
+@media (prefers-color-scheme:dark){:root{--text-primary:#EDE6D6;--text-secondary:#b9b2a3;--text-muted:#6d685e;--bg:#1B1A18;--bg-accent:#1d2e4a;--text-accent:#8fb4ee;--border-accent:#8fb4ee;--border:#3a3833}}
+body{margin:0;padding:16px;max-width:640px;margin-inline:auto;background:var(--bg);color:var(--text-primary);font:14px/1.4 system-ui,sans-serif}
+button{font:inherit;font-size:13px;padding:4px 10px;border:1px solid var(--border);border-radius:6px;background:transparent;color:var(--text-primary);cursor:pointer}
+input[type=checkbox]{accent-color:var(--text-accent)}
+.ti{display:none}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+</style>
+</head>
+<body>
+<style>
+.row{display:flex;align-items:center;gap:8px;margin:0 0 6px}
+.row label.l{font-size:13px;color:var(--text-secondary);min-width:78px}
+.row .o{font-size:13px;min-width:30px;text-align:right}
+.ck{font-size:13px;color:var(--text-secondary);display:flex;align-items:center;gap:4px}
+input.t{font-family:var(--font-mono);font-size:13px}
+</style>
+<h2 class="sr-only">Seedelt generatív minta: 20x20 pin támasz elforgatva, egy-egy teherrel; a recept string újra előállítja ugyanazt a képet, Project code-ként másolható.</h2>
+<div class="row"><label class="l">Seed</label><input class="t" id="seed" style="flex:1;min-width:0"><button id="dice" aria-label="Új seed">⚄</button></div>
+<div class="row"><label class="l">Komplexitás</label><input type="range" min="1" max="6" step="1" value="3" id="c" style="flex:1"><span class="o" id="co"></span></div>
+<div class="row"><label class="l">Zaj</label><input type="range" min="0" max="10" step="1" value="1" id="j" style="flex:1"><span class="o" id="jo"></span></div>
+<div class="row"><label class="l">Kitöltés</label><input type="range" min="30" max="100" step="5" value="100" id="f" style="flex:1"><span class="o" id="fo"></span></div>
+<div class="row" style="margin-bottom:10px"><label class="ck"><input type="checkbox" id="ra" checked>Támasz a reakció irányába</label></div>
+<canvas id="cv" style="width:100%;display:block"></canvas>
+<div class="row" style="margin-top:10px"><label class="l">Recept</label><input class="t" id="rec" style="flex:1;min-width:0"><button id="load">Betölt</button></div>
+<div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:4px">
+<button id="cprec"><i class="ti ti-link" aria-hidden="true" style="margin-right:6px"></i>Recept másolása</button>
+<button id="copy"><i class="ti ti-copy" aria-hidden="true" style="margin-right:6px"></i>Project code másolása</button>
+<span id="msg" style="font-size:13px;color:var(--text-secondary)"></span>
+</div>
+<div id="info" style="font-size:12px;color:var(--text-muted);margin-top:6px"></div>
+<textarea id="fallback" readonly style="display:none;width:100%;height:120px;margin-top:8px;font-family:var(--font-mono);font-size:11px"></textarea>
+<script>
+const GEN='pts1',N=20,FMAX=1,$=id=>document.getElementById(id),cv=$('cv'),ctx=cv.getContext('2d');
+// --- determinism: FNV-1a + mulberry32, per-node hash streams ---
+function h32(s){let h=2166136261>>>0;for(let i=0;i<s.length;i++)h=Math.imul(h^s.charCodeAt(i),16777619);return h>>>0}
+function mulberry(a){return()=>{a=(a+0x6D2B79F5)|0;let t=Math.imul(a^(a>>>15),1|a);t=(t+Math.imul(t^(t>>>7),61|t))^t;return((t^(t>>>14))>>>0)/4294967296}}
+function hr(S,ch,i,j){let h=S^Math.imul(ch+1,0x9E3779B1);h=Math.imul(h^(i+1),0x85EBCA6B);h^=h>>>13;h=Math.imul(h^(j+1),0xC2B2AE35);h^=h>>>16;return mulberry(h)()}
+const r3=x=>{const v=Math.round(x*1000)/1000;return Object.is(v,-0)?0:v};
+const r1=x=>{const v=Math.round(x*10)/10;return Object.is(v,-0)?0:v};
+function state(){return{seed:$('seed').value.trim()||'0',c:+$('c').value,j:+$('j').value,f:+$('f').value,ra:$('ra').checked}}
+const recipe=s=>[GEN,s.seed.replace(/[^a-z0-9]/gi,'').toLowerCase()||'0','c'+s.c,'j'+s.j,'f'+s.f,s.ra?'ra':'r0'].join('.');
+function gen(st){
+const S=h32(st.seed),rng=mulberry(S),comps=[];
+for(let k=0;k<6;k++)comps.push({t:Math.floor(rng()*3),cx:rng()*2-1,cy:rng()*2-1,s:rng()<0.5?-1:1,f:1+Math.floor(rng()*4),th:rng()*Math.PI*2,ph:rng()*Math.PI*2,sg:0.3+rng()*0.7});
+const use=comps.slice(0,st.c),pts=[];let mx=0;
+for(let j=0;j<N;j++)for(let i=0;i<N;i++){
+if(hr(S,2,i,j)>=st.f/100)continue;
+const u=i/(N-1)*2-1,v=1-j/(N-1)*2;let vx=0,vy=0;
+use.forEach(q=>{const dx=u-q.cx,dy=v-q.cy,e=Math.exp(-(dx*dx+dy*dy)/(q.sg*q.sg));
+if(q.t===0){const w=Math.sin(q.f*Math.PI*(u*Math.cos(q.th)+v*Math.sin(q.th))+q.ph);vx+=-Math.sin(q.th)*w;vy+=Math.cos(q.th)*w}
+else if(q.t===1){vx+=-dy*e*2*q.s;vy+=dx*e*2*q.s}else{vx+=dx*e*2*q.s;vy+=dy*e*2*q.s}});
+const a=Math.atan2(vy,vx)+(hr(S,1,i,j)-0.5)*st.j/10*Math.PI,m=Math.hypot(vx,vy);mx=Math.max(mx,m);
+pts.push({i,j,a,m})}
+return pts.map(p=>{const m=mx?p.m/mx:0,Fx=r3(Math.cos(p.a)*m*FMAX),Fy=r3(Math.sin(p.a)*m*FMAX);
+let ang=0;if(st.ra&&(Fx||Fy))ang=r1(((Math.atan2(-Fy,-Fx)*180/Math.PI-90)%360+540)%360-180);
+return{x:p.i,y:N-1-p.j,Fx,Fy,ang}});
+}
+function draw(fromRecipe){
+const st=state();$('co').textContent=st.c;$('jo').textContent=st.j;$('fo').textContent=st.f+'%';
+if(!fromRecipe)$('rec').value=recipe(st);
+$('msg').textContent='';$('fallback').style.display='none';
+const w=cv.clientWidth,h=w,dpr=window.devicePixelRatio||1;
+cv.width=w*dpr;cv.height=h*dpr;cv.style.height=h+'px';ctx.setTransform(dpr,0,0,dpr,0,0);
+const cs=getComputedStyle(document.body),fg=cs.getPropertyValue('--text-primary').trim()||'#222',mu=cs.getPropertyValue('--text-muted').trim()||'#999';
+ctx.clearRect(0,0,w,h);const s=w/N,gr=s*0.13;ctx.lineCap='round';ctx.lineJoin='round';
+const pts=gen(st);
+pts.forEach(p=>{const X=(p.x+0.5)*s,Y=(N-1-p.y+0.5)*s,t=p.ang*Math.PI/180,c=Math.cos(t),sn=Math.sin(t);
+const L=(lx,ly)=>[X+lx*c-ly*sn,Y-(lx*sn+ly*c)];
+ctx.strokeStyle=mu;ctx.lineWidth=1;ctx.beginPath();[[0,0],[-gr,-gr*1.5],[gr,-gr*1.5]].forEach((q,k)=>{const[a,b]=L(q[0],q[1]);k?ctx.lineTo(a,b):ctx.moveTo(a,b)});ctx.closePath();ctx.stroke();
+ctx.beginPath();let[a1,b1]=L(-gr*1.4,-gr*1.5),[a2,b2]=L(gr*1.4,-gr*1.5);ctx.moveTo(a1,b1);ctx.lineTo(a2,b2);ctx.stroke();
+const m=Math.hypot(p.Fx,p.Fy)/FMAX;if(m>0.02){const l=m*s*0.45,ux=p.Fx/FMAX/m,uy=p.Fy/FMAX/m,tx=X-ux*l,ty=Y+uy*l,hl=Math.min(4,l*0.4);
+ctx.strokeStyle=fg;ctx.fillStyle=fg;ctx.lineWidth=1.4;ctx.beginPath();ctx.moveTo(tx,ty);ctx.lineTo(X,Y);ctx.stroke();
+const cx=ux,cy=-uy;ctx.beginPath();ctx.moveTo(X,Y);ctx.lineTo(X-cx*hl-cy*hl*0.5,Y-cy*hl+cx*hl*0.5);ctx.lineTo(X-cx*hl+cy*hl*0.5,Y-cy*hl-cx*hl*0.5);ctx.fill()}
+ctx.fillStyle=fg;ctx.beginPath();ctx.arc(X,Y,1.2,0,7);ctx.fill()});
+$('info').textContent=pts.length+' pin · max '+FMAX+' kN · 1 m rácsköz · generátor '+GEN;
+}
+function build(){
+const pts=gen(state()),nodes=[],sup=[],loads=[];
+pts.forEach((p,k)=>{const id=k+1;nodes.push({id,x:p.x,y:p.y});const S={id,node:id,x:true,y:true};if(p.ang)S.angle=p.ang;sup.push(S);
+if(p.Fx||p.Fy)loads.push({id:loads.length+1,node:id,x:p.Fx,y:p.Fy})});
+const line=a=>a.map(o=>'    '+JSON.stringify(o)).join(',\n');
+return '{\n  "units": {"length":"m","sectionLength":"mm","force":"kN","materialStrength":"N/mm²","area":"mm²","density":"kg/m³"},\n  "nodes": [\n'+line(nodes)+'\n  ],\n  "members": [],\n  "supports": [\n'+line(sup)+'\n  ],\n  "nodalLoads": [\n'+line(loads)+'\n  ],\n  "materials": [{"id":1,"name":"S235","EModulus":210000,"fMax":235,"density":7850,"color":"#F9DC85"}],\n  "sections": [{"id":1,"name":"CHS 114.3×6","color":"#FF908D","sectionType":"pipe","outerDiameter":114.3,"thickness":6}],\n  "dimensions": []\n}';
+}
+function copyText(txt,ok){const fb=$('fallback');const fail=()=>{fb.value=txt;fb.style.display='block';fb.focus();fb.select();$('msg').textContent='Nem ment a vágólapra, másold innen.'};
+try{navigator.clipboard.writeText(txt).then(()=>{$('msg').textContent=ok},fail)}catch(e){fail()}}
+function load(){const m=$('rec').value.trim().match(/^pts1\.([a-z0-9]+)\.c([1-6])\.j(\d+)\.f(\d+)\.(ra|r0)$/i);
+if(!m){$('msg').textContent='Ismeretlen recept.';return}
+$('seed').value=m[1];$('c').value=m[2];$('j').value=Math.min(10,+m[3]);$('f').value=Math.max(30,Math.min(100,+m[4]));$('ra').checked=m[5].toLowerCase()==='ra';draw()}
+const newSeed=()=>{$('seed').value=Math.floor(Math.random()*36**6).toString(36).padStart(6,'0');draw()};
+$('dice').onclick=newSeed;$('load').onclick=load;
+$('cprec').onclick=()=>copyText($('rec').value,'Recept másolva');
+$('copy').onclick=()=>{const t=build();copyText(t,'Másolva ('+Math.round(t.length/1024)+' kB)')};
+['seed','c','j','f','ra'].forEach(id=>$(id).oninput=()=>draw());
+window.addEventListener('resize',()=>draw(true));
+$('seed').value='truzme';draw();
+</script>
+</body>
+</html>

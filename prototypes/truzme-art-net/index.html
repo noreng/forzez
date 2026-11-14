@@ -1,0 +1,418 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Truzme Art net1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: one square drawing plate, instrument column beside it; stacks on phones */
+:root{
+  --paper:#eef0f3; --plate:#fbfcfd; --ink:#1b2130; --muted:#667085; --rule:#d5d9e1;
+  --t:#2152c4; --c:#cf3427;
+  --display:"Archivo",system-ui,-apple-system,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,"SF Mono",Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#0d1015; --plate:#141920; --ink:#e4e8ef; --muted:#8b94a7; --rule:#2a313d;
+  --t:#5d8dff; --c:#ff5e50; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#0d1015; --plate:#141920; --ink:#e4e8ef; --muted:#8b94a7; --rule:#2a313d;
+  --t:#5d8dff; --c:#ff5e50; color-scheme:dark}
+html,body{background:var(--paper);color:var(--ink)}
+body{font-family:var(--display);padding:24px 16px 40px}
+.wrap{max-width:1080px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:28px;align-items:start}
+@media (max-width:820px){.wrap{grid-template-columns:minmax(0,1fr)}}
+header{max-width:1080px;margin:0 auto 18px;display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 16px}
+h1{font-size:1.5rem;font-weight:700;letter-spacing:-.01em;margin:0}
+h1 span{font-family:var(--mono);font-weight:400;font-size:.95rem;color:var(--muted);margin-left:.4em}
+header p{margin:0;color:var(--muted);font-size:.9rem;max-width:62ch}
+.plate{background:var(--plate);border:1px solid var(--rule);position:relative}
+canvas{display:block;width:100%;aspect-ratio:1;max-width:100%}
+.legend{display:flex;flex-wrap:wrap;gap:6px 18px;padding:10px 14px;border-top:1px solid var(--rule);font-family:var(--mono);font-size:.75rem;color:var(--muted)}
+.legend i{display:inline-block;width:18px;height:3px;vertical-align:middle;margin-right:6px}
+.err{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--mono);color:var(--c)}
+aside{display:flex;flex-direction:column;gap:18px;min-width:0}
+.grp{display:flex;flex-direction:column;gap:12px}
+.lbl{font-family:var(--mono);font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.row{display:flex;gap:8px;align-items:center}
+input[type=text]{flex:1;min-width:0;font:600 .95rem var(--mono);padding:8px 10px;border:1px solid var(--rule);background:var(--plate);color:var(--ink);border-radius:2px}
+button{font:500 .85rem var(--display);padding:8px 12px;border:1px solid var(--ink);background:var(--ink);color:var(--plate);border-radius:2px;cursor:pointer;white-space:nowrap}
+button.ghost{background:transparent;color:var(--ink);border-color:var(--rule)}
+button:focus-visible,input:focus-visible{outline:2px solid var(--t);outline-offset:2px}
+.sl{display:grid;grid-template-columns:1fr auto;gap:2px 10px;align-items:center;font-size:.88rem}
+.sl output{font-family:var(--mono);font-size:.82rem;font-variant-numeric:tabular-nums;color:var(--muted)}
+.sl input{grid-column:1/-1;width:100%;accent-color:var(--ink)}
+.chk{display:flex;gap:8px;align-items:center;font-size:.88rem;cursor:pointer}
+.chk input{accent-color:var(--ink)}
+.seg{display:flex;border:1px solid var(--rule);border-radius:2px}
+.seg button{flex:1;background:transparent;color:var(--muted);border:0;border-radius:0}
+.seg button[aria-pressed=true]{background:var(--ink);color:var(--plate)}
+.recipe{font-family:var(--mono);font-size:.8rem;padding:8px 10px;background:var(--plate);border:1px dashed var(--rule);overflow-wrap:anywhere;user-select:all}
+dl{margin:0;display:grid;grid-template-columns:1fr auto;gap:4px 12px;font-size:.85rem}
+dt{color:var(--muted)} dd{margin:0;font-family:var(--mono);font-variant-numeric:tabular-nums;text-align:right}
+hr{border:0;border-top:1px solid var(--rule);margin:0;width:100%}
+</style>
+
+<header>
+  <h1>Truzme Art <span id="genName">net2</span></h1>
+  <p>Seedelt, összefüggő rácsos tartó. A rúderőket merevségi solver számolja; a szín és vastagság a valódi húzás és nyomás.</p>
+</header>
+
+<div class="wrap">
+  <div class="plate">
+    <canvas id="cv" aria-label="Generált rácsos tartó, rúderő szerint színezve"></canvas>
+    <div id="err" class="err" hidden>Instabil szerkezet</div>
+    <div class="legend">
+      <span><i style="background:var(--t)"></i>húzott</span>
+      <span><i style="background:var(--c)"></i>nyomott</span>
+      <span>vastagság ∝ |N|</span>
+    </div>
+  </div>
+
+  <aside>
+    <div class="grp">
+      <span class="lbl">Seed</span>
+      <div class="row">
+        <input id="seed" type="text" value="truzme" spellcheck="false" autocomplete="off" aria-label="Seed">
+        <button id="roll">Új seed</button>
+      </div>
+    </div>
+
+    <div class="grp">
+      <span class="lbl">Generátor</span>
+      <div class="seg" role="group" aria-label="Generátor">
+        <button id="g1" aria-pressed="false">net1 · rács</button>
+        <button id="g2" aria-pressed="true">net2 · ív</button>
+      </div>
+    </div>
+
+    <div class="grp" id="net2grp">
+      <span class="lbl">Forma</span>
+      <div class="seg" role="group" aria-label="Forma">
+        <button id="m0" aria-pressed="false">Hullám</button>
+        <button id="m1" aria-pressed="true">Ív</button>
+        <button id="m2" aria-pressed="false">Örvény</button>
+      </div>
+      <label class="sl" for="a">Görbület<output id="oa"></output><input id="a" type="range" min="0" max="10" value="6"></label>
+      <label class="sl" for="d">Vastagság (sor)<output id="od"></output><input id="d" type="range" min="2" max="10" value="4"></label>
+      <label class="sl" for="g">Gravitáció<output id="og"></output><input id="g" type="range" min="0" max="10" value="5"></label>
+    </div>
+
+    <div class="grp">
+      <span class="lbl">Recept</span>
+      <label class="sl" for="c">Mező komplexitás<output id="oc"></output><input id="c" type="range" min="1" max="6" value="3"></label>
+      <label class="sl" for="f">Kitöltés<output id="of"></output><input id="f" type="range" min="50" max="100" step="5" value="100"></label>
+      <label class="sl" for="l">Terhelt csomópontok<output id="ol"></output><input id="l" type="range" min="10" max="100" step="10" value="60"></label>
+      <label class="sl" for="s">Támaszok<output id="os"></output><input id="s" type="range" min="2" max="6" value="3"></label>
+      <label class="sl" for="w">Torzítás<output id="ow"></output><input id="w" type="range" min="0" max="10" value="3"></label>
+      <label class="chk"><input id="ra" type="checkbox" checked> Elforgatott görgők</label>
+    </div>
+
+    <div class="grp">
+      <div class="recipe" id="recipe"></div>
+      <button id="copy" class="ghost">Recept másolása</button>
+    </div>
+
+    <hr>
+
+    <div class="grp">
+      <span class="lbl">Nézet (nem része a receptnek)</span>
+      <div class="seg" role="group" aria-label="Stílus">
+        <button id="stLine" aria-pressed="true">Vonal</button>
+        <button id="stPlot" aria-pressed="false">Plotter</button>
+      </div>
+      <label class="chk"><input id="showL" type="checkbox" checked> Terhek</label>
+      <label class="chk"><input id="showS" type="checkbox" checked> Támaszok</label>
+    </div>
+
+    <hr>
+
+    <dl id="stats"></dl>
+  </aside>
+</div>
+
+<script>
+/*CORE*/
+const N=14;
+function h32(s){let h=2166136261>>>0;for(let i=0;i<s.length;i++)h=Math.imul(h^s.charCodeAt(i),16777619);return h>>>0}
+function mulberry(a){return()=>{a=(a+0x6D2B79F5)|0;let t=Math.imul(a^(a>>>15),1|a);t=(t+Math.imul(t^(t>>>7),61|t))^t;return((t^(t>>>14))>>>0)/4294967296}}
+function hr(S,ch,i,j){let h=S^Math.imul(ch+1,0x9E3779B1);h=Math.imul(h^(i+1),0x85EBCA6B);h^=h>>>13;h=Math.imul(h^(j+1),0xC2B2AE35);h^=h>>>16;return mulberry(h)()}
+const r3=x=>{const v=Math.round(x*1000)/1000;return v===0?0:v};
+const r2=x=>{const v=Math.round(x*100)/100;return v===0?0:v};
+// channels: 3,4 node jitter · 5 cell keep · 6 diagonal · 7 loaded · 8 support type · 9 roller angle
+
+function gen(st){
+  const S=h32(st.seed), rng=mulberry(S), comps=[];
+  for(let k=0;k<6;k++) comps.push({t:Math.floor(rng()*3),cx:rng()*2-1,cy:rng()*2-1,s:rng()<0.5?-1:1,
+    f:1+Math.floor(rng()*4),th:rng()*Math.PI*2,ph:rng()*Math.PI*2,sg:0.3+rng()*0.7});
+  const use=comps.slice(0,st.c), W=st.w/10*0.6, id=(i,j)=>j*N+i;
+
+  const P=[];
+  for(let j=0;j<N;j++)for(let i=0;i<N;i++)
+    P.push({i,j,x:r2(i+(hr(S,3,i,j)-0.5)*W),y:r2(j+(hr(S,4,i,j)-0.5)*W)});
+
+  // triangulated cells — topology only from integer-derived hashes
+  const tris=[];
+  for(let j=0;j<N-1;j++)for(let i=0;i<N-1;i++){
+    if(hr(S,5,i,j)>=st.f/100)continue;
+    const a=id(i,j),b=id(i+1,j),c=id(i+1,j+1),d=id(i,j+1);
+    if(hr(S,6,i,j)<0.5)tris.push([a,b,c],[a,c,d]);else tris.push([a,b,d],[b,c,d]);
+  }
+  if(!tris.length)return null;
+  // edge-connected triangle components are rigid; keep the largest
+  const par=tris.map((_,k)=>k),find=k=>{while(par[k]!==k){par[k]=par[par[k]];k=par[k]}return k};
+  const ek=(p,q)=>p<q?p*1000+q:q*1000+p, own=new Map();
+  tris.forEach((t,k)=>{for(let e=0;e<3;e++){const key=ek(t[e],t[(e+1)%3]);
+    if(own.has(key)){const a=find(own.get(key)),b=find(k);if(a!==b)par[Math.max(a,b)]=Math.min(a,b)}else own.set(key,k)}});
+  const cnt=new Map();tris.forEach((_,k)=>{const r=find(k);cnt.set(r,(cnt.get(r)||0)+1)});
+  let best=-1,bc=0;for(const[r,c]of cnt)if(c>bc||(c===bc&&r<best)){bc=c;best=r}
+  const eset=new Set(),used=new Set();
+  tris.forEach((t,k)=>{if(find(k)!==best)return;for(let e=0;e<3;e++){eset.add(ek(t[e],t[(e+1)%3]));used.add(t[e])}});
+  const nodes=[...used].sort((a,b)=>a-b);
+  const members=[...eset].sort((a,b)=>a-b).map(k=>[Math.floor(k/1000),k%1000]);
+
+  // loads from the seeded field, sampled on grid indices (independent of jitter)
+  let mx=0;const raw=[];
+  for(const g of nodes){const p=P[g];if(hr(S,7,p.i,p.j)>=st.l/100)continue;
+    const u=p.i/(N-1)*2-1,v=p.j/(N-1)*2-1;let vx=0,vy=0;
+    use.forEach(q=>{const dx=u-q.cx,dy=v-q.cy,e=Math.exp(-(dx*dx+dy*dy)/(q.sg*q.sg));
+      if(q.t===0){const w=Math.sin(q.f*Math.PI*(u*Math.cos(q.th)+v*Math.sin(q.th))+q.ph);vx+=-Math.sin(q.th)*w;vy+=Math.cos(q.th)*w}
+      else if(q.t===1){vx+=-dy*e*2*q.s;vy+=dx*e*2*q.s}
+      else{vx+=dx*e*2*q.s;vy+=dy*e*2*q.s}});
+    const m=Math.hypot(vx,vy);mx=Math.max(mx,m);raw.push({g,vx,vy})}
+  const loads=raw.map(o=>({g:o.g,Fx:mx?r3(o.vx/mx):0,Fy:mx?r3(o.vy/mx):0})).filter(o=>o.Fx||o.Fy);
+
+  // supports: evenly spaced along the lowest node of each column
+  const base=[];for(let i=0;i<N;i++)for(let j=0;j<N;j++)if(used.has(id(i,j))){base.push(id(i,j));break}
+  const sc=Math.min(st.s,base.length),pick=[];
+  for(let k=0;k<sc;k++){const g=base[Math.round(k*(base.length-1)/(sc-1))];if(!pick.includes(g))pick.push(g)}
+  const supports=pick.map((g,k)=>{const p=P[g];
+    const type=k===0?'pin':pick.length===2?'roller':(hr(S,8,p.i,0)<0.5?'pin':'roller');
+    const ang=type==='roller'&&st.ra?(Math.floor(hr(S,9,p.i,0)*5)-2)*15:0;
+    return{g,type,ang}});
+  // a lone pin + rollers whose lines all pass through it would be a mechanism: straighten those rollers
+  const pins=supports.filter(s=>s.type==='pin');
+  if(pins.length===1)for(const s of supports)if(s.type==='roller'&&s.ang){
+    const a=s.ang*Math.PI/180,nx=-Math.sin(a),ny=Math.cos(a),dx=P[pins[0].g].x-P[s.g].x,dy=P[pins[0].g].y-P[s.g].y;
+    if(Math.abs(nx*dy-ny*dx)<0.15*Math.hypot(dx,dy))s.ang=0}
+
+  return{P,nodes,members,loads,supports};
+}
+
+function solve(m){
+  const n=m.nodes.length,D=2*n,K=new Float64Array(D*D),F=new Float64Array(D),ix=new Map(m.nodes.map((g,k)=>[g,k]));
+  const geo=m.members.map(([p,q])=>{const A=m.P[p],B=m.P[q],dx=B.x-A.x,dy=B.y-A.y,L=Math.hypot(dx,dy);
+    return{a:ix.get(p),b:ix.get(q),c:dx/L,s:dy/L,k:1/L}});
+  for(const e of geo){const kk=[e.c*e.c,e.c*e.s,e.s*e.s],blk=[[kk[0],kk[1]],[kk[1],kk[2]]];
+    for(const[r0,c0,sg]of[[e.a,e.a,1],[e.b,e.b,1],[e.a,e.b,-1],[e.b,e.a,-1]])
+      for(let x=0;x<2;x++)for(let y=0;y<2;y++)K[(2*r0+x)*D+2*c0+y]+=sg*e.k*blk[x][y]}
+  const PEN=1e8;
+  for(const s of m.supports){const a=ix.get(s.g);
+    if(s.type==='pin'){K[(2*a)*D+2*a]+=PEN;K[(2*a+1)*D+2*a+1]+=PEN}
+    else{const t=s.ang*Math.PI/180,nx=-Math.sin(t),ny=Math.cos(t),v=[[nx*nx,nx*ny],[nx*ny,ny*ny]];
+      for(let x=0;x<2;x++)for(let y=0;y<2;y++)K[(2*a+x)*D+2*a+y]+=PEN*v[x][y]}}
+  for(const l of m.loads){const a=ix.get(l.g);F[2*a]+=l.Fx;F[2*a+1]+=l.Fy}
+  // dense Cholesky (≤ ~400 DOF)
+  for(let j=0;j<D;j++){let d=K[j*D+j];for(let k=0;k<j;k++)d-=K[j*D+k]*K[j*D+k];
+    if(!(d>1e-9))return null;d=Math.sqrt(d);K[j*D+j]=d;
+    for(let i=j+1;i<D;i++){let s=K[i*D+j];for(let k=0;k<j;k++)s-=K[i*D+k]*K[j*D+k];K[i*D+j]=s/d}}
+  const y=new Float64Array(D);
+  for(let i=0;i<D;i++){let s=F[i];for(let k=0;k<i;k++)s-=K[i*D+k]*y[k];y[i]=s/K[i*D+i]}
+  const u=new Float64Array(D);
+  for(let i=D-1;i>=0;i--){let s=y[i];for(let k=i+1;k<D;k++)s-=K[k*D+i]*u[k];u[i]=s/K[i*D+i]}
+  return geo.map(e=>r3(e.k*(e.c*(u[2*e.b]-u[2*e.a])+e.s*(u[2*e.b+1]-u[2*e.a+1]))));
+}
+const recipeOf=st=>st.gen===2
+  ?`net2.${st.seed}.m${st.m}.a${st.a}.d${st.d}.c${st.c}.f${st.f}.l${st.l}.g${st.g}.s${st.s}.w${st.w}.${st.ra?'ra':'r0'}`
+  :`net1.${st.seed}.c${st.c}.f${st.f}.l${st.l}.s${st.s}.w${st.w}.${st.ra?'ra':'r0'}`;
+
+// net2: same hash topology in (i,j) parameter space, positions through a smooth fold-free map
+// forms: 0 wave band (normal offset, curvature capped so rows never cross)
+//        1 arch (polar band, intrados radius kept positive)
+//        2 swirl (rotation by θ(r) around 1–2 centres: bijective, area-preserving)
+function gen2(st){
+  const S=h32(st.seed),rng=mulberry(S),comps=[];
+  for(let k=0;k<6;k++)comps.push({t:Math.floor(rng()*3),cx:rng()*2-1,cy:rng()*2-1,s:rng()<0.5?-1:1,
+    f:1+Math.floor(rng()*4),th:rng()*Math.PI*2,ph:rng()*Math.PI*2,sg:0.3+rng()*0.7});
+  // shape draws: always the same count, whatever the form
+  const kw=[1,1.5,2,2.5][Math.floor(rng()*4)],wph=rng()*Math.PI*2;
+  const sw=[0,1].map(()=>({cx:0.2+rng()*0.6,cy:0.2+rng()*0.6,sg:0.25+rng()*0.3,s:rng()<0.5?-1:1}));
+  const twoSw=rng()<0.5;
+  const use=comps.slice(0,st.c),A=st.a/10,form=st.m;
+  const C=form===2?18:25,R=form===2?Math.min(18,2*st.d):st.d,Lx=C-1,H=R-1,W=st.w/10*0.6,id=(i,j)=>j*C+i;
+
+  let map;
+  if(form===0){
+    const om=2*Math.PI*kw/Lx,Am=A*Math.min(0.9*2/(Math.max(H,1)*om*om),Lx*0.3);
+    map=(x,y)=>{const d=Am*om*Math.cos(om*x+wph),nl=Math.hypot(d,1),o=y-H/2;
+      return[x-d/nl*o,Am*Math.sin(om*x+wph)+o/nl]};
+  }else if(form===1){
+    const Ph=(40+160*A)*Math.PI/180,Rr=Math.max(Lx/Ph,H/2+1.5);
+    map=(x,y)=>{const f=Math.PI/2+(0.5-x/Lx)*Ph,r=Rr+y-H/2;return[r*Math.cos(f),r*Math.sin(f)]};
+  }else{
+    const Lm=Math.max(Lx,H),list=twoSw?sw:[sw[0]];
+    map=(x,y)=>{for(const q of list){const cx=q.cx*Lx,cy=q.cy*H,dx=x-cx,dy=y-cy,
+      t=q.s*A*Math.PI*Math.exp(-(dx*dx+dy*dy)/((q.sg*Lm)**2)),c=Math.cos(t),s=Math.sin(t);
+      x=cx+dx*c-dy*s;y=cy+dx*s+dy*c}return[x,y]};
+  }
+  const P=[];
+  for(let j=0;j<R;j++)for(let i=0;i<C;i++){
+    const[x,y]=map(i+(hr(S,3,i,j)-0.5)*W,j+(hr(S,4,i,j)-0.5)*W);P.push({i,j,x:r2(x),y:r2(y)})}
+
+  const tris=[];
+  for(let j=0;j<R-1;j++)for(let i=0;i<C-1;i++){
+    if(hr(S,5,i,j)>=st.f/100)continue;
+    const a=id(i,j),b=id(i+1,j),c=id(i+1,j+1),d=id(i,j+1);
+    if(hr(S,6,i,j)<0.5)tris.push([a,b,c],[a,c,d]);else tris.push([a,b,d],[b,c,d]);
+  }
+  if(!tris.length)return null;
+  const par=tris.map((_,k)=>k),find=k=>{while(par[k]!==k){par[k]=par[par[k]];k=par[k]}return k};
+  const ek=(p,q)=>p<q?p*1000+q:q*1000+p,own=new Map();
+  tris.forEach((t,k)=>{for(let e=0;e<3;e++){const key=ek(t[e],t[(e+1)%3]);
+    if(own.has(key)){const a=find(own.get(key)),b=find(k);if(a!==b)par[Math.max(a,b)]=Math.min(a,b)}else own.set(key,k)}});
+  const cnt=new Map();tris.forEach((_,k)=>{const r=find(k);cnt.set(r,(cnt.get(r)||0)+1)});
+  let best=-1,bc=0;for(const[r,c]of cnt)if(c>bc||(c===bc&&r<best)){bc=c;best=r}
+  const eset=new Set(),used=new Set();
+  tris.forEach((t,k)=>{if(find(k)!==best)return;for(let e=0;e<3;e++){eset.add(ek(t[e],t[(e+1)%3]));used.add(t[e])}});
+  const nodes=[...used].sort((a,b)=>a-b);
+  const members=[...eset].sort((a,b)=>a-b).map(k=>[Math.floor(k/1000),k%1000]);
+
+  // loads: field sampled in world space (the field is "the weather"), blended with gravity
+  let bx0=1e9,bx1=-1e9,by0=1e9,by1=-1e9;for(const p of P){bx0=Math.min(bx0,p.x);bx1=Math.max(bx1,p.x);by0=Math.min(by0,p.y);by1=Math.max(by1,p.y)}
+  const mcx=(bx0+bx1)/2,mcy=(by0+by1)/2,half=Math.max(bx1-bx0,by1-by0)/2||1;
+  let mx=0;const raw=[];
+  for(const g of nodes){const p=P[g];if(hr(S,7,p.i,p.j)>=st.l/100)continue;
+    const u=(p.x-mcx)/half,v=(p.y-mcy)/half;let vx=0,vy=0;
+    use.forEach(q=>{const dx=u-q.cx,dy=v-q.cy,e=Math.exp(-(dx*dx+dy*dy)/(q.sg*q.sg));
+      if(q.t===0){const w=Math.sin(q.f*Math.PI*(u*Math.cos(q.th)+v*Math.sin(q.th))+q.ph);vx+=-Math.sin(q.th)*w;vy+=Math.cos(q.th)*w}
+      else if(q.t===1){vx+=-dy*e*2*q.s;vy+=dx*e*2*q.s}
+      else{vx+=dx*e*2*q.s;vy+=dy*e*2*q.s}});
+    mx=Math.max(mx,Math.hypot(vx,vy));raw.push({g,vx,vy})}
+  const gm=st.g/10;let m2=0;
+  const bl=raw.map(o=>{const fx=(1-gm)*(mx?o.vx/mx:0),fy=(1-gm)*(mx?o.vy/mx:0)-gm;m2=Math.max(m2,Math.hypot(fx,fy));return{g:o.g,fx,fy}});
+  const loads=bl.map(o=>({g:o.g,Fx:m2?r3(o.fx/m2):0,Fy:m2?r3(o.fy/m2):0})).filter(o=>o.Fx||o.Fy);
+
+  // supports along the j-lowest node of each column (intrados for the arch)
+  const base=[];for(let i=0;i<C;i++)for(let j=0;j<R;j++)if(used.has(id(i,j))){base.push(id(i,j));break}
+  const sc=Math.min(st.s,base.length),pick=[];
+  for(let k=0;k<sc;k++){const g=base[Math.round(k*(base.length-1)/(sc-1))];if(!pick.includes(g))pick.push(g)}
+  const supports=pick.map((g,k)=>{const p=P[g];
+    // an arch on two supports gets two pins: that is what makes it carry thrust instead of bending
+    const type=k===0?'pin':pick.length===2?(form===1?'pin':'roller'):(hr(S,8,p.i,0)<0.5?'pin':'roller');
+    const ang=type==='roller'&&st.ra?(Math.floor(hr(S,9,p.i,0)*5)-2)*15:0;
+    return{g,type,ang}});
+  const pins=supports.filter(s=>s.type==='pin');
+  if(pins.length===1)for(const s of supports)if(s.type==='roller'&&s.ang){
+    const a=s.ang*Math.PI/180,nx=-Math.sin(a),ny=Math.cos(a),dx=P[pins[0].g].x-P[s.g].x,dy=P[pins[0].g].y-P[s.g].y;
+    if(Math.abs(nx*dy-ny*dx)<0.15*Math.hypot(dx,dy))s.ang=0}
+  return{P,nodes,members,loads,supports};
+}
+/*END*/
+
+const $=id=>document.getElementById(id);
+const view={style:'line',loads:true,sup:true};
+const sel={gen:2,m:1};
+let model=null,forces=null;
+
+function readState(){return{gen:sel.gen,m:sel.m,seed:$('seed').value.toLowerCase().replace(/[^a-z0-9]/g,'')||'truzme',
+  a:+$('a').value,d:+$('d').value,g:+$('g').value,
+  c:+$('c').value,f:+$('f').value,l:+$('l').value,s:+$('s').value,w:+$('w').value,ra:$('ra').checked}}
+function syncSel(){
+  $('g1').setAttribute('aria-pressed',sel.gen===1);$('g2').setAttribute('aria-pressed',sel.gen===2);
+  [0,1,2].forEach(k=>$('m'+k).setAttribute('aria-pressed',sel.m===k));
+  $('net2grp').hidden=sel.gen!==2;$('genName').textContent='net'+sel.gen;
+}
+
+function tokens(){const cs=getComputedStyle(document.documentElement),g=v=>cs.getPropertyValue(v).trim();
+  return{plate:g('--plate'),ink:g('--ink'),muted:g('--muted'),rule:g('--rule'),t:g('--t'),c:g('--c')}}
+const hex=h=>{h=h.replace('#','');return[0,2,4].map(i=>parseInt(h.slice(i,i+2),16))};
+const mix=(a,b,t)=>{const A=hex(a),B=hex(b);return`rgb(${A.map((x,i)=>Math.round(x+(B[i]-x)*t)).join(',')})`};
+
+function regen(){
+  const st=readState();
+  ['c','f','l','s','w','a','d','g'].forEach(k=>$('o'+k).textContent=st[k]+(k==='f'||k==='l'?'%':''));
+  syncSel();
+  const rec=recipeOf(st);$('recipe').textContent=rec;
+  try{history.replaceState(null,'','#'+rec)}catch(e){}
+  model=st.gen===2?gen2(st):gen(st);forces=model?solve(model):null;
+  $('err').hidden=!!forces;draw();stats();
+}
+
+function stats(){
+  if(!model||!forces){$('stats').innerHTML='';return}
+  const n=model.nodes.length,m=model.members.length,r=model.supports.reduce((a,s)=>a+(s.type==='pin'?2:1),0);
+  const mx=Math.max(...forces.map(Math.abs)),T=forces.filter(f=>f>0.001*mx).length,C=forces.filter(f=>f<-0.001*mx).length;
+  const rows=[['csomópont',n],['rúd',m],['reakció',r],['határozatlanság',m+r-2*n],['húzott / nyomott',T+' / '+C],['max |N|',mx.toFixed(3)+' kN']];
+  $('stats').innerHTML=rows.map(([a,b])=>`<dt>${a}</dt><dd>${b}</dd>`).join('');
+}
+
+function draw(){
+  const cv=$('cv'),dpr=window.devicePixelRatio||1,px=cv.clientWidth;if(!px)return;
+  cv.width=cv.height=Math.round(px*dpr);
+  const ctx=cv.getContext('2d'),col=tokens();
+  ctx.setTransform(1,0,0,1,0,0);ctx.fillStyle=col.plate;ctx.fillRect(0,0,cv.width,cv.height);
+  if(!model||!forces)return;
+  const P=model.P,xs=model.nodes.map(g=>P[g].x),ys=model.nodes.map(g=>P[g].y);
+  const x0=Math.min(...xs),x1=Math.max(...xs),y0=Math.min(...ys),y1=Math.max(...ys);
+  const span=Math.max(x1-x0,y1-y0)+3,sc=cv.width/span,cx=(x0+x1)/2,cy=(y0+y1)/2;
+  ctx.setTransform(sc,0,0,-sc,cv.width/2-cx*sc,cv.height/2+cy*sc);
+  const pxw=dpr/sc; ctx.lineCap='round';ctx.lineJoin='round';
+  const mx=Math.max(1e-9,...forces.map(Math.abs));
+  const order=forces.map((f,k)=>k).sort((a,b)=>Math.abs(forces[a])-Math.abs(forces[b]));
+
+  for(const k of order){
+    const[p,q]=model.members[k],A=P[p],B=P[q],N=forces[k],t=Math.sqrt(Math.abs(N)/mx),hue=N>0?col.t:col.c;
+    if(view.style==='line'){
+      ctx.strokeStyle=t<0.08?col.rule:mix(col.rule,hue,Math.min(1,0.25+t));
+      ctx.lineWidth=(0.7+4.6*t)*pxw;ctx.beginPath();ctx.moveTo(A.x,A.y);ctx.lineTo(B.x,B.y);ctx.stroke();
+    }else{
+      const dx=B.x-A.x,dy=B.y-A.y,L=Math.hypot(dx,dy),nx=-dy/L,ny=dx/L;
+      const pass=t<0.08?1:1+Math.round(2*t),gap=1.7*pxw;
+      ctx.strokeStyle=t<0.08?col.muted:hue;ctx.lineWidth=1*pxw;ctx.globalAlpha=t<0.08?0.45:0.9;
+      for(let s=0;s<pass;s++){const o=(s-(pass-1)/2)*gap;ctx.beginPath();ctx.moveTo(A.x+nx*o,A.y+ny*o);ctx.lineTo(B.x+nx*o,B.y+ny*o);ctx.stroke()}
+      ctx.globalAlpha=1;
+    }
+  }
+  if(view.style==='line'){ctx.fillStyle=col.ink;for(const g of model.nodes){ctx.beginPath();ctx.arc(P[g].x,P[g].y,1.3*pxw,0,7);ctx.fill()}}
+
+  if(view.loads){ctx.strokeStyle=col.muted;ctx.fillStyle=col.muted;ctx.lineWidth=1*pxw;
+    for(const l of model.loads){const m=Math.hypot(l.Fx,l.Fy),dx=l.Fx/m,dy=l.Fy/m,len=0.85*m,hx=P[l.g].x-dx*0.07,hy=P[l.g].y-dy*0.07;
+      if(len<0.12)continue;
+      ctx.beginPath();ctx.moveTo(hx-dx*len,hy-dy*len);ctx.lineTo(hx,hy);ctx.stroke();
+      const s=0.13;ctx.beginPath();ctx.moveTo(hx,hy);ctx.lineTo(hx-dx*s-dy*s*0.45,hy-dy*s+dx*s*0.45);ctx.lineTo(hx-dx*s+dy*s*0.45,hy-dy*s-dx*s*0.45);ctx.closePath();ctx.fill()}}
+
+  if(view.sup){ctx.strokeStyle=col.ink;ctx.lineWidth=1.2*pxw;
+    for(const s of model.supports){const p=P[s.g],a=s.ang*Math.PI/180,dn=[Math.sin(a),-Math.cos(a)],pp=[Math.cos(a),Math.sin(a)],h=0.42;
+      const at=(d,w)=>[p.x+dn[0]*d+pp[0]*w,p.y+dn[1]*d+pp[1]*w];
+      const T=[at(0,0),at(h,-h*0.6),at(h,h*0.6)];
+      ctx.fillStyle=col.plate;ctx.beginPath();ctx.moveTo(...T[0]);ctx.lineTo(...T[1]);ctx.lineTo(...T[2]);ctx.closePath();ctx.fill();ctx.stroke();
+      const bd=s.type==='roller'?h+0.12:h;
+      ctx.beginPath();ctx.moveTo(...at(bd,-h*0.85));ctx.lineTo(...at(bd,h*0.85));ctx.stroke();
+      if(s.type==='pin')for(let k=-2;k<=2;k++){ctx.beginPath();ctx.moveTo(...at(bd,k*h*0.32));ctx.lineTo(...at(bd+0.13,k*h*0.32-0.1));ctx.stroke()}
+      else for(const w of[-0.2,0.2]){const c=at(h+0.06,w);ctx.beginPath();ctx.arc(c[0],c[1],0.055,0,7);ctx.stroke()}}}
+}
+
+function loadHash(){const h=location.hash||'';
+  let m=h.match(/^#net1\.([a-z0-9]+)\.c(\d)\.f(\d+)\.l(\d+)\.s(\d)\.w(\d+)\.(ra|r0)$/);
+  if(m){sel.gen=1;$('seed').value=m[1];[['c',2],['f',3],['l',4],['s',5],['w',6]].forEach(([k,i])=>$(k).value=m[i]);$('ra').checked=m[7]==='ra';return}
+  m=h.match(/^#net2\.([a-z0-9]+)\.m(\d)\.a(\d+)\.d(\d+)\.c(\d)\.f(\d+)\.l(\d+)\.g(\d+)\.s(\d)\.w(\d+)\.(ra|r0)$/);
+  if(m){sel.gen=2;sel.m=Math.min(2,+m[2]);$('seed').value=m[1];
+    [['a',3],['d',4],['c',5],['f',6],['l',7],['g',8],['s',9],['w',10]].forEach(([k,i])=>$(k).value=m[i]);$('ra').checked=m[11]==='ra'}}
+
+let tmr;const sched=()=>{clearTimeout(tmr);tmr=setTimeout(regen,30)};
+['seed','c','f','l','s','w','ra','a','d','g'].forEach(id=>$(id).addEventListener('input',sched));
+$('g1').onclick=()=>{sel.gen=1;regen()};$('g2').onclick=()=>{sel.gen=2;regen()};
+[0,1,2].forEach(k=>$('m'+k).onclick=()=>{sel.m=k;regen()});
+$('roll').onclick=()=>{const a=new Uint32Array(1);crypto.getRandomValues(a);$('seed').value=a[0].toString(36).slice(0,6);regen()};
+$('copy').onclick=()=>{const t=$('recipe').textContent,b=$('copy');
+  const ok=()=>{b.textContent='Másolva';setTimeout(()=>b.textContent='Recept másolása',1400)};
+  try{navigator.clipboard.writeText(t).then(ok,()=>{getSelection().selectAllChildren($('recipe'))})}catch(e){getSelection().selectAllChildren($('recipe'))}};
+const setStyle=s=>{view.style=s;$('stLine').setAttribute('aria-pressed',s==='line');$('stPlot').setAttribute('aria-pressed',s==='plot');draw()};
+$('stLine').onclick=()=>setStyle('line');$('stPlot').onclick=()=>setStyle('plot');
+$('showL').onchange=e=>{view.loads=e.target.checked;draw()};
+$('showS').onchange=e=>{view.sup=e.target.checked;draw()};
+new ResizeObserver(draw).observe($('cv'));
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change',draw);
+new MutationObserver(draw).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
+loadHash();regen();
+</script>
+
+</body></html>
