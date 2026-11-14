@@ -10,7 +10,7 @@ export default function NotFound() {
       <p className="max-w-[30rem] text-md text-muted">The link may be old, or the page was never built. The rest of the structure still stands.</p>
       <div className="mt-2 flex flex-wrap items-center gap-x-6 gap-y-3">
         <Link href="/" className={buttonClass("primary")}>Back to the start</Link>
-        <Link href="/elements" className={buttonClass("ghost")}>The Elements of Statics</Link>
+        <Link href="/elements" className={buttonClass("secondary")}>The Elements of Statics</Link>
       </div>
     </main>
   );

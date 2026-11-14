@@ -37,3 +37,18 @@ export function Eyebrow({ children, className }: { children: ReactNode; classNam
 export function Hint({ children }: { children: ReactNode }) {
   return <p className="border-l-2 border-rule pl-3 font-data text-sm text-muted">{children}</p>;
 }
+
+/**
+ * Class for a link in text: ink with an underline that is always visible.
+ * Grey never means "link", and links never rely on hover alone.
+ */
+export const linkClass = "text-ink underline decoration-muted underline-offset-3 transition-colors duration-150 ease-fz hover:decoration-ink";
+
+/** Something that is not there yet ("in the works"): said in words, with a dashed outline, never by greying the title. */
+export function Pending({ children, className }: { children: ReactNode; className?: string }) {
+  return (
+    <span className={cx("inline-block rounded-sm border border-dashed border-rule-strong px-1.5 py-1 font-data text-xs leading-none whitespace-nowrap text-muted", className)}>
+      {children}
+    </span>
+  );
+}

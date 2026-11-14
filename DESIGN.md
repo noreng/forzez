@@ -90,8 +90,21 @@ touches `font`/`fontWeight` in tokens and the `next/font` imports in
 | `Sym` | Byrne symbol in text: a coloured bar for a force, dashed for a resultant, a square, a wedge for an angle. Has a spoken label |
 | `Live` | a number computed from the diagram, inline in text |
 | `Eyebrow`, `Hint` | label above a title; side note with a rule |
+| `linkClass`, `Pending` | a link in text (always underlined); a "not there yet" tag with a dashed outline |
 | `ThemeToggle`, `ThemeScript` | light/dark switch (moon in light, sun in dark), fixed top right in the root layout; `ThemeScript` in `<head>` applies a saved choice before paint. No saved choice = follow the system |
 | `ForceArrow`, `DotGrid` | SVG: force arrow with head and label; dot grid behind a diagram |
+
+### Links and status
+
+A reader must tell a link from text without hovering, on a phone too.
+
+- A link in text is ink with an underline that is always visible (`linkClass`). No underline means it is not a link.
+- A whole row that links (a contents line) shows an underlined title and a `→` at every width; hover tints the row `sunken`.
+- Actions are buttons: `primary` for the main one, `secondary` (outlined) next to it. `ghost` only inside dense UI, never as a page's second call to action.
+- Grey (`muted`) means secondary text only: descriptions, captions, kickers. Never "link", never "unavailable".
+- Something that is not there yet keeps its ink title and says so in words with `<Pending>` ("in the works"), not by greying.
+- `font-data` is for numbers, labels and buttons; links in text use the text face.
+- Links use ink, not `accent`: blue means tension.
 
 Reference pages: `/lab/equilibrium` (scroll explainer) and `/elements` (the book).
 

@@ -3,7 +3,7 @@ export { toneColor, toneText, type Tone } from "./tone";
 export { Button, buttonClass } from "./button";
 export { Slider } from "./slider";
 export { Readout, ReadoutRow, Badge } from "./readout";
-export { ForceRef, Live, Eyebrow, Hint } from "./prose";
+export { ForceRef, Live, Eyebrow, Hint, Pending, linkClass } from "./prose";
 export { ForceArrow } from "./svg/arrow";
 export { DotGrid } from "./svg/grid";
 export { ThemeToggle } from "./theme-toggle";

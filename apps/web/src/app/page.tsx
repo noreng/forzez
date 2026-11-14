@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
-import { Eyebrow, Sym, buttonClass } from "@forzez/ui";
+import { Eyebrow, Pending, Sym, buttonClass, linkClass } from "@forzez/ui";
 import { PAGES, findPage } from "./elements/_lib/content";
 
 // Copy: docs/notes/brand-naming.md and forzez-puns-and-logo.md. The figure is the hero
@@ -8,23 +8,38 @@ import { PAGES, findPage } from "./elements/_lib/content";
 const hero = findPage("v-3")!.page;
 const plates = PAGES.length;
 
-/** One line of "on forzez": what it is, a sentence, and where it goes (or that it is coming). */
+/**
+ * One line of "on forzez": what it is, a sentence, and where it goes. A linked row shows its
+ * underline and arrow at every width; a row that is not there yet says so with a tag, not with grey.
+ */
 function Row({ kicker, title, children, href, status }: { kicker: string; title: string; children: ReactNode; href?: string; status?: string }) {
   const inner = (
     <>
       <span className="font-data text-sm text-muted">{kicker}</span>
       <span>
-        <span className={href ? "font-display text-xl group-hover:underline" : "font-display text-xl text-muted"}>{title}</span>
+        <span className="font-display text-xl">
+          {href ? (
+            <>
+              <span className="underline decoration-muted decoration-1 underline-offset-4 group-hover:decoration-ink">{title}</span>
+              <span aria-hidden className="ml-2 inline-block font-data text-lg transition-transform duration-150 ease-fz group-hover:translate-x-1">→</span>
+            </>
+          ) : (
+            title
+          )}
+        </span>
         <span className="mt-1 block text-muted">{children}</span>
       </span>
-      {/* on phones the whole row is the link; the arrow only shows where it has its own column */}
-      <span className={href ? "hidden font-data text-sm text-muted sm:inline" : "font-data text-sm whitespace-nowrap text-muted"}>{href ? "→" : status}</span>
+      {status ? <Pending className="justify-self-start">{status}</Pending> : null}
     </>
   );
-  const row = "grid grid-cols-1 gap-x-8 gap-y-1 py-5 sm:grid-cols-[11rem_minmax(0,1fr)_auto] sm:items-baseline";
+  const row = "grid grid-cols-1 gap-x-8 gap-y-2 py-5 sm:grid-cols-[11rem_minmax(0,1fr)_auto] sm:items-baseline";
   return (
     <li className="border-b border-rule first:border-t">
-      {href ? <Link href={href} className={`group ${row}`}>{inner}</Link> : <div className={row}>{inner}</div>}
+      {href ? (
+        <Link href={href} className={`group -mx-3 rounded-sm px-3 transition-colors duration-150 ease-fz hover:bg-sunken ${row}`}>{inner}</Link>
+      ) : (
+        <div className={row}>{inner}</div>
+      )}
     </li>
   );
 }
@@ -42,13 +57,13 @@ export default function Home() {
           </p>
           <div className="mt-2 flex flex-wrap items-center gap-x-6 gap-y-3">
             <Link href="/elements" className={buttonClass("primary")}>Read The Elements of Statics</Link>
-            <Link href="/lab/equilibrium" className={buttonClass("ghost")}>See forces in balance</Link>
+            <Link href="/lab/equilibrium" className={buttonClass("secondary")}>See forces in balance</Link>
           </div>
         </div>
         <figure className="m-0">
           {hero.figure}
           <figcaption className="mt-4 text-center text-sm text-muted italic">
-            <Link href={`/elements/${hero.slug}`} className="underline decoration-rule underline-offset-3 hover:decoration-ink">
+            <Link href={`/elements/${hero.slug}`} className={`not-italic ${linkClass}`}>
               Book V, Prop. III
             </Link>
             : as the chain hangs, so the arch stands.
@@ -89,15 +104,20 @@ export default function Home() {
       {/* newsletter: no form until a list service is chosen */}
       <section className="flex flex-col gap-3 border-t border-rule-strong pt-10">
         <h2 className="font-display text-3xl leading-none">Feel the Forzez.</h2>
-        <p className="max-w-[36rem]">One proposition per issue, and every new series first. The list opens with the first series.</p>
-        <p className="font-data text-sm text-muted">Hold your forzez.</p>
+        <p className="max-w-[36rem]">One proposition per issue, and every new series first.</p>
+        <p className="flex flex-wrap items-baseline gap-x-3 gap-y-2">
+          <Pending>signup opens with Series 01</Pending>
+          <span className="text-muted italic">Hold your forzez.</span>
+        </p>
       </section>
 
       <footer className="flex flex-wrap items-baseline justify-between gap-x-8 gap-y-3 border-t border-rule pt-6 text-sm text-muted">
         <p className="italic">Every line carries a load.</p>
-        <nav aria-label="More" className="flex flex-wrap gap-x-6 gap-y-2 font-data">
-          <Link href="/design" className="hover:text-ink">Design system</Link>
-          <a href="https://truzme.com" className="hover:text-ink">Powered by Truzme</a>
+        <nav aria-label="More" className="flex flex-wrap gap-x-6 gap-y-2">
+          <Link href="/design" className={linkClass}>Design system</Link>
+          <span>
+            Powered by <a href="https://truzme.com" className={linkClass}>Truzme</a>
+          </span>
         </nav>
       </footer>
     </main>
