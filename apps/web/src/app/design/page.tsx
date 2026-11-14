@@ -80,8 +80,7 @@ function Arrow({ y, w, cls, label }: { y: number; w: string; cls: string; label:
 export default function DesignPage() {
   return (
     <main className="mx-auto flex w-full max-w-5xl flex-col gap-14 px-4 pb-24 sm:px-8">
-      <div className="flex justify-between border-b border-rule-strong pt-4 pr-12 pb-2.5 font-data text-sm text-muted">
-        <span>forzez</span>
+      <div className="flex justify-end border-b border-rule-strong pt-16 pb-2.5 font-data text-sm text-muted">
         <span>Design system</span>
       </div>
 

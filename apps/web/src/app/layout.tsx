@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Mono, IBM_Plex_Sans_Condensed, IBM_Plex_Serif } from "next/font/google";
 import { ThemeScript, ThemeToggle } from "@forzez/ui";
+import { HomeLink } from "./_components/home-link";
 import "./globals.css";
 
 // Font variables feed the --fz-font-* tokens (see @forzez/tokens): the "Plex" pairing.
@@ -42,6 +43,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       </head>
       <body className="min-h-full flex flex-col">
         {children}
+        <HomeLink className="fixed top-3 left-3 z-20 min-[860px]:top-4 min-[860px]:left-4" />
         <ThemeToggle className="fixed top-3 right-3 z-20 min-[860px]:top-4 min-[860px]:right-4" />
       </body>
     </html>

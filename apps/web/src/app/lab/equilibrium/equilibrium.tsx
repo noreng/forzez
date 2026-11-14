@@ -86,7 +86,7 @@ function Stage({ sections, sceneRef }: { sections: React.RefObject<(HTMLElement 
   return (
     <div className="relative min-h-0 flex-1 overflow-hidden">
       <SceneSvg frame={frame} now={now} reduceMotion={engine.reduceMotion} />
-      <Readout className="pointer-events-none absolute top-2.5 left-3 transition-opacity duration-300">
+      <Readout className="pointer-events-none absolute top-2.5 left-3 transition-opacity duration-300 min-[860px]:top-16 min-[860px]:left-4">
         <div style={{ opacity: anyF > 0.05 ? 1 : 0 }}>
           <ReadoutRow label={<>ΣF<sub>x</sub></>} value={fmt(Rx, 2)} unit="kN" />
           <ReadoutRow label={<>ΣF<sub>y</sub></>} value={fmt(Ry, 2)} unit="kN" />

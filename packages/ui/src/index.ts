@@ -10,3 +10,4 @@ export { ThemeToggle } from "./theme-toggle";
 export { themeScript, THEME_KEY } from "./theme-script";
 export { ThemeScript } from "./theme-script-tag";
 export { Sym } from "./sym";
+export { LogoMark } from "./logo";

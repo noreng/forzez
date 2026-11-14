@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { BOOKS, PROPS, findProp, refHref, refLabel, refText, roman } from "../_lib/content";
+import { PageNav } from "../_lib/page-nav";
 import { Spread } from "../_lib/spread";
 
 export function generateStaticParams() {
@@ -60,11 +61,10 @@ async function Proposition({ params }: { params: PageProps<"/elements/[slug]">["
             </aside>
           ) : null}
 
-          <nav aria-label="Propositions" className="mt-8 flex flex-wrap justify-between gap-x-6 gap-y-2 font-data text-sm">
-            {prev ? <Link href={`/elements/${prev.slug}`} className="hover:underline">← {roman(prev.n)}. {prev.short}</Link> : <span />}
-            <Link href="/elements" className="text-muted hover:text-ink">Contents</Link>
-            {next ? <Link href={`/elements/${next.slug}`} className="hover:underline">{roman(next.n)}. {next.short} →</Link> : <span />}
-          </nav>
+          <PageNav
+            prev={prev ? { href: `/elements/${prev.slug}`, n: roman(prev.n), short: prev.short } : null}
+            next={next ? { href: `/elements/${next.slug}`, n: roman(next.n), short: next.short } : null}
+          />
         </>
       }
       right={
