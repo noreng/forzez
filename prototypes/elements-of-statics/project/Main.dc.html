@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Axioms</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Display&amp;family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#C2311F}a:hover{color:#8E2416}
+</style>
+</helmet>
+<div style="width: 720px; height: 1020px; box-sizing: border-box; padding: 56px 72px 48px; background: {{paper}}; color: #1B1A17; font-family: 'Libre Caslon Text', Georgia, serif; display: flex; flex-direction: column; gap: 22px">
+<div style="display: flex; justify-content: space-between; font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: #5C574C; border-bottom: 1px solid #1B1A17; padding-bottom: 10px">
+<span>The Elements of Statics</span>
+<span>Axioms</span>
+</div>
+<div style="display: flex; flex-direction: column; align-items: center; gap: 6px; padding-top: 12px">
+<h1 style="margin: 0; font-family: 'Libre Caslon Display', Georgia, serif; font-weight: 400; font-size: 46px; line-height: 1.1; text-align: center">The Elements of Statics</h1>
+<p style="margin: 0; font-style: italic; font-size: 16px; color: #5C574C; text-align: center">with coloured diagrams in place of letters</p>
+</div>
+<div style="display: flex; align-items: center; justify-content: center; gap: 14px; padding-top: 4px">
+<svg width="40" height="14" viewBox="0 0 40 14" aria-hidden="true"><line x1="2" y1="7" x2="38" y2="7" stroke="#C2311F" stroke-width="5"></line></svg>
+<svg width="40" height="14" viewBox="0 0 40 14" aria-hidden="true"><line x1="2" y1="7" x2="38" y2="7" stroke="#1F4E96" stroke-width="5"></line></svg>
+<svg width="40" height="14" viewBox="0 0 40 14" aria-hidden="true"><line x1="2" y1="7" x2="38" y2="7" stroke="#E3A81B" stroke-width="5"></line></svg>
+<svg width="40" height="14" viewBox="0 0 40 14" aria-hidden="true"><line x1="2" y1="7" x2="38" y2="7" stroke="#1B1A17" stroke-width="5"></line></svg>
+</div>
+<h2 style="margin: 8px 0 0; font-family: 'Libre Caslon Display', Georgia, serif; font-weight: 400; font-size: 22px; letter-spacing: 0.2em; text-transform: uppercase; text-align: center">Axioms.</h2>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 26px 32px">
+
+<div style="display: flex; flex-direction: column; gap: 8px">
+<svg width="100%" viewBox="0 0 260 130" role="img" aria-label="Two equal and opposite red forces on one line hold a body in balance">
+<defs><marker id="a1r" viewBox="0 0 10 10" refX="3" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#C2311F"></path></marker></defs>
+<rect x="95" y="40" width="70" height="50" fill="#1B1A17" fill-opacity="0.08"></rect>
+<line x1="14" y1="65" x2="246" y2="65" stroke="#1B1A17" stroke-width="1" stroke-dasharray="4 4"></line>
+<line x1="110" y1="65" x2="44" y2="65" stroke="#C2311F" stroke-width="5" marker-end="url(#a1r)"></line>
+<line x1="150" y1="65" x2="216" y2="65" stroke="#C2311F" stroke-width="5" marker-end="url(#a1r)"></line>
+</svg>
+<p style="margin: 0; font-size: 14px; line-height: 1.55"><span style="font-family: 'Libre Caslon Display', Georgia, serif; font-size: 20px; color: #C2311F">I.</span> Two forces hold a body in balance when they are equal, opposite, and on one line.</p>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 8px">
+<svg width="100%" viewBox="0 0 260 130" role="img" aria-label="A red and a blue force at a point combine into the black diagonal of their parallelogram">
+<defs>
+<marker id="a2r" viewBox="0 0 10 10" refX="3" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#C2311F"></path></marker>
+<marker id="a2b" viewBox="0 0 10 10" refX="3" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#1F4E96"></path></marker>
+<marker id="a2k" viewBox="0 0 10 10" refX="3" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#1B1A17"></path></marker>
+</defs>
+<line x1="90" y1="30" x2="230" y2="10" stroke="#1B1A17" stroke-width="1" stroke-dasharray="4 4"></line>
+<line x1="200" y1="100" x2="230" y2="10" stroke="#1B1A17" stroke-width="1" stroke-dasharray="4 4"></line>
+<line x1="60" y1="118" x2="223" y2="14" stroke="#1B1A17" stroke-width="3" marker-end="url(#a2k)"></line>
+<line x1="60" y1="118" x2="85" y2="43" stroke="#C2311F" stroke-width="5" marker-end="url(#a2r)"></line>
+<line x1="60" y1="118" x2="186" y2="102" stroke="#1F4E96" stroke-width="5" marker-end="url(#a2b)"></line>
+<circle cx="60" cy="118" r="4" fill="#1B1A17"></circle>
+</svg>
+<p style="margin: 0; font-size: 14px; line-height: 1.55"><span style="font-family: 'Libre Caslon Display', Georgia, serif; font-size: 20px; color: #C2311F">II.</span> Two forces at a point act as one: the diagonal of the parallelogram they span.</p>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 8px">
+<svg width="100%" viewBox="0 0 260 130" role="img" aria-label="A yellow load on a body is unchanged when a balanced pair of blue forces is added">
+<defs>
+<marker id="a3y" viewBox="0 0 10 10" refX="3" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#E3A81B"></path></marker>
+<marker id="a3b" viewBox="0 0 10 10" refX="3" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#1F4E96"></path></marker>
+</defs>
+<rect x="95" y="50" width="70" height="50" fill="#1B1A17" fill-opacity="0.08"></rect>
+<line x1="130" y1="6" x2="130" y2="34" stroke="#E3A81B" stroke-width="5" marker-end="url(#a3y)"></line>
+<line x1="112" y1="75" x2="50" y2="75" stroke="#1F4E96" stroke-width="5" stroke-opacity="0.45" marker-end="url(#a3b)"></line>
+<line x1="148" y1="75" x2="210" y2="75" stroke="#1F4E96" stroke-width="5" stroke-opacity="0.45" marker-end="url(#a3b)"></line>
+</svg>
+<p style="margin: 0; font-size: 14px; line-height: 1.55"><span style="font-family: 'Libre Caslon Display', Georgia, serif; font-size: 20px; color: #C2311F">III.</span> A balanced set of forces may be added or taken away; the body never notices.</p>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 8px">
+<svg width="100%" viewBox="0 0 260 130" role="img" aria-label="Two bodies press on each other with equal and opposite red forces">
+<defs><marker id="a4r" viewBox="0 0 10 10" refX="3" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#C2311F"></path></marker></defs>
+<rect x="20" y="40" width="80" height="50" fill="#1B1A17" fill-opacity="0.08"></rect>
+<rect x="160" y="40" width="80" height="50" fill="#1B1A17" fill-opacity="0.16"></rect>
+<line x1="134" y1="65" x2="116" y2="65" stroke="#C2311F" stroke-width="5" marker-end="url(#a4r)"></line>
+<line x1="126" y1="65" x2="144" y2="65" stroke="#C2311F" stroke-width="5" marker-end="url(#a4r)"></line>
+</svg>
+<p style="margin: 0; font-size: 14px; line-height: 1.55"><span style="font-family: 'Libre Caslon Display', Georgia, serif; font-size: 20px; color: #C2311F">IV.</span> Whatever one body does to another, the other does back: equal, and opposite.</p>
+</div>
+
+</div>
+<div style="flex-grow: 1"></div>
+<p style="margin: 0; font-style: italic; font-size: 14px; line-height: 1.6; color: #5C574C; text-align: center">Everything that follows is built from these four, and from nothing else.</p>
+<div style="display: flex; justify-content: center; font-size: 12px; letter-spacing: 0.18em; color: #5C574C">i</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"paper":{"editor":"color","default":"#F4EEDF","options":["#F4EEDF","#FFFFFF","#EFE6CF"]},"$preview":{"width":720,"height":1020}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { paper: this.props.paper ?? '#F4EEDF' };
+  }
+}
+</script>
+</body>
+</html>

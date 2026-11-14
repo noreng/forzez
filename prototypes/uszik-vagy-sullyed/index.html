@@ -1,0 +1,1225 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Úszik vagy süllyed?</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=DM+Mono:wght@400;500&family=Nunito:wght@400;600;700;800&display=swap">
+<style>
+/* Layout: the same "füzet" column as Csaló térképek. Hero title sits half under a waterline,
+   sticky chip nav, then six toy cards (question → toy → "Tudtad?"), links, screen-free experiments, sources. */
+:root{
+  --paper:#edf5f6; --card:#ffffff; --ink:#0e2a33; --muted:#4c6872; --line:#d0e2e6;
+  --scene:#f5fbfc; --glass:#e6f2f5; --glass-line:#86aebb; --glint:#ffffff;
+  --water:#9fd3e6; --water-ink:#2a8db3; --water-line:#2a8db3; --brine:#c6ece1;
+  --pool:#8ed5e7; --sea:#58a3d2; --river:#86b6a8; --dead:#93dcc8;
+  --accent:#d63d27; --accent-ink:#a32a17; --on-accent:#ffffff; --accent-shadow:#9b2a18;
+  --yolk:#f2b31b; --shell:#f4e6cf; --shell-line:#b39470; --cell:#ffffff;
+  --honey:#e3a02a; --oil:#f1de8a; --sand:#e4d5ae; --table:#d8c6a3;
+  --steel:#8d9da5; --steel-dark:#5b6b73; --wood:#d8a868; --wood-line:#a77838;
+  --gold:#e8b931; --gold-fake:#cfc39a; --skin:#e8b691; --leaf:#4f9a3a; --goggle:#2470c9;
+  --hull:#2a3d47; --hull-red:#b8402e; --mark:#f6f2e8; --ship-white:#f3f5f3; --window:#2a5d74;
+  --c1:#d63d27; --c2:#2470c9; --c3:#0c968d; --c4:#f2b31b; --c5:#7351d1;
+  --ok:#178a4a; --bad:#c62a46; --link:#1f6fb8; --foam:#dff0f3;
+  --display:"Baloo 2","Nunito",ui-rounded,system-ui,sans-serif;
+  --body:"Nunito",ui-rounded,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"DM Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --paper:#0a1a20; --card:#11262e; --ink:#e2f0f3; --muted:#92afb8; --line:#21404a;
+  --scene:#0d2129; --glass:#143039; --glass-line:#5d8e9c; --glint:#a8d8e6;
+  --water:#1f6a86; --water-ink:#64c8ea; --water-line:#6fd0f0; --brine:#2b7a6e;
+  --pool:#1e6f86; --sea:#1f5683; --river:#2f6055; --dead:#2a7d6c;
+  --accent:#ff6a4f; --accent-ink:#ff9d88; --on-accent:#2a0903; --accent-shadow:#b8422c;
+  --yolk:#f6c547; --shell:#eadbc2; --shell-line:#9c8261; --cell:#fffaf2;
+  --honey:#c98a1c; --oil:#b5a14c; --sand:#4f4636; --table:#4a3f30;
+  --steel:#7f939c; --steel-dark:#4b5d65; --wood:#c08f50; --wood-line:#8b6230;
+  --gold:#e9bd3d; --gold-fake:#b5aa80; --skin:#d9a57f; --leaf:#5cb246; --goggle:#4f97f0;
+  --hull:#3a5562; --hull-red:#c2533f; --mark:#f6f2e8; --ship-white:#dce4e6; --window:#163a49;
+  --c1:#ff6a4f; --c2:#4f97f0; --c3:#2fc1b4; --c4:#f6c547; --c5:#9a7cf0;
+  --ok:#43d184; --bad:#ff6b84; --link:#76baff; --foam:#153a45;
+  color-scheme:dark }}
+:root[data-theme="dark"]{
+  --paper:#0a1a20; --card:#11262e; --ink:#e2f0f3; --muted:#92afb8; --line:#21404a;
+  --scene:#0d2129; --glass:#143039; --glass-line:#5d8e9c; --glint:#a8d8e6;
+  --water:#1f6a86; --water-ink:#64c8ea; --water-line:#6fd0f0; --brine:#2b7a6e;
+  --pool:#1e6f86; --sea:#1f5683; --river:#2f6055; --dead:#2a7d6c;
+  --accent:#ff6a4f; --accent-ink:#ff9d88; --on-accent:#2a0903; --accent-shadow:#b8422c;
+  --yolk:#f6c547; --shell:#eadbc2; --shell-line:#9c8261; --cell:#fffaf2;
+  --honey:#c98a1c; --oil:#b5a14c; --sand:#4f4636; --table:#4a3f30;
+  --steel:#7f939c; --steel-dark:#4b5d65; --wood:#c08f50; --wood-line:#8b6230;
+  --gold:#e9bd3d; --gold-fake:#b5aa80; --skin:#d9a57f; --leaf:#5cb246; --goggle:#4f97f0;
+  --hull:#3a5562; --hull-red:#c2533f; --mark:#f6f2e8; --ship-white:#dce4e6; --window:#163a49;
+  --c1:#ff6a4f; --c2:#4f97f0; --c3:#2fc1b4; --c4:#f6c547; --c5:#9a7cf0;
+  --ok:#43d184; --bad:#ff6b84; --link:#76baff; --foam:#153a45;
+  color-scheme:dark }
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto} }
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55;
+  padding-left:max(16px, env(safe-area-inset-left,0px));padding-right:max(16px, env(safe-area-inset-right,0px));}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--paper)}
+.wrap{max-width:1060px;margin:0 auto;padding-block:20px 72px;display:flex;flex-direction:column;gap:28px}
+a{color:var(--link)}
+:focus-visible{outline:3px solid var(--link);outline-offset:3px;border-radius:6px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* Hero */
+.hero{position:relative;padding-block:8px 0}
+.hero-inner{display:flex;flex-direction:column;gap:16px;padding-block:22px 6px;max-width:800px}
+.hero h1{font-family:var(--display);font-weight:800;font-size:clamp(54px,12.5vw,118px);line-height:.9;letter-spacing:-.02em;margin:0}
+.hero h1 .l1{display:block}
+.hero h1 .l2{display:block;position:relative;padding-bottom:.08em}
+.hero h1 .sink{display:inline-block;transform:translateY(.1em)}
+@supports ((-webkit-background-clip:text) or (background-clip:text)){
+  .hero h1 .sink{background:linear-gradient(to bottom, var(--ink) 0 47%, var(--water-ink) 47% 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+}
+.hero h1 .wave{position:absolute;left:0;right:0;top:calc(.1em + 47% - 9px);width:100%;height:18px;pointer-events:none;overflow:visible}
+.hero h1 .wave path{fill:none;stroke:var(--water-line);stroke-width:3;stroke-linecap:round}
+.hero h1 .bob{display:inline-block;width:.42em;height:.56em;margin-left:.06em;vertical-align:-.06em;animation:bob 3.2s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(.05em) rotate(4deg)}}
+@media (prefers-reduced-motion: reduce){ .hero h1 .bob{animation:none} }
+.hero p{margin:0;font-size:clamp(17px,2.2vw,20px);max-width:58ch}
+.hero .meta{font-family:var(--mono);font-size:13px;color:var(--muted);letter-spacing:.02em}
+.rule{display:grid;grid-template-columns:auto minmax(0,1fr);gap:16px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:22px;padding:14px 18px;max-width:820px}
+.rule svg{width:120px;height:auto}
+.rule p{margin:0;font-size:17px}
+.rule b{font-family:var(--display);font-weight:800;color:var(--accent-ink)}
+@media (max-width:520px){ .rule{grid-template-columns:1fr} .rule svg{width:140px} }
+
+/* Nav */
+.nav{display:flex;flex-wrap:wrap;gap:8px;padding-block:10px;background:color-mix(in srgb, var(--paper) 92%, transparent);backdrop-filter:blur(6px);z-index:6}
+@media (min-width:700px){ .nav{position:sticky;top:env(safe-area-inset-top,0px)} }
+.nav a{font-family:var(--display);font-weight:600;font-size:16px;text-decoration:none;color:var(--ink);background:var(--card);border:2px solid var(--line);border-radius:999px;padding:3px 14px}
+.nav a:hover{border-color:var(--accent)}
+
+/* Toy card */
+.toy{background:var(--card);border:1px solid var(--line);border-radius:28px;padding:clamp(16px,3.2vw,32px);display:flex;flex-direction:column;gap:18px;scroll-margin-top:76px;min-width:0}
+.toy-head{display:flex;flex-direction:column;gap:6px}
+.eyebrow{font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--accent-ink)}
+.toy-head h2{font-family:var(--display);font-weight:800;font-size:clamp(30px,5.4vw,48px);line-height:1;margin:0;text-wrap:balance}
+.toy-head p{margin:0;color:var(--muted);max-width:66ch}
+.fact{display:flex;gap:14px;align-items:baseline;background:var(--foam);border-radius:18px;padding:12px 18px}
+.fact b{font-family:var(--display);font-weight:800;color:var(--accent-ink);font-size:19px;white-space:nowrap}
+.fact span{max-width:72ch}
+@media (max-width:520px){ .fact{flex-direction:column;gap:2px} }
+
+.two{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:22px;align-items:start}
+.two.wide{grid-template-columns:minmax(0,1.7fr) minmax(0,1fr)}
+@media (max-width:780px){ .two,.two.wide{grid-template-columns:1fr} }
+.panel{display:flex;flex-direction:column;gap:14px;min-width:0}
+.scene{display:block;width:100%;height:auto;border-radius:20px;background:var(--scene);border:1px solid var(--line);user-select:none;-webkit-user-select:none}
+.scene.narrow{max-width:420px;margin-inline:auto}
+
+/* Controls */
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.chip{font:inherit;font-weight:700;font-size:15px;color:var(--ink);background:var(--card);border:2px solid var(--line);border-radius:999px;padding:5px 13px 5px 10px;display:inline-flex;gap:7px;align-items:center;cursor:pointer}
+.chip .dot{width:13px;height:13px;border-radius:50%;background:var(--c,var(--accent));flex:none}
+.chip .em{font-size:18px;line-height:1}
+.chip[aria-pressed="true"]{border-color:var(--c,var(--accent));background:color-mix(in srgb, var(--c,var(--accent)) 14%, var(--card))}
+.chip:hover{border-color:var(--c,var(--accent))}
+.chip[disabled]{opacity:.45;cursor:default}
+.btn{font-family:var(--display);font-weight:800;font-size:18px;line-height:1.2;color:var(--on-accent);background:var(--accent);border:0;border-radius:14px;padding:9px 16px;cursor:pointer;box-shadow:0 4px 0 var(--accent-shadow);transition:transform .08s, box-shadow .08s}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--accent-shadow)}
+.btn.alt{background:var(--card);color:var(--ink);border:2px solid var(--line);box-shadow:0 4px 0 var(--line)}
+.btn.alt:active{box-shadow:0 1px 0 var(--line)}
+.btn[disabled]{opacity:.45;cursor:default;transform:none}
+.btn[aria-pressed="true"]{background:var(--ink);color:var(--card);border-color:var(--ink);box-shadow:0 4px 0 var(--muted)}
+label.lab,.lab{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+input[type=range]{width:100%;accent-color:var(--accent);height:28px}
+.slider-row{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:12px;align-items:center}
+.slider-row .num{font-family:var(--mono);font-size:20px;min-width:5ch;text-align:right;font-variant-numeric:tabular-nums}
+.seg{display:inline-flex;border:2px solid var(--line);border-radius:999px;overflow:hidden;flex-wrap:wrap}
+.seg button{font:inherit;font-weight:700;border:0;background:var(--card);color:var(--ink);padding:5px 14px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--on-accent)}
+.switch{display:inline-flex;align-items:center;gap:10px;font-weight:800;cursor:pointer}
+.switch input{width:22px;height:22px;accent-color:var(--accent)}
+.group{display:flex;flex-direction:column;gap:6px}
+
+/* Readouts */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
+.stats.pair{grid-template-columns:repeat(2,minmax(0,1fr))}
+.stats.trio{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media (max-width:520px){ .stat{padding:8px 10px} .stat .v{font-size:20px} }
+.stat{border-radius:16px;padding:10px 14px;background:var(--paper);border:1px solid var(--line);display:flex;flex-direction:column;gap:2px;min-width:0}
+.stat .k{font-size:14px;color:var(--muted)}
+.stat .v{font-family:var(--mono);font-size:24px;font-variant-numeric:tabular-nums;line-height:1.2}
+.stat .s{font-size:13px;color:var(--muted)}
+.state{font-family:var(--display);font-weight:800;font-size:26px;line-height:1.1;display:flex;align-items:center;gap:10px}
+.state::before{content:"";width:16px;height:16px;border-radius:50%;background:var(--muted);flex:none}
+.state.up::before{background:var(--ok)} .state.down::before{background:var(--steel)} .state.mid::before{background:var(--yolk)} .state.bad::before{background:var(--bad)}
+.note{margin:0;font-size:15px;min-height:3em}
+.bar{height:16px;border-radius:999px;background:var(--paper);border:1px solid var(--line);overflow:hidden;position:relative}
+.bar i{position:absolute;inset:0 auto 0 0;border-radius:999px;transition:width .25s}
+.bar-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 10px;align-items:baseline}
+.bar-row b{font-family:var(--mono);font-weight:500;font-variant-numeric:tabular-nums}
+.bar-row .bar{grid-column:1/-1}
+
+/* Archimedes equation */
+.eq{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr) auto minmax(0,1fr);gap:6px;align-items:stretch}
+.eq i{font-style:normal;font-family:var(--display);font-weight:800;font-size:26px;align-self:center;color:var(--muted)}
+.eqb{border-radius:16px;padding:8px 10px;background:var(--paper);border:1px solid var(--line);display:flex;flex-direction:column;gap:2px;min-width:0}
+.eqb span{font-size:13px;color:var(--muted);line-height:1.25}
+.eqb b{font-family:var(--mono);font-weight:500;font-size:22px;font-variant-numeric:tabular-nums}
+.eqb.water{background:color-mix(in srgb, var(--water) 30%, var(--card));border-color:var(--water)}
+.log{display:flex;flex-wrap:wrap;gap:6px}
+.log span{font-family:var(--mono);font-size:13px;background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:2px 10px}
+
+/* Quiz */
+.q-top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.score{font-family:var(--display);font-weight:800;font-size:20px}
+.q-prompt{font-family:var(--display);font-weight:800;font-size:22px;line-height:1.15}
+.q-result{min-height:4.6em;font-size:16px}
+.q-result .good{color:var(--ok);font-weight:800} .q-result .badc{color:var(--bad);font-weight:800}
+.objs .chip{font-size:14px;padding:4px 11px 4px 8px}
+
+/* SVG classes */
+.f-water{fill:var(--water);fill-opacity:.55}
+.f-brine{fill:var(--brine)}
+.f-front{fill:var(--water);fill-opacity:.38}
+.f-salt{fill:#ffffff;stroke:var(--glass-line);stroke-width:.8}
+.f-grain{fill:#ffffff;stroke:var(--glass-line);stroke-width:.4}
+.f-shell{fill:var(--shell);stroke:var(--shell-line);stroke-width:1.4}
+.f-cell{fill:var(--cell);opacity:.85}
+.s-cell{stroke:var(--shell-line);stroke-width:1;stroke-dasharray:3 2}
+.f-glint{fill:#ffffff;opacity:.55}
+.s-surface{fill:none;stroke:var(--water-line);stroke-width:2.2;stroke-linecap:round}
+.s-glass{fill:none;stroke:var(--glass-line);stroke-width:3;stroke-linejoin:round;stroke-linecap:round}
+.s-glint{stroke:var(--glint);stroke-width:4;stroke-linecap:round;opacity:.7}
+.shadow{fill:var(--ink);opacity:.08}
+.t-small{font-family:var(--mono);font-size:11px;fill:var(--muted)}
+.t-label{font-family:var(--mono);font-size:12px;fill:var(--ink)}
+.t-big{font-family:var(--mono);font-size:14px;font-weight:500;fill:var(--ink)}
+.t-disp{font-family:var(--mono);font-size:10px;fill:#c6f5d0}
+.f-lcd{fill:#13222a}
+.f-steel{fill:var(--steel)} .f-steel-d{fill:var(--steel-dark)}
+.s-steel{fill:none;stroke:var(--steel-dark);stroke-width:2.2;stroke-linejoin:round}
+.s-string{fill:none;stroke:var(--muted);stroke-width:1.4}
+.f-table{fill:var(--table)}
+.f-sand{fill:var(--sand)}
+.f-ink{fill:var(--ink)}
+.f-card{fill:var(--card)}
+.f-scene{fill:var(--scene)}
+.f-rock{fill:#9a9184;stroke:#6f675c;stroke-width:1.2}
+.f-wood{fill:var(--wood);stroke:var(--wood-line);stroke-width:1.2}
+.s-wood{stroke:var(--wood-line);stroke-width:1;fill:none;opacity:.7}
+.f-apple{fill:#d23a2f;stroke:#9c241c;stroke-width:1.2}
+.f-leaf{fill:var(--leaf)}
+.f-gold{fill:var(--gold);stroke:#a07a12;stroke-width:1.2}
+.f-fake{fill:var(--gold-fake);stroke:#8a8160;stroke-width:1.2}
+.f-gem{fill:var(--c1)}
+.f-skin{fill:var(--skin)}
+.s-skin{stroke:var(--skin);fill:none;stroke-linecap:round}
+.f-accent{fill:var(--accent)}
+.f-goggle{fill:var(--goggle)}
+.f-pool{fill:var(--pool)}
+.f-sea{fill:var(--sea)}
+.f-river{fill:var(--river)}
+.f-dead{fill:var(--dead)}
+.f-honey{fill:var(--honey)}
+.f-oil{fill:var(--oil);fill-opacity:.85}
+.f-hull{fill:var(--hull)}
+.f-hullred{fill:var(--hull-red)}
+.f-white{fill:var(--ship-white)}
+.f-window{fill:var(--window)}
+.f-mark{fill:var(--mark)}
+.s-mark{stroke:var(--mark);fill:none}
+.t-mark{font-family:var(--mono);font-size:10px;fill:var(--mark);font-weight:500}
+.t-name{font-family:var(--display);font-weight:800;font-size:13px;fill:var(--mark);letter-spacing:.12em}
+.bubble{fill:none;stroke:var(--glint);stroke-width:1.2;opacity:.8}
+.emoji{font-size:28px;font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif}
+
+/* Links */
+.links{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:12px}
+.lgroup{grid-column:1/-1;font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent-ink);margin-top:8px}
+.lcard{display:flex;flex-direction:column;gap:6px;text-decoration:none;color:var(--ink);background:var(--paper);border:2px solid var(--line);border-radius:18px;padding:14px 16px;min-width:0}
+.lcard:hover{border-color:var(--accent)}
+.lcard .t{font-family:var(--display);font-weight:800;font-size:21px;line-height:1.1}
+.lcard .d{font-family:var(--mono);font-size:12px;color:var(--muted);overflow-wrap:anywhere}
+.lcard .x{font-size:15px}
+.lcard .task{font-size:15px;color:var(--ink);background:var(--card);border-radius:12px;padding:6px 10px}
+.lcard .task::before{content:"Feladat: ";font-weight:800;color:var(--accent-ink)}
+.lang{align-self:flex-start;font-family:var(--mono);font-size:11px;border:1px solid var(--line);border-radius:999px;padding:1px 8px;color:var(--muted)}
+
+.exp{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.exp div{background:var(--foam);border-radius:18px;padding:14px 16px;display:flex;flex-direction:column;gap:6px}
+.exp h3{font-family:var(--display);font-weight:800;font-size:22px;margin:0;line-height:1.1}
+.exp p{margin:0}
+footer{font-family:var(--mono);font-size:12px;color:var(--muted);text-align:center;max-width:90ch;margin-inline:auto}
+</style>
+
+<div class="wrap">
+  <header class="hero" aria-label="Bevezető">
+    <div class="hero-inner">
+      <h1><span class="l1">Úszik vagy</span><span class="l2"><span class="sink">süllyed?</span><svg class="bob" viewBox="-26 -34 52 68" aria-hidden="true"><path id="heroEgg" class="f-shell"></path></svg><svg class="wave" id="heroWave" viewBox="0 0 1000 18" preserveAspectRatio="none" aria-hidden="true"><path></path></svg></span></h1>
+      <p>Hat kis játék arról, miért úszik fel a tojás a sós vízben, hogyan marad fenn egy vasból készült hajó, és miért csak a fejünk lóg ki az uszodában. Itt mindent lehet sózni, húzni és pakolni.</p>
+      <div class="meta">9–10 éveseknek · szülővel együtt · bármelyik játékkal lehet kezdeni</div>
+    </div>
+    <div class="rule">
+      <svg viewBox="0 0 150 80" role="img" aria-label="Két kockacukornyi darab egy mérlegen: a tojás nehezebb, mint a víz">
+        <line x1="75" y1="72" x2="75" y2="30" class="s-steel"></line>
+        <path d="M60 76 L90 76 L75 66 Z" class="f-steel-d"></path>
+        <g transform="rotate(7 75 30)">
+          <line x1="20" y1="30" x2="130" y2="30" class="s-steel"></line>
+          <rect x="10" y="10" width="20" height="20" rx="3" class="f-shell"></rect>
+          <rect x="120" y="10" width="20" height="20" rx="3" class="f-water" style="fill-opacity:1"></rect>
+        </g>
+        <text x="20" y="62" class="t-small" text-anchor="middle">tojás</text>
+        <text x="130" y="62" class="t-small" text-anchor="middle">víz</text>
+      </svg>
+      <p><b>A nagy titok:</b> képzelj el egy kockacukornyi darabot (1 cm³) a tárgyból. Ha nehezebb, mint egy kockacukornyi víz, ami 1 gramm, akkor lesüllyed. Ha könnyebb, felúszik. Ezt hívják <strong>sűrűségnek</strong>.</p>
+    </div>
+  </header>
+
+  <nav class="nav" aria-label="Játékok">
+    <a href="#tojas">Tojás és só</a>
+    <a href="#merleg">Arkhimédész mérlege</a>
+    <a href="#nyakig">Miért csak nyakig?</a>
+    <a href="#vas">Úszó vas</a>
+    <a href="#hajo">Pakold meg a hajót!</a>
+    <a href="#tipp">Tippelj!</a>
+    <a href="#linkek">Linkek</a>
+  </nav>
+
+  <!-- 1. Egg + salt -->
+  <section class="toy" id="tojas" aria-labelledby="h-egg">
+    <div class="toy-head">
+      <div class="eyebrow">Konyhai kísérlet</div>
+      <h2 id="h-egg">Sózd meg, amíg fel nem jön a tojás!</h2>
+      <p>A tojás sima vízben lemegy az aljára. Szórj sót a vízbe, és figyeld, mikor indul felfelé. A kis mérleg azt mutatja, mi a nehezebb: egy kockacukornyi tojás vagy egy kockacukornyi víz.</p>
+    </div>
+    <div class="group">
+      <span class="lab" id="egg-age-lab">Milyen idős a tojás?</span>
+      <div class="row" id="egg-chips" role="group" aria-labelledby="egg-age-lab"></div>
+    </div>
+    <div class="two">
+      <svg class="scene narrow" id="egg-svg" viewBox="0 0 320 360" role="img" aria-label="Pohár víz, benne egy tojás. Ahogy sót szórsz bele, a tojás felemelkedik."></svg>
+      <div class="panel">
+        <div class="row">
+          <button class="btn" id="egg-tsp" type="button">+ teáskanál só</button>
+          <button class="btn alt" id="egg-pinch" type="button">+ csipet</button>
+          <button class="btn alt" id="egg-tbsp" type="button">+ evőkanál</button>
+        </div>
+        <div class="state" id="egg-state" aria-live="polite">Lent van az alján</div>
+        <p class="note" id="egg-note"></p>
+        <div class="stats">
+          <div class="stat"><div class="k">Só a vízben</div><div class="v" id="egg-salt">0 g</div><div class="s" id="egg-spoons">még semmi</div></div>
+          <div class="stat"><div class="k">1 liter ebből a vízből</div><div class="v" id="egg-liter">998 g</div><div class="s">sima víz: kb. 1000 g</div></div>
+        </div>
+        <svg id="egg-bal" viewBox="0 0 300 132" role="img" aria-label="Kockacukor-mérleg: egy köbcentiméter tojás és egy köbcentiméter víz összehasonlítása"></svg>
+        <div class="row"><button class="btn alt" id="egg-reset" type="button">Új pohár víz</button></div>
+      </div>
+    </div>
+    <div class="fact"><b>Tudtad?</b><span>A tojás héján több ezer apró lyuk van. Ezeken át a tojás lassan kiszárad, és a tompa végén lévő légkamra napról napra nő. Ezért áll fel a régi tojás a pohár alján, és ezért jön fel a záptojás sima vízben is.</span></div>
+  </section>
+
+  <!-- 2. Archimedes scale -->
+  <section class="toy" id="merleg" aria-labelledby="h-ar">
+    <div class="toy-head">
+      <div class="eyebrow">Arkhimédész szabálya</div>
+      <h2 id="h-ar">Mennyit segít a víz?</h2>
+      <p>Engedd le a tárgyat a csordultig teli edénybe. A rugós mérleg egyre kevesebbet mutat, a kiömlő víz pedig a kis pohárba folyik a konyhai mérlegen. A két szám összefügg: a víz pont annyival tolja felfelé a tárgyat, amennyi víz kifolyt.</p>
+    </div>
+    <div class="row" id="ar-objs" role="group" aria-label="Tárgyak"></div>
+    <div class="row"><div class="seg" role="group" aria-label="Folyadék" id="ar-liq"></div></div>
+    <div class="two">
+      <svg class="scene narrow" id="ar-svg" viewBox="0 0 360 400" role="img" aria-label="Rugós mérlegen lógó tárgy, alatta csordultig teli edény kifolyóval, a kifolyó alatt pohár egy konyhai mérlegen. Húzással vagy a csúszkával engedheted le a tárgyat."></svg>
+      <div class="panel">
+        <div class="slider-row">
+          <label class="lab" for="ar-depth">Engedd le</label>
+          <input type="range" id="ar-depth" min="0" max="100" step="1" value="0">
+          <span class="num" id="ar-depth-v">0%</span>
+        </div>
+        <div class="eq" aria-live="polite">
+          <div class="eqb"><span>A tárgy súlya</span><b id="ar-m">150 g</b></div>
+          <i aria-hidden="true">=</i>
+          <div class="eqb"><span>A rugós mérleg mutatja</span><b id="ar-r">150 g</b></div>
+          <i aria-hidden="true">+</i>
+          <div class="eqb water"><span>A víz felfelé tolja</span><b id="ar-b">0 g</b></div>
+        </div>
+        <p class="note" id="ar-msg"></p>
+        <div class="group">
+          <span class="lab">Mérési napló · ennyi víz folyt ki</span>
+          <div class="log" id="ar-log"><span>Még nincs mérés</span></div>
+        </div>
+        <div class="row"><button class="btn alt" id="ar-refill" type="button">Újratöltés</button></div>
+      </div>
+    </div>
+    <div class="fact"><b>Tudtad?</b><span>A legenda szerint Hierón király gyanakodott, hogy az aranyműves ezüstöt kevert a koronájába. Arkhimédész a fürdőkádban jött rá a megoldásra: a hamis korona ugyanolyan nehéz, de nagyobb, ezért több vizet szorít ki. Örömében állítólag ruha nélkül szaladt ki az utcára, és azt kiabálta: Heuréka! Vagyis: megtaláltam! Mérd meg a két koronát te is.</span></div>
+  </section>
+
+  <!-- 3. Floating person -->
+  <section class="toy" id="nyakig" aria-labelledby="h-p">
+    <div class="toy-head">
+      <div class="eyebrow">Uszodában</div>
+      <h2 id="h-p">Miért csak nyakig?</h2>
+      <p>Az ember majdnem pont olyan nehéz, mint ugyanannyi víz. Ezért nem süllyedünk el, de ki sem lógunk sokat. Próbáld ki, mit csinál a levegő a tüdődben, és mit a sós víz.</p>
+    </div>
+    <div class="two">
+      <svg class="scene narrow" id="p-svg" viewBox="0 0 360 380" role="img" aria-label="Függőlegesen lebegő gyerek a medencében. A vízvonal azt mutatja, mennyi lóg ki belőle."></svg>
+      <div class="panel">
+        <div class="group"><span class="lab" id="p-lung-lab">Levegő a tüdődben</span><div class="row" id="p-lung" role="group" aria-labelledby="p-lung-lab"></div></div>
+        <div class="group"><span class="lab" id="p-water-lab">Víz</span><div class="row" id="p-water" role="group" aria-labelledby="p-water-lab"></div></div>
+        <label class="switch"><input type="checkbox" id="p-paddle"> Evickélek a kezemmel és a lábammal</label>
+        <div class="slider-row">
+          <label class="lab" for="p-kg">Testsúly</label>
+          <input type="range" id="p-kg" min="20" max="100" step="1" value="35">
+          <span class="num" id="p-kg-v">35 kg</span>
+        </div>
+        <div class="state" id="p-state" aria-live="polite"></div>
+        <p class="note" id="p-note"></p>
+        <div class="stats trio">
+          <div class="stat"><div class="k">Magától kilóg</div><div class="v" id="p-free">2%</div><div class="s">a testedből</div></div>
+          <div class="stat"><div class="k">A fejed</div><div class="v">8%</div><div class="s">a testednek, nagyjából</div></div>
+          <div class="stat"><div class="k">Evickélve tartod</div><div class="v" id="p-push">–</div><div class="s">kb. ennyit, hogy nyakig kint legyél</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="fact"><b>Tudtad?</b><span>Egy kutatásban 98 felnőtt férfit mértek meg. Mély levegővel mindannyian fennmaradtak édesvízben, teljesen kifújt levegővel viszont egyikük sem. A tüdőd a beépített úszógumid.</span></div>
+  </section>
+
+  <!-- 4. Steel boat -->
+  <section class="toy" id="vas" aria-labelledby="h-s">
+    <div class="toy-head">
+      <div class="eyebrow">Úszó vas</div>
+      <h2 id="h-s">Hogyan úszik egy vasból készült hajó?</h2>
+      <p>Itt 1 kilogramm acél van. Kockának gyúrva lemegy, mint a kő, mert az acél majdnem nyolcszor nehezebb, mint ugyanannyi víz. Húzd a csúszkát, és kalapáld vékony tállá. Ugyanannyi vas marad, de sokkal több vizet tud kiszorítani.</p>
+    </div>
+    <div class="slider-row">
+      <label class="lab" for="s-flat">Kalapáld laposra</label>
+      <input type="range" id="s-flat" min="0" max="100" step="1" value="0">
+      <span class="num" id="s-flat-v">30 mm</span>
+    </div>
+    <div class="two">
+      <svg class="scene" id="s-svg" viewBox="0 0 360 240" role="img" aria-label="Vízzel teli kád, benne egy acéldarab. Ahogy vékonyabb és szélesebb tállá kalapálod, felúszik."></svg>
+      <div class="panel">
+        <div class="state" id="s-state" aria-live="polite"></div>
+        <div class="bar-row"><span>Súlya</span><b id="s-w">1000 g</b><div class="bar"><i id="s-wbar" style="background:var(--steel-dark)"></i></div></div>
+        <div class="bar-row"><span>Ennyi vizet tud kiszorítani, mielőtt befolyik a víz</span><b id="s-c">127 g</b><div class="bar"><i id="s-cbar" style="background:var(--water-ink)"></i></div></div>
+        <div class="stats">
+          <div class="stat"><div class="k">Falvastagság</div><div class="v" id="s-t">30 mm</div></div>
+          <div class="stat"><div class="k">Méret</div><div class="v" id="s-dim">7 × 7 × 3 cm</div></div>
+        </div>
+        <div class="row"><button class="btn alt" id="s-hole" type="button" aria-pressed="false">Fúrj bele egy lyukat!</button></div>
+      </div>
+    </div>
+    <div class="fact"><b>Tudtad?</b><span>Egy nagy hajó acélfala csak néhány centi vastag, a belsejében pedig főleg levegő van. Ezért a hajó egészben véve könnyebb, mint ugyanannyi víz. Ha egy résen beömlik a víz, ugyanaz történik, mint a lyukas tállal. A Titanic is így süllyedt el.</span></div>
+  </section>
+
+  <!-- 5. Cargo ship -->
+  <section class="toy" id="hajo" aria-labelledby="h-h">
+    <div class="toy-head">
+      <div class="eyebrow">Teherhajó</div>
+      <h2 id="h-h">Pakold meg a hajót!</h2>
+      <p>Minden konténer 25 tonna. Pakolj, és figyeld, hogyan ül egyre mélyebbre a hajó. A nagyító a hajó oldalára festett merülési jelet mutatja: eddig szabad megrakni. Aztán vidd ki a tengerre, és nézd meg, mi történik.</p>
+    </div>
+    <div class="row">
+      <button class="btn" id="h-add" type="button">+ konténer</button>
+      <button class="btn alt" id="h-rem" type="button">− konténer</button>
+      <button class="btn alt" id="h-sea" type="button">Irány a tenger!</button>
+      <button class="btn" id="h-raise" type="button" hidden>Kiemeljük (−1 konténer)</button>
+    </div>
+    <div class="row" id="h-water" role="group" aria-label="Víz"></div>
+    <svg class="scene" id="h-svg" viewBox="0 0 720 300" role="img" aria-label="Oldalnézetben egy konténerhajó a vízben. Minél több konténer van rajta, annál mélyebben ül."></svg>
+    <div class="two">
+      <div class="panel">
+        <div class="state" id="h-state" aria-live="polite"></div>
+        <div class="stats pair">
+          <div class="stat"><div class="k">Konténer</div><div class="v" id="h-n">0 db</div><div class="s">25 tonna darabja</div></div>
+          <div class="stat"><div class="k">Hajó + rakomány</div><div class="v" id="h-m">300 t</div><div class="s">az üres hajó 300 t</div></div>
+          <div class="stat"><div class="k">Kiszorított víz</div><div class="v" id="h-disp">300 t</div><div class="s">mindig ugyanannyi!</div></div>
+          <div class="stat"><div class="k">Merülés</div><div class="v" id="h-d">1,00 m</div><div class="s" id="h-free">fedélzet: 2,20 m-rel a víz fölött</div></div>
+        </div>
+      </div>
+      <div class="panel">
+        <span class="lab">Nagyító · merülési jel a hajó oldalán</span>
+        <svg class="scene" id="h-inset" viewBox="0 0 360 240" role="img" aria-label="Közelkép a merülési jelről (Plimsoll-jel) és a vízvonalról"></svg>
+        <p class="note" style="min-height:0">F: édesvíz · T: trópusi tenger · S: nyári tenger · W: téli tenger. A sós víz nehezebb, ezért abban feljebb ül a hajó. Emiatt van az édesvízi jel feljebb.</p>
+      </div>
+    </div>
+    <div class="fact"><b>Tudtad?</b><span>A merülési jelet egy angol politikus, Samuel Plimsoll harcolta ki. 1876 óta kötelező, mert addig a hajótulajdonosok gyakran annyira túlterhelték a hajókat, hogy elsüllyedtek. Ezért hívják ma is Plimsoll-jelnek.</span></div>
+  </section>
+
+  <!-- 6. Quiz -->
+  <section class="toy" id="tipp" aria-labelledby="h-q">
+    <div class="toy-head">
+      <div class="eyebrow">Kvíz</div>
+      <h2 id="h-q">Tippeld meg, mi lesz vele!</h2>
+      <p>Válassz egy tárgyat, tippeld meg, mi lesz vele, aztán dobd be. A rétegtoronyban méz, víz és étolaj van egymáson.</p>
+    </div>
+    <div class="q-top">
+      <div class="seg" role="group" aria-label="Mi van a pohárban?" id="q-mode"></div>
+      <span class="score" id="q-score">Találat: 0 / 0</span>
+    </div>
+    <div class="row objs" id="q-objs" role="group" aria-label="Tárgyak"></div>
+    <div class="two">
+      <svg class="scene narrow" id="q-svg" viewBox="0 0 300 380" role="img" aria-label="Pohár folyadékkal, beledobott tárgyakkal"></svg>
+      <div class="panel">
+        <div class="q-prompt" id="q-prompt">Válassz egy tárgyat fent!</div>
+        <div class="row" id="q-opts"></div>
+        <div class="q-result" id="q-result" aria-live="polite"></div>
+        <div class="row"><button class="btn alt" id="q-clear" type="button">Kiöntjük</button></div>
+      </div>
+    </div>
+    <div class="fact"><b>Tudtad?</b><span>A jéghegyeknek is csak körülbelül a tizede lóg ki a vízből, a nagy része a víz alatt van. Ezért veszélyesek a hajóknak.</span></div>
+  </section>
+
+  <!-- Links -->
+  <section class="toy" id="linkek" aria-labelledby="h-l">
+    <div class="toy-head">
+      <div class="eyebrow">Linkek</div>
+      <h2 id="h-l">Ha még többet akartok</h2>
+      <p>Mindegyikhez van egy kis feladat. A PhET-szimulációk magyarul is mennek.</p>
+    </div>
+    <div class="links">
+      <div class="lgroup">Szimulációk magyarul</div>
+      <a class="lcard" href="https://phet.colorado.edu/hu/simulations/buoyancy-basics" target="_blank" rel="noopener">
+        <span class="t">Felhajtóerő: alapok</span><span class="d">phet.colorado.edu</span>
+        <span class="x">Kockákat lehet vízbe tenni, mérlegre rakni és összehasonlítani.</span>
+        <span class="task">Keressetek két ugyanolyan súlyú kockát, amelyik közül az egyik úszik, a másik süllyed. Miben különböznek?</span>
+        <span class="lang">magyar · böngészőben</span>
+      </a>
+      <a class="lcard" href="https://phet.colorado.edu/hu/simulations/density" target="_blank" rel="noopener">
+        <span class="t">Sűrűség</span><span class="d">phet.colorado.edu</span>
+        <span class="x">Itt ki lehet nyomozni, miből készült egy kocka, a súlyából és a kiszorított vízből.</span>
+        <span class="task">A rejtélyes kockák között derítsétek ki, melyik arany. Pont, mint Arkhimédész a koronánál!</span>
+        <span class="lang">magyar · böngészőben</span>
+      </a>
+      <a class="lcard" href="https://phet.colorado.edu/hu/simulations/buoyancy" target="_blank" rel="noopener">
+        <span class="t">Felhajtóerő</span><span class="d">phet.colorado.edu</span>
+        <span class="x">A nagyobb testvér: itt a folyadékot is lehet cserélni, például mézre.</span>
+        <span class="task">Melyik folyadékban úszik fel a legtöbb kocka?</span>
+        <span class="lang">magyar · böngészőben</span>
+      </a>
+
+      <div class="lgroup">Videók</div>
+      <a class="lcard" href="https://www.ted.com/talks/armand_d_angour_the_real_story_behind_archimedes_eureka" target="_blank" rel="noopener">
+        <span class="t">The real story behind Archimedes' Eureka!</span><span class="d">TED-Ed · 4,5 perc</span>
+        <span class="x">Animáció arról, hogy a kád mellett egy óriási hajó is szerepet játszhatott a felfedezésben.</span>
+        <span class="task">Apa fordít. Mi minden volt Hierón király hajóján?</span>
+        <span class="lang">EN · animáció</span>
+      </a>
+      <a class="lcard" href="https://www.gpb.org/education/things-explained/how-do-ships-float" target="_blank" rel="noopener">
+        <span class="t">How Do Ships Float?</span><span class="d">gpb.org</span>
+        <span class="x">Rövid videó: miért süllyed el egy gemkapocs, ha egy 250 ezer tonnás hajó úszik?</span>
+        <span class="task">Figyeljétek, hol van levegő a hajóban.</span>
+        <span class="lang">EN · videó</span>
+      </a>
+
+      <div class="lgroup">Igazi hajók</div>
+      <a class="lcard" href="https://www.vesselfinder.com/" target="_blank" rel="noopener">
+        <span class="t">VesselFinder</span><span class="d">vesselfinder.com</span>
+        <span class="x">Élő hajótérkép. A hajókra kattintva ott a „Draught”, vagyis a merülésük méterben.</span>
+        <span class="task">Keressetek egy hajót a budapesti Dunán, aztán egy nagy tengeri konténerhajót. Melyik ül mélyebben a vízben?</span>
+        <span class="lang">EN · élő térkép</span>
+      </a>
+    </div>
+  </section>
+
+  <section class="toy" aria-labelledby="h-e">
+    <div class="toy-head">
+      <div class="eyebrow">Otthoni kísérletek</div>
+      <h2 id="h-e">Képernyő nélkül</h2>
+    </div>
+    <div class="exp">
+      <div><h3>Gyurmahajó</h3><p>Gyúrjatok golyót gyurmából, és tegyétek vízbe: lemegy. Ugyanazt a gyurmát lapítsátok vékony tálkává: úszik! Hány pénzérmét bír el, mielőtt elsüllyed?</p></div>
+      <div><h3>Mérleg és cérna</h3><p>Tegyetek egy pohár vizet a konyhai mérlegre, és engedjetek bele cérnán egy tojást úgy, hogy ne érjen le. A mérleg annyival többet mutat, amennyi vizet a tojás kiszorít.</p></div>
+      <div><h3>Rétegtorony</h3><p>Egy magas pohárba csorgassatok mézet, aztán mosogatószert, színezett vizet és olajat, mindig kanál hátán, lassan. Dobjatok bele szőlőt, krumplikockát, műanyag kupakot.</p></div>
+      <div><h3>Hajólesés a Dunán</h3><p>Nézzétek meg a hajók orrát a parton: létraszerű számok vannak rajta. Ez a merülési skála, abból látszik, milyen mélyen ül a hajó. Megrakott uszálynál a víz a nagyobb számoknál jár.</p></div>
+    </div>
+  </section>
+
+  <footer>Adatok: sós víz sűrűsége a CRC-táblázatból, 20 °C-on. Tojás: frissen 1,086 g/cm³, ez naponta kb. 0,0017-tel csökken. Ember: Donoghue és Minnigerode (1977), 98 férfi mérése alapján, kerekítve. Holt-tenger: 1,24 g/cm³. A hajó és a vaslemez egyszerűsített doboz-modell, a hajó rajzán a magasság a hosszához képest nagyítva van.</footer>
+</div>
+
+<script>
+(function(){
+'use strict';
+// ---------- shared helpers ----------
+const NS='http://www.w3.org/2000/svg';
+const $=(s,r=document)=>r.querySelector(s);
+function S(tag,attrs,parent){const e=document.createElementNS(NS,tag);if(attrs)for(const k in attrs)e.setAttribute(k,attrs[k]);if(parent)parent.appendChild(e);return e;}
+const clamp=(x,a,b)=>Math.min(b,Math.max(a,x));
+const lerp=(a,b,t)=>a+(b-a)*t;
+const RM=window.matchMedia?matchMedia('(prefers-reduced-motion: reduce)'):{matches:false};
+const nf=(x,d=0)=>Number(x).toLocaleString('hu-HU',{minimumFractionDigits:d,maximumFractionDigits:d});
+const Spring=x=>({x,v:0,t:x});
+function step(s,dt,k=70,c=14){
+  if(RM.matches||dt<=0){s.x=s.t;s.v=0;return;}
+  const a=k*(s.t-s.x)-c*s.v; s.v+=a*dt; s.x+=s.v*dt;
+  if(Math.abs(s.t-s.x)<0.02&&Math.abs(s.v)<0.05){s.x=s.t;s.v=0;}
+}
+// Runs frame(dt,t) every animation frame while el is on screen; renders once immediately.
+function loop(el,frame){
+  el=(el.closest&&el.closest('.toy'))||el;
+  let on=false,raf=0,last=0;
+  function run(now){const dt=Math.min(0.033,Math.max(0,(now-last)/1000));last=now;try{frame(dt,now/1000);}catch(e){console.error(e);on=false;return;}if(on)raf=requestAnimationFrame(run);}
+  frame(0,performance.now()/1000);
+  if('IntersectionObserver' in window){
+    new IntersectionObserver(es=>{const vis=es.some(e=>e.isIntersecting);
+      if(vis&&!on){on=true;last=performance.now();raf=requestAnimationFrame(run);}
+      else if(!vis&&on){on=false;cancelAnimationFrame(raf);}
+    }).observe(el);
+  }
+}
+function wavePath(x0,x1,y,amp,len,phase,close){
+  let d='';const n=Math.max(2,Math.ceil((x1-x0)/8));
+  for(let i=0;i<=n;i++){const x=x0+(x1-x0)*i/n;const yy=y+amp*Math.sin(phase+(x-x0)/len*2*Math.PI);d+=(i?' L':'M')+x.toFixed(1)+' '+yy.toFixed(2);}
+  if(close!=null)d+=` L${x1} ${close} L${x0} ${close} Z`;
+  return d;
+}
+function eggPath(rx,ry){let d='';for(let i=0;i<=48;i++){const t=i/48*2*Math.PI;const y=-ry*Math.cos(t);const x=rx*Math.sin(t)*(1+0.13*Math.cos(t));d+=(i?'L':'M')+x.toFixed(2)+' '+y.toFixed(2);}return d+'Z';}
+function chips(container,items,cur,onPick){
+  container.innerHTML='';
+  const btns=items.map(it=>{
+    const b=document.createElement('button');b.type='button';b.className='chip';
+    b.setAttribute('aria-pressed',String(it.id===cur));
+    if(it.c)b.style.setProperty('--c',it.c);
+    b.innerHTML=(it.c?'<span class="dot"></span>':'')+(it.em?`<span class="em" aria-hidden="true">${it.em}</span>`:'')+`<span>${it.name}</span>`;
+    b.addEventListener('click',()=>{btns.forEach(x=>x.setAttribute('aria-pressed',String(x===b)));onPick(it);});
+    container.appendChild(b);return b;
+  });
+  return btns;
+}
+function seg(container,items,cur,onPick){
+  container.innerHTML='';
+  const btns=items.map(it=>{const b=document.createElement('button');b.type='button';b.textContent=it.name;b.setAttribute('aria-pressed',String(it.id===cur));
+    b.addEventListener('click',()=>{btns.forEach(x=>x.setAttribute('aria-pressed',String(x===b)));onPick(it);});container.appendChild(b);return b;});
+  return btns;
+}
+function svgPoint(svg,e){const p=svg.createSVGPoint();p.x=e.clientX;p.y=e.clientY;const m=svg.getScreenCTM();return m?p.matrixTransform(m.inverse()):{x:0,y:0};}
+
+// Salt water density at 20 °C by mass percent (CRC table), extended to saturation.
+const NACL=[[0,0.9982],[0.5,1.0018],[1,1.0053],[2,1.0125],[3,1.0196],[4,1.0268],[5,1.034],[6,1.0413],[7,1.0486],[8,1.0559],[9,1.0633],[10,1.0707],[12,1.0857],[14,1.1008],[16,1.1162],[18,1.1319],[20,1.1478],[22,1.164],[24,1.1804],[26,1.1972],[26.41,1.2006]];
+const SAT=359; // g salt that dissolves in 1000 g water at 20 °C
+function brineRho(g){const w=g/(1000+g)*100;for(let i=1;i<NACL.length;i++){if(w<=NACL[i][0]){const[w0,r0]=NACL[i-1],[w1,r1]=NACL[i];return r0+(r1-r0)*(w-w0)/(w1-w0);}}return NACL[NACL.length-1][1];}
+function saltFor(rho){let lo=0,hi=SAT;if(brineRho(hi)<rho)return null;for(let i=0;i<50;i++){const m=(lo+hi)/2;if(brineRho(m)<rho)lo=m;else hi=m;}return (lo+hi)/2;}
+
+// ---------- hero ----------
+$('#heroEgg').setAttribute('d',eggPath(19,27));
+(function(){const p=$('#heroWave path');loop($('#heroWave'),(dt,t)=>{p.setAttribute('d',wavePath(0,1000,9,4,150,RM.matches?0:t*1.6));});})();
+
+// ---------- 1. Egg + salt ----------
+(function(){
+  const svg=$('#egg-svg'),bal=$('#egg-bal');
+  const EGGS=[
+    {id:'fresh',name:'Friss, ma tojt',rho:1.086,cell:3,lie:90},
+    {id:'w2',name:'2 hetes (bolti)',rho:1.062,cell:7,lie:68},
+    {id:'w4',name:'4 hetes',rho:1.038,cell:11,lie:22},
+    {id:'old',name:'2 hónapos záptojás',rho:0.984,cell:17,lie:4},
+  ];
+  let egg=EGGS[1],salt=0;
+  const YS=88,YB=334,CX=160,RX=23,RY=30;
+  const xL=y=>62+15*(y-50)/284,xR=y=>258-15*(y-50)/284;
+  const waterD=`M${xL(YS)} ${YS} L${xR(YS)} ${YS} L${xR(YB)} ${YB} L${xL(YB)} ${YB} Z`;
+  const defs=S('defs',{},svg);
+  const cp=S('clipPath',{id:'egg-clip'},defs);const ep=eggPath(RX,RY);S('path',{d:ep},cp);
+  S('rect',{x:0,y:344,width:320,height:16,class:'f-table'},svg);
+  S('ellipse',{cx:160,cy:344,rx:92,ry:5,class:'shadow'},svg);
+  S('path',{d:waterD,class:'f-water'},svg);
+  const brine=S('path',{d:waterD,class:'f-brine',opacity:0},svg);
+  const pile=S('path',{class:'f-salt',d:''},svg);
+  const eggG=S('g',{},svg);
+  S('path',{d:ep,class:'f-shell'},eggG);
+  const cell=S('rect',{x:-RX-6,y:-RY-2,width:2*RX+12,height:8,'clip-path':'url(#egg-clip)',class:'f-cell'},eggG);
+  const cellLine=S('line',{x1:-RX-4,x2:RX+4,y1:0,y2:0,'clip-path':'url(#egg-clip)',class:'s-cell'},eggG);
+  S('ellipse',{cx:-9,cy:-10,rx:4.5,ry:9,class:'f-glint',transform:'rotate(18 -9 -10)'},eggG);
+  S('path',{d:waterD,class:'f-front'},svg);
+  const grainsG=S('g',{},svg);
+  const surf=S('path',{class:'s-surface'},svg);
+  S('path',{d:'M56 44 L73 334 Q75 344 86 344 L234 344 Q245 344 247 334 L264 44',class:'s-glass'},svg);
+  S('line',{x1:74,y1:66,x2:86,y2:300,class:'s-glint'},svg);
+  S('line',{x1:252,y1:YS,x2:262,y2:YS,class:'s-glass',style:'stroke-width:2'},svg);
+  S('text',{x:250,y:YS-8,class:'t-small','text-anchor':'end'},svg).textContent='1 liter';
+
+  // balance
+  const BX=150,BY=46,ARM=96;
+  S('rect',{x:120,y:118,width:60,height:8,rx:3,class:'f-steel-d'},bal);
+  S('line',{x1:BX,y1:118,x2:BX,y2:BY,class:'s-steel'},bal);
+  const beam=S('line',{class:'s-steel',style:'stroke-width:3'},bal);
+  S('circle',{cx:BX,cy:BY,r:4,class:'f-steel-d'},bal);
+  function pan(cls){const g=S('g',{},bal);S('line',{x1:-14,y1:0,x2:0,y2:-24,class:'s-string'},g);S('line',{x1:14,y1:0,x2:0,y2:-24,class:'s-string'},g);S('path',{d:'M-22 0 Q0 9 22 0 Z',class:'f-steel'},g);S('rect',{x:-10,y:-20,width:20,height:20,rx:3,class:cls,style:'fill-opacity:1'},g);return g;}
+  const panL=pan('f-shell'),panR=pan('f-water');
+  const tL1=S('text',{x:BX-ARM,y:112,class:'t-small','text-anchor':'middle'},bal),tL2=S('text',{x:BX-ARM,y:126,class:'t-label','text-anchor':'middle'},bal);
+  const tR1=S('text',{x:BX+ARM,y:112,class:'t-small','text-anchor':'middle'},bal),tR2=S('text',{x:BX+ARM,y:126,class:'t-label','text-anchor':'middle'},bal);
+  tL1.textContent='1 cm³ tojás';tR1.textContent='1 cm³ víz';
+  const balA=Spring(0);
+
+  const ey=Spring(0),ea=Spring(egg.lie);
+  let grains=[];const grainEls=[];
+  function addSalt(g,n){
+    const before=salt;salt=Math.min(salt+g,SAT+240);
+    if(!RM.matches)for(let i=0;i<n;i++)grains.push({x:CX-34+Math.random()*68,y:10+Math.random()*24,vy:40+Math.random()*60,a:1});
+    if(before<SAT||g>0)update();
+  }
+  function target(){
+    const rw=brineRho(Math.min(salt,SAT)),re=egg.rho,diff=rw-re;
+    const th=egg.lie*Math.PI/180,H=2*Math.sqrt((RY*Math.cos(th))**2+(RX*Math.sin(th))**2);
+    let y,st;
+    if(diff<-0.0015){y=YB-H/2-1;st='down';}
+    else if(diff<=0.0015){y=(YS+YB)/2+20;st='mid';}
+    else{y=YS+(re/rw-0.5)*H;st='up';}
+    return{rw,re,diff,y,st,H};
+  }
+  function update(){
+    const T=target();ey.t=T.y;ea.t=egg.lie;
+    balA.t=clamp((T.re-T.rw)*3,-0.26,0.26);
+    $('#egg-salt').textContent=nf(Math.round(Math.min(salt,SAT+240)))+' g';
+    $('#egg-spoons').textContent=salt>0?`≈ ${nf(Math.round(salt/6))} teáskanál`:'még semmi';
+    $('#egg-liter').textContent=nf(Math.round(T.rw*1000))+' g';
+    tL2.textContent=nf(T.re,3)+' g';tR2.textContent=nf(T.rw,3)+' g';
+    const st=$('#egg-state'),note=$('#egg-note');
+    st.className='state '+T.st;
+    const need=saltFor(egg.rho);
+    if(T.st==='down'){
+      st.textContent='Lent van az alján';
+      note.textContent=T.diff>-0.007?'Már közel jársz! Innen csipetenként szórd a sót.':'A tojás még nehezebb, mint ugyanannyi víz. Kell még só.';
+    }else if(T.st==='mid'){
+      st.textContent='Lebeg!';
+      note.textContent=`Most a tojás és a sós víz ugyanolyan nehéz. 1 liter ebből a vízből ${nf(Math.round(T.rw*1000))} g, tehát 1 liter tojás is ennyi lenne. Ehhez a tojáshoz kb. ${nf(Math.round(need))} g, vagyis ${nf(Math.round(need/6))} teáskanál só kellett.`;
+    }else{
+      const pct=(1-T.re/T.rw)*100;
+      st.textContent=`Felúszott! ${pct<1?'Egy picit':nf(Math.round(pct))+'%-a'} kilóg.`;
+      note.textContent=salt===0?'Ez a tojás sima vízben is felúszik: könnyebb lett, mint a víz. Ne egyétek meg!':'A sós víz már nehezebb, mint a tojás, ezért kitolja magából. Minél sósabb, annál jobban kilóg.';
+    }
+    if(salt>SAT)note.textContent='Ennyi só már nem oldódik fel, leül a pohár aljára. A víz ennél sósabb nem lesz.';
+    const exc=Math.max(0,salt-SAT);
+    if(exc>0){const h=Math.min(18,3+exc/14),w=Math.min(74,26+exc/5);pile.setAttribute('d',`M${CX-w} ${YB} Q${CX} ${YB-2*h} ${CX+w} ${YB} Z`);}else pile.setAttribute('d','');
+    brine.setAttribute('opacity',String(clamp(Math.min(salt,SAT)/260,0,0.85)));
+  }
+  chips($('#egg-chips'),EGGS,egg.id,it=>{egg=it;cell.setAttribute('height',String(it.cell+2));cellLine.setAttribute('y1',String(-RY+it.cell));cellLine.setAttribute('y2',String(-RY+it.cell));update();});
+  cell.setAttribute('height',String(egg.cell+2));cellLine.setAttribute('y1',String(-RY+egg.cell));cellLine.setAttribute('y2',String(-RY+egg.cell));
+  $('#egg-tsp').onclick=()=>addSalt(6,10);
+  $('#egg-pinch').onclick=()=>addSalt(1,3);
+  $('#egg-tbsp').onclick=()=>addSalt(18,22);
+  $('#egg-reset').onclick=()=>{salt=0;grains=[];update();};
+  update();ey.x=ey.t;ea.x=ea.t;balA.x=balA.t;
+  loop(svg,(dt,t)=>{
+    step(ey,dt,40,11);step(ea,dt,30,10);step(balA,dt,40,9);
+    const T=target();
+    const bob=(T.st==='mid'&&!RM.matches)?Math.sin(t*1.4)*3:(T.st==='up'&&!RM.matches?Math.sin(t*1.8)*1.2:0);
+    eggG.setAttribute('transform',`translate(${CX} ${(ey.x+bob).toFixed(2)}) rotate(${ea.x.toFixed(2)})`);
+    surf.setAttribute('d',wavePath(xL(YS)+1,xR(YS)-1,YS,1.2,70,RM.matches?0:t*2));
+    // grains
+    for(const g of grains){if(g.y<YS){g.vy+=500*dt;g.y+=g.vy*dt;}else{g.vy=Math.min(g.vy,30);g.y+=g.vy*dt;g.a-=dt*1.3;}}
+    grains=grains.filter(g=>g.a>0&&g.y<YB);
+    while(grainEls.length<grains.length)grainEls.push(S('rect',{width:2.6,height:2.6,class:'f-grain'},grainsG));
+    grainEls.forEach((el,i)=>{const g=grains[i];if(g){el.setAttribute('x',g.x.toFixed(1));el.setAttribute('y',g.y.toFixed(1));el.setAttribute('opacity',g.a.toFixed(2));}else el.setAttribute('opacity','0');});
+    // balance
+    const a=balA.x,lx=BX-ARM*Math.cos(a),ly=BY+ARM*Math.sin(a),rx=BX+ARM*Math.cos(a),ry=BY-ARM*Math.sin(a);
+    beam.setAttribute('x1',lx);beam.setAttribute('y1',ly);beam.setAttribute('x2',rx);beam.setAttribute('y2',ry);
+    panL.setAttribute('transform',`translate(${lx.toFixed(1)} ${(ly+40).toFixed(1)})`);panR.setAttribute('transform',`translate(${rx.toFixed(1)} ${(ry+40).toFixed(1)})`);
+  });
+  // move pans' strings to hang from the beam ends
+  [panL,panR].forEach(g=>{g.querySelectorAll('line').forEach(l=>{l.setAttribute('y2','-40');});});
+})();
+
+// ---------- 2. Archimedes scale ----------
+(function(){
+  const svg=$('#ar-svg'),range=$('#ar-depth');
+  const OBJ=[
+    {id:'rock',name:'Kavics',m:150,rho:2.6,shape:'rock',k:1,wk:1.3},
+    {id:'egg',name:'Tojás',m:60,rho:1.062,shape:'egg',k:1.15,wk:.76},
+    {id:'apple',name:'Alma',m:150,rho:0.8,shape:'apple',k:.95,wk:1.05},
+    {id:'wood',name:'Fakocka',m:32,rho:0.5,shape:'cube',k:1,wk:1},
+    {id:'gold',name:'Arany korona',m:1000,rho:19.3,shape:'crown',k:.85,wk:1.6},
+    {id:'fake',name:'Hamis korona',m:1000,rho:15.4,shape:'fake',k:.85,wk:1.6},
+  ];
+  const LIQ=[{id:'w',name:'Sima víz',rho:1.0},{id:'b',name:'Sós víz',rho:1.10}];
+  let obj=OBJ[0],liq=LIQ[0],maxVs=0,cupG=Spring(0),drip=0;
+  const PX=9,LEVEL0=228,CAN_PX_PER_ML=0.054,CUP_PX_PER_ML=0.32;
+  const log=new Map();
+  // static scene
+  S('rect',{x:0,y:388,width:360,height:12,class:'f-table'},svg);
+  S('rect',{x:26,y:12,width:8,height:376,rx:3,class:'f-steel'},svg);
+  S('rect',{x:12,y:380,width:40,height:8,rx:2,class:'f-steel-d'},svg);
+  const canWater=S('rect',{x:95,width:150,class:'f-water',style:'fill-opacity:.7'},svg);
+  const ANCHOR=30;
+  const arm=S('g',{transform:`translate(0 ${ANCHOR})`},svg);
+  S('rect',{x:22,y:-6,width:16,height:12,rx:3,class:'f-steel-d'},arm);
+  S('rect',{x:34,y:-3,width:142,height:6,rx:3,class:'f-steel'},arm);
+  const spring=S('polyline',{class:'s-steel',style:'stroke-width:2'},svg);
+  const springCap=S('rect',{width:20,height:8,rx:2,class:'f-steel-d'},svg);
+  const springTxt=S('text',{class:'t-big'},svg);
+  const string=S('path',{class:'s-string'},svg);
+  const objG=S('g',{style:'cursor:grab;touch-action:none'},svg);
+  const canFront=S('rect',{x:95,width:150,class:'f-water',style:'fill-opacity:.38'},svg);
+  const surf=S('path',{class:'s-surface'},svg);
+  S('path',{d:'M92 204 L92 380 Q92 386 98 386 L242 386 Q248 386 248 380 L248 204',class:'s-glass'},svg);
+  S('path',{d:'M248 225 L286 239 L286 247 L248 235',class:'s-glass',style:'stroke-width:2.4'},svg);
+  const stream=S('path',{class:'s-surface',style:'stroke-width:3'},svg);
+  // cup on kitchen scale
+  const cupWater=S('rect',{x:273,width:42,class:'f-water',style:'fill-opacity:.8'},svg);
+  S('path',{d:'M270 296 L272 356 Q272 360 276 360 L312 360 Q316 360 316 356 L318 296',class:'s-glass',style:'stroke-width:2.4'},svg);
+  S('rect',{x:262,y:360,width:64,height:20,rx:4,class:'f-steel-d'},svg);
+  S('rect',{x:276,y:364,width:36,height:12,rx:2,class:'f-lcd'},svg);
+  const cupTxt=S('text',{x:308,y:373.5,class:'t-disp','text-anchor':'end'},svg);
+  S('text',{x:294,y:395,class:'t-small','text-anchor':'middle'},svg).textContent='kifolyt víz';
+
+  let dims={h:30,w:30};
+  function rockPath(w,h){const pts=[[0,-1],[.55,-.85],[.95,-.5],[.85,-.12],[.5,0],[-.4,0],[-.9,-.18],[-1,-.55],[-.6,-.9]];return 'M'+pts.map(p=>`${(p[0]*w/2).toFixed(1)} ${(p[1]*h).toFixed(1)}`).join(' L')+' Z';}
+  function crownPath(w,h){const p=[[-.5,0],[.5,0],[.5,-.85],[.27,-.45],[.14,-1],[0,-.5],[-.14,-1],[-.27,-.45],[-.5,-.85]];return 'M'+p.map(q=>`${(q[0]*w).toFixed(1)} ${(q[1]*h).toFixed(1)}`).join(' L')+' Z';}
+  function drawObj(){
+    objG.innerHTML='';
+    const V=obj.m/obj.rho,s=Math.cbrt(V)*PX;const h=s*obj.k,w=h*obj.wk;dims={h,w,V};
+    if(obj.shape==='rock')S('path',{d:rockPath(w,h),class:'f-rock'},objG);
+    else if(obj.shape==='egg')S('path',{d:eggPath(w/2,h/2),class:'f-shell',transform:`translate(0 ${-h/2})`},objG);
+    else if(obj.shape==='apple'){S('path',{d:`M0 ${-h*.82} C${w*.35} ${-h*1.02} ${w*.56} ${-h*.7} ${w*.48} ${-h*.36} C${w*.42} ${-h*.06} ${w*.18} 0 0 ${-h*.04} C${-w*.18} 0 ${-w*.42} ${-h*.06} ${-w*.48} ${-h*.36} C${-w*.56} ${-h*.7} ${-w*.35} ${-h*1.02} 0 ${-h*.82} Z`,class:'f-apple'},objG);S('path',{d:`M0 ${-h*.82} L2 ${-h}`,class:'s-wood',style:'stroke-width:2.5;opacity:1'},objG);S('ellipse',{cx:9,cy:-h*.95,rx:7,ry:3.5,class:'f-leaf',transform:`rotate(-25 9 ${-h*.95})`},objG);}
+    else if(obj.shape==='cube'){S('rect',{x:-w/2,y:-h,width:w,height:h,rx:2,class:'f-wood'},objG);for(let i=1;i<4;i++)S('path',{d:`M${-w/2+3} ${-h+i*h/4} Q0 ${-h+i*h/4-4} ${w/2-3} ${-h+i*h/4}`,class:'s-wood'},objG);}
+    else{S('path',{d:crownPath(w,h),class:obj.shape==='crown'?'f-gold':'f-fake'},objG);[-.25,0,.25].forEach(x=>S('circle',{cx:x*w,cy:-h*.2,r:2.6,class:'f-gem'},objG));}
+    S('circle',{cx:0,cy:-h,r:2.4,class:'f-steel-d'},objG);
+  }
+  const yb=Spring(196);
+  function limits(){
+    const h=dims.h,ybMin=192;let ybMax=Math.min(380,LEVEL0+h+34);
+    if(obj.rho<liq.rho)ybMax=Math.min(ybMax,LEVEL0+obj.rho/liq.rho*h+12);
+    return{ybMin,ybMax};
+  }
+  function reset(){maxVs=0;cupG.t=0;cupG.x=0;cupG.v=0;range.value=0;yb.t=yb.x=limits().ybMin;yb.v=0;}
+  chips($('#ar-objs'),OBJ,obj.id,it=>{obj=it;drawObj();reset();});
+  seg($('#ar-liq'),LIQ,liq.id,it=>{liq=it;reset();});
+  drawObj();reset();
+  range.addEventListener('input',()=>{const L=limits();yb.t=lerp(L.ybMin,L.ybMax,range.value/100);});
+  $('#ar-refill').onclick=()=>{reset();};
+  // drag the object
+  let drag=null;
+  objG.addEventListener('pointerdown',e=>{const p=svgPoint(svg,e);drag={off:yb.x-p.y};objG.setPointerCapture(e.pointerId);objG.style.cursor='grabbing';e.preventDefault();});
+  objG.addEventListener('pointermove',e=>{if(!drag)return;const p=svgPoint(svg,e),L=limits();const want=clamp(p.y+drag.off,L.ybMin,L.ybMax);range.value=Math.round((want-L.ybMin)/(L.ybMax-L.ybMin)*100);yb.t=want;});
+  const end=()=>{drag=null;objG.style.cursor='grab';};
+  objG.addEventListener('pointerup',end);objG.addEventListener('pointercancel',end);
+
+  function logRow(){
+    const el=$('#ar-log');if(!log.size){el.innerHTML='<span>Még nincs mérés</span>';return;}
+    el.innerHTML='';log.forEach((v,k)=>{const sp=document.createElement('span');sp.textContent=`${k}: ${nf(Math.round(v))} g`;el.appendChild(sp);});
+  }
+  let lastMsg='';
+  loop(svg,(dt,t)=>{
+    step(yb,dt,60,13);step(cupG,dt,30,9);
+    const L=limits();
+    const h=dims.h,V=dims.V;
+    const want=yb.x;
+    let f=clamp((want-LEVEL0)/h,0,1),objBottom=want,slack=false;
+    const fe=obj.rho/liq.rho;
+    if(fe<1&&f>fe){f=fe;objBottom=LEVEL0+fe*h;slack=true;}
+    const Vs=V*f;
+    if(Vs>maxVs+0.01){maxVs=Vs;drip=0.6;}
+    const lvl=LEVEL0+(maxVs-Vs)*CAN_PX_PER_ML;
+    cupG.t=maxVs*liq.rho;
+    const B=liq.rho*Vs,Bi=Math.min(obj.m,Math.round(B)),R=obj.m-Bi;
+    // draw water
+    canWater.setAttribute('y',lvl.toFixed(1));canWater.setAttribute('height',(383-lvl).toFixed(1));
+    canFront.setAttribute('y',lvl.toFixed(1));canFront.setAttribute('height',(383-lvl).toFixed(1));
+    surf.setAttribute('d',wavePath(95,245,lvl,0.8,50,RM.matches?0:t*2));
+    const cupH=cupG.x/liq.rho*CUP_PX_PER_ML;
+    cupWater.setAttribute('y',(358-cupH).toFixed(1));cupWater.setAttribute('height',Math.max(0,cupH).toFixed(1));
+    cupTxt.textContent=nf(Math.round(cupG.x))+' g';
+    drip=Math.max(0,drip-dt);
+    stream.setAttribute('d',drip>0?`M286 246 Q290 270 293 ${(358-cupH).toFixed(1)}`:'');
+    stream.setAttribute('opacity',String(Math.min(1,drip*3)));
+    // object
+    objG.setAttribute('transform',`translate(170 ${objBottom.toFixed(1)})`);
+    const objTop=objBottom-h;
+    const springLen=20+R*0.07,y0=ANCHOR+11,hookY=y0+springLen,y1=hookY;
+    springCap.setAttribute('x',160);springCap.setAttribute('y',ANCHOR+3);const pts=[`170,${y0.toFixed(1)}`];const n=12;
+    for(let i=1;i<n;i++){const yy=y0+(y1-y0)*i/n;pts.push(`${i%2?160:180},${yy.toFixed(1)}`);}
+    pts.push(`170,${y1.toFixed(1)}`);spring.setAttribute('points',pts.join(' '));
+    springTxt.setAttribute('x',188);springTxt.setAttribute('y',((y0+y1)/2+5).toFixed(1));springTxt.textContent=nf(R)+' g';
+    if(slack){const sag=Math.min(16,4+(want-objBottom)*1.5);string.setAttribute('d',`M170 ${hookY.toFixed(1)} Q${(170+sag).toFixed(1)} ${((hookY+objTop)/2).toFixed(1)} 170 ${objTop.toFixed(1)}`);}
+    else string.setAttribute('d',`M170 ${hookY.toFixed(1)} L170 ${objTop.toFixed(1)}`);
+    // readouts
+    $('#ar-m').textContent=nf(obj.m)+' g';$('#ar-r').textContent=nf(R)+' g';$('#ar-b').textContent=nf(Bi)+' g';
+    $('#ar-depth-v').textContent=range.value+'%';
+    let msg;
+    if(maxVs>0.5&&Vs<maxVs-0.5)msg='Felhúztad, de a kifolyt víz már a pohárban van. Nyomd meg az Újratöltést, ha újra akarod mérni.';
+    else if(Vs<0.5)msg='Engedd le lassan a vízbe! Figyeld a rugós mérleget és a kis poharat.';
+    else if(slack)msg=`Úszik! A rugós mérleg 0-t mutat, a víz egyedül megtartja. A kifolyt víz pont annyit nyom, mint a tárgy: ${nf(obj.m)} g. Így lehet lemérni egy tárgyat mérleg nélkül, ahogy ti is a tojást.`;
+    else if(f>=0.999)msg=`Teljesen víz alatt van. A víz ${nf(Bi)} g-mal tolja felfelé, pont annyival, amennyi víz kifolyt.${obj.shape==='crown'||obj.shape==='fake'?' Hasonlítsd össze a másik koronával!':''}`;
+    else msg='Ahogy lejjebb engeded, a rugós mérleg egyre kevesebbet mutat, és egyre több víz folyik ki.';
+    if(msg!==lastMsg){$('#ar-msg').textContent=msg;lastMsg=msg;}
+    if((slack||f>=0.999)&&Vs>=maxVs-0.5){const key=`${obj.name}, ${liq.name.toLowerCase()}`;if(log.get(key)!==cupG.t){log.set(key,cupG.t);logRow();}}
+  });
+})();
+
+// ---------- 3. Floating person ----------
+(function(){
+  const svg=$('#p-svg');
+  const LUNG=[{id:'full',name:'Mély levegő',rho:0.98},{id:'norm',name:'Normál',rho:1.02},{id:'out',name:'Kifújt levegő',rho:1.06}];
+  const WATER=[{id:'pool',name:'Uszoda',rho:1.0,cls:'f-pool'},{id:'sea',name:'Tenger',rho:1.025,cls:'f-sea'},{id:'dead',name:'Holt-tenger',rho:1.24,cls:'f-dead'}];
+  let lung=LUNG[0],water=WATER[0];
+  const YS=118,H=175,CX=150,NECK=0.085;
+  // body volume profile: fraction of volume above depth u (0 = top of head, 1 = feet)
+  function cum(u){
+    if(u<=0)return 0;if(u>=1)return 1;
+    if(u<0.17){const x=u/0.17;return 0.075*(3*x*x-2*x*x*x);}
+    if(u<0.21)return 0.075+0.01*(u-0.17)/0.04;
+    if(u<0.56)return 0.085+0.54*(u-0.21)/0.35;
+    const x=(u-0.56)/0.44;return 0.625+0.375*(1-Math.pow(1-x,1.6));
+  }
+  function uFor(frac){let lo=0,hi=1;for(let i=0;i<40;i++){const m=(lo+hi)/2;if(cum(m)<frac)lo=m;else hi=m;}return (lo+hi)/2;}
+  // scene
+  const back=S('g',{},svg);
+  const wBack={};WATER.forEach(w=>wBack[w.id]=S('rect',{x:0,y:YS,width:360,height:262,class:w.cls,opacity:0},back));
+  S('rect',{x:0,y:372,width:360,height:8,class:'f-sand'},svg);
+  // depth tiles on the wall
+  S('rect',{x:0,y:104,width:16,height:276,class:'f-steel',style:'opacity:.35'},svg);
+  [[1,'1,0 m'],[2,'2,0 m']].forEach(([m,l])=>{const y=YS+m*127;S('line',{x1:0,y1:y,x2:22,y2:y,class:'s-steel'},svg);S('text',{x:26,y:y+4,class:'t-small'},svg).textContent=l;});
+  S('text',{x:4,y:YS-24,class:'t-small'},svg).textContent='Mélység: 2 m';
+  const bubbles=S('g',{},svg);
+  // person
+  const P=S('g',{},svg);
+  const legL=S('line',{x1:-9,y1:94,x2:-10,y2:167,class:'s-skin',style:'stroke-width:15'},P);
+  const legR=S('line',{x1:9,y1:94,x2:10,y2:167,class:'s-skin',style:'stroke-width:15'},P);
+  const armL=S('line',{x1:-21,y1:42,x2:-21,y2:94,class:'s-skin',style:'stroke-width:11'},P);
+  const armR=S('line',{x1:21,y1:42,x2:21,y2:94,class:'s-skin',style:'stroke-width:11'},P);
+  S('rect',{x:-23,y:34,width:46,height:62,rx:16,class:'f-skin'},P);
+  S('rect',{x:-23,y:78,width:46,height:22,rx:7,class:'f-accent'},P);
+  S('rect',{x:-6,y:24,width:12,height:14,class:'f-skin'},P);
+  S('circle',{cx:0,cy:15,r:15,class:'f-skin'},P);
+  S('path',{d:'M-15.5 14 A15.5 15.5 0 0 1 15.5 14 Z',class:'f-accent'},P);
+  S('line',{x1:-15,y1:17,x2:15,y2:17,class:'s-steel',style:'stroke-width:2'},P);
+  S('circle',{cx:-6,cy:17,r:4.2,class:'f-goggle'},P);S('circle',{cx:6,cy:17,r:4.2,class:'f-goggle'},P);
+  S('path',{d:'M-4 24 Q0 27 4 24',class:'s-string',style:'stroke-width:1.6'},P);
+  const front=S('g',{},svg);
+  const wFront={};WATER.forEach(w=>wFront[w.id]=S('path',{class:w.cls,opacity:0},front));
+  const surf=S('path',{class:'s-surface'},svg);
+  const rope=S('g',{},svg);
+  const ropeBalls=[];for(let i=0;i<9;i++)ropeBalls.push(S('circle',{r:5,class:i%3===0?'f-accent':(i%3===1?'f-card':'f-goggle'),style:'stroke:var(--ink);stroke-opacity:.25'},rope));
+  const mix={pool:Spring(1),sea:Spring(0),dead:Spring(0)};
+  const top=Spring(YS-0.02*H);
+  let bub=[];
+
+  function calc(){
+    const kg=+$('#p-kg').value,paddle=$('#p-paddle').checked;
+    const a0=1-lung.rho/water.rho;const V=kg/lung.rho;
+    const push=kg-water.rho*V*(1-NECK);
+    let a,st,sinking=false;
+    if(paddle&&a0<NECK){a=NECK;}else if(a0>=0){a=a0;}else{a=null;sinking=true;}
+    return{kg,paddle,a0,push,a,sinking};
+  }
+  function update(){
+    const C=calc();
+    top.t=C.sinking?YS+26:YS-uFor(C.a)*H;
+    WATER.forEach(w=>mix[w.id].t=w===water?1:0);
+    $('#p-kg-v').textContent=C.kg+' kg';
+    $('#p-free').textContent=C.a0<0?'semmi':(C.a0<0.005?'alig':nf(Math.round(C.a0*100))+'%');
+    $('#p-push').textContent=C.push>0?`${nf(C.push,1)} kg`:'0 kg';
+    const st=$('#p-state'),note=$('#p-note');
+    if(C.sinking){st.className='state bad';st.textContent='Lassan süllyedsz';note.textContent=C.paddle?'':'Kifújt levegővel nehezebb vagy, mint ugyanannyi víz. Vegyél levegőt, vagy evickélj!';}
+    else if(water.id==='dead'){st.className='state up';st.textContent='Mint egy dugó!';note.textContent=`A Holt-tenger vize nagyon sós, ezért magától kint vagy egészen a ${C.a0>0.19?'mellkasodig':'válladig'}. Itt elmerülni sem lehet, csak lebegni.`;}
+    else if(C.paddle&&C.a0<NECK){st.className='state mid';st.textContent='Nyakig kint vagy';note.textContent=`A kezed és a lábad kb. ${nf(C.push,1)} kg-nyi erővel tolja lefelé a vizet. Ettől lóg ki a fejed. Ha abbahagyod, visszasüllyedsz, amíg csak a fejed teteje lesz kint.`;}
+    else{st.className='state mid';st.textContent=C.a0<0.03?'Csak a fejed teteje lóg ki':'A fejed egy része kilóg';note.textContent=`Magától a tested ${C.a0<0.005?'alig':'csak '+nf(Math.round(C.a0*100))+'%-a'} lóg ki, a fejed viszont a tested kb. 8%-a. A különbséget evickéléssel kell kint tartanod. Kapcsold be!`;}
+  }
+  chips($('#p-lung'),LUNG,lung.id,it=>{lung=it;update();});
+  chips($('#p-water'),WATER,water.id,it=>{water=it;update();});
+  $('#p-paddle').addEventListener('change',update);
+  $('#p-kg').addEventListener('input',update);
+  update();top.x=top.t;WATER.forEach(w=>mix[w.id].x=mix[w.id].t);
+  loop(svg,(dt,t)=>{
+    step(top,dt,10,5.5);WATER.forEach(w=>step(mix[w.id],dt,20,9));
+    const C=calc();const tt=RM.matches?0:t;
+    const bob=RM.matches?0:Math.sin(t*1.3)*1.5;
+    P.setAttribute('transform',`translate(${CX} ${(top.x+bob).toFixed(2)})`);
+    const armAng=C.paddle?72+Math.sin(tt*5)*14:16;
+    armL.setAttribute('transform',`rotate(${armAng.toFixed(1)} -21 42)`);armR.setAttribute('transform',`rotate(${(-armAng).toFixed(1)} 21 42)`);
+    const kick=C.paddle?Math.sin(tt*5+1)*9:0;
+    legL.setAttribute('transform',`rotate(${kick.toFixed(1)} -9 94)`);legR.setAttribute('transform',`rotate(${(-kick).toFixed(1)} 9 94)`);
+    const wd=wavePath(0,360,YS,1.6,90,tt*1.8,380);
+    WATER.forEach(w=>{wBack[w.id].setAttribute('opacity',(mix[w.id].x*0.9).toFixed(3));wFront[w.id].setAttribute('d',wd);wFront[w.id].setAttribute('opacity',(mix[w.id].x*0.45).toFixed(3));});
+    surf.setAttribute('d',wavePath(0,360,YS,1.6,90,tt*1.8));
+    ropeBalls.forEach((b,i)=>{const x=240+i*14;b.setAttribute('cx',x);b.setAttribute('cy',(YS+1.6*Math.sin(tt*1.8+(x)/90*2*Math.PI)).toFixed(1));});
+    // bubbles while sinking
+    if(C.sinking&&!RM.matches&&Math.random()<dt*3)bub.push({x:CX+(Math.random()*8-4),y:top.x+26,r:2+Math.random()*2.5});
+    bub.forEach(b=>{b.y-=40*dt;});bub=bub.filter(b=>b.y>YS);
+    while(bubbles.childNodes.length<bub.length)S('circle',{class:'bubble'},bubbles);
+    [...bubbles.childNodes].forEach((c,i)=>{const b=bub[i];if(b){c.setAttribute('cx',b.x.toFixed(1));c.setAttribute('cy',b.y.toFixed(1));c.setAttribute('r',b.r.toFixed(1));c.setAttribute('opacity','0.8');}else c.setAttribute('opacity','0');});
+  });
+})();
+
+// ---------- 4. Steel lump to boat ----------
+(function(){
+  const svg=$('#s-svg'),range=$('#s-flat');
+  const M=1000,RHO=7.85,VS=M/RHO,K=0.35,PX=10,YS=82,YB=226,CX=180;
+  let holed=false;
+  function shape(s){
+    const t=3.0*Math.pow(1/30,s/100); // cm
+    const vol=a=>{const h=K*a;const ia=Math.max(0,a-2*t),ih=Math.max(0,h-t);return a*a*h-ia*ia*ih;};
+    let lo=1,hi=60;for(let i=0;i<60;i++){const m=(lo+hi)/2;if(vol(m)<VS)lo=m;else hi=m;}
+    const a=(lo+hi)/2,h=K*a,solid=(a-2*t<=0.05)||(h-t<=0.05);
+    return{t,a,h,solid,cap:a*a*h};
+  }
+  // scene
+  S('rect',{x:0,y:YB,width:360,height:14,class:'f-sand'},svg);
+  const water=S('path',{class:'f-water',style:'fill-opacity:.7'},svg);
+  const G=S('g',{},svg);
+  const inner=S('rect',{class:'f-scene'},G);
+  const innerWater=S('rect',{class:'f-water',style:'fill-opacity:.7'},G);
+  const steel=S('path',{class:'f-steel',style:'stroke:var(--steel-dark);stroke-width:1.2'},G);
+  const holeMark=S('circle',{r:3,class:'f-ink'},G);
+  const surf=S('path',{class:'s-surface'},svg);
+  S('path',{d:`M12 30 L12 ${YB} M348 30 L348 ${YB}`,class:'s-glass'},svg);
+  const yT=Spring(YB),flood=Spring(0);
+  let cur=shape(0);
+  function update(){
+    cur=shape(+range.value);
+    const floats=!holed&&cur.cap>M&&!cur.solid;
+    const d=floats?M/(cur.a*cur.a):null;
+    yT.t=floats?YS+d*PX-cur.h*PX:YB-cur.h*PX;  // top of shape
+    flood.t=(!floats&&!cur.solid)?1:0;
+    const tmm=cur.t*10;
+    $('#s-flat-v').textContent=(tmm<10?nf(tmm,1):nf(Math.round(tmm)))+' mm';
+    $('#s-t').textContent=(tmm<10?nf(tmm,1):nf(Math.round(tmm)))+' mm';
+    $('#s-dim').textContent=`${nf(Math.round(cur.a))} × ${nf(Math.round(cur.a))} × ${nf(Math.round(cur.h))} cm`;
+    const capShow=holed?VS:(cur.solid?VS:cur.cap);
+    $('#s-c').textContent=nf(Math.round(capShow))+' g';
+    $('#s-wbar').style.width=(M/5000*100)+'%';$('#s-cbar').style.width=clamp(capShow/5000*100,0,100)+'%';
+    const st=$('#s-state');
+    if(floats){st.className='state up';st.textContent=`Úszik! ${nf(d,1)} cm-re merül a vízbe.`;}
+    else if(holed&&cur.cap>M){st.className='state bad';st.textContent='Lyukas: befolyt a víz, elsüllyedt.';}
+    else{st.className='state down';st.textContent=cur.solid?'Elsüllyed, mint egy kő.':'Még elsüllyed: túl kicsi a tál.';}
+    const hb=$('#s-hole');hb.setAttribute('aria-pressed',String(holed));hb.textContent=holed?'Befoltozom':'Fúrj bele egy lyukat!';
+  }
+  range.addEventListener('input',update);
+  $('#s-hole').onclick=()=>{holed=!holed;update();};
+  update();yT.x=yT.t;flood.x=flood.t;
+  loop(svg,(dt,t)=>{
+    step(yT,dt,18,7);step(flood,dt,14,7);
+    const a=cur.a*PX,h=cur.h*PX,tp=Math.max(2,cur.t*PX),x0=CX-a/2,x1=CX+a/2;
+    const y0=yT.x,y1=y0+h,tt=RM.matches?0:t;
+    const wd=wavePath(12,348,YS,1.4,80,tt*1.7,YB);
+    water.setAttribute('d',wd);
+    surf.setAttribute('d',wavePath(12,348,YS,1.4,80,tt*1.7));
+    if(cur.solid){steel.setAttribute('d',`M${x0} ${y0} L${x1} ${y0} L${x1} ${y1} L${x0} ${y1} Z`);inner.setAttribute('width',0);innerWater.setAttribute('width',0);holeMark.setAttribute('opacity','0');}
+    else{
+      steel.setAttribute('d',`M${x0} ${y0} L${x0} ${y1} L${x1} ${y1} L${x1} ${y0} L${x1-tp} ${y0} L${x1-tp} ${y1-tp} L${x0+tp} ${y1-tp} L${x0+tp} ${y0} Z`);
+      inner.setAttribute('x',x0+tp);inner.setAttribute('y',y0);inner.setAttribute('width',Math.max(0,a-2*tp));inner.setAttribute('height',Math.max(0,h-tp));
+      const ih=Math.max(0,h-tp)*flood.x,top=y1-tp-ih;
+      innerWater.setAttribute('x',x0+tp);innerWater.setAttribute('y',Math.max(top,YS));innerWater.setAttribute('width',Math.max(0,a-2*tp));innerWater.setAttribute('height',Math.max(0,y1-tp-Math.max(top,YS)));
+      holeMark.setAttribute('cx',CX);holeMark.setAttribute('cy',y1-tp/2);holeMark.setAttribute('opacity',holed?'1':'0');
+    }
+  });
+})();
+
+// ---------- 5. Cargo ship ----------
+(function(){
+  const svg=$('#h-svg'),inset=$('#h-inset');
+  const A=300,EMPTY=300,BOX=25,DEPTH=3.2,MAXN=32,PXM=40,YS=180;
+  const SD=(EMPTY+20*BOX)/(1.025*A); // summer mark: 20 containers in seawater
+  const FWA=SD*0.025;               // fresh water allowance for a box hull
+  const MARKS={TF:SD+SD/48+FWA,F:SD+FWA,T:SD+SD/48,S:SD,W:SD-SD/48};
+  const WATERS=[{id:'river',name:'Duna (édesvíz)',rho:1.0,mark:'F',c:'var(--river)'},{id:'sea',name:'Tenger',rho:1.025,mark:'S',c:'var(--sea)'},{id:'dead',name:'Holt-tenger',rho:1.24,mark:'S',c:'var(--dead)'}];
+  let wat=WATERS[0],n=0,sunk=false,sinkT=0;
+  const rho={x:1,from:1,to:1,p:1};
+  const mix={river:Spring(1),sea:Spring(0),dead:Spring(0)};
+  // back water
+  const wb={};['river','sea','dead'].forEach(id=>wb[id]=S('path',{class:'f-'+id,opacity:0},svg));
+  const ship=S('g',{},svg);
+  const defs=S('defs',{},svg);const cp=S('clipPath',{id:'hull-clip'},defs);
+  const hullD='M46 -128 L676 -128 C668 -70 650 -14 616 0 L84 0 C62 0 50 -14 48 -40 Z';
+  S('path',{d:hullD},cp);
+  // superstructure
+  S('rect',{x:70,y:-190,width:72,height:62,rx:4,class:'f-white'},ship);
+  S('rect',{x:76,y:-182,width:60,height:10,rx:2,class:'f-window'},ship);
+  S('rect',{x:76,y:-162,width:60,height:8,rx:2,class:'f-window',opacity:.7},ship);
+  S('rect',{x:96,y:-208,width:18,height:18,class:'f-accent'},ship);
+  S('rect',{x:96,y:-203,width:18,height:5,class:'f-white'},ship);
+  const boxG=S('g',{},ship);
+  S('path',{d:hullD,class:'f-hull'},ship);
+  S('rect',{x:0,y:-SD*PXM,width:720,height:SD*PXM+2,class:'f-hullred','clip-path':'url(#hull-clip)'},ship);
+  S('line',{x1:0,y1:-SD*PXM,x2:720,y2:-SD*PXM,class:'s-mark','clip-path':'url(#hull-clip)',style:'stroke-width:1.5'},ship);
+  S('line',{x1:46,y1:-126,x2:676,y2:-126,class:'s-mark',style:'stroke-width:2;opacity:.6'},ship);
+  S('text',{x:520,y:-110,class:'t-name','text-anchor':'middle'},ship).textContent='ARKHIMÉDÉSZ';
+  S('text',{x:150,y:-110,class:'t-name','text-anchor':'middle',style:'font-size:10px'},ship).textContent='BUDAPEST';
+  // draft marks on the bow
+  for(let m=1;m<=3;m++){S('text',{x:624,y:-m*PXM+4,class:'t-mark'},ship).textContent=m+'M';}
+  for(let c=1;c<16;c++){if(c%5)S('line',{x1:614,x2:620,y1:-c*8,y2:-c*8,class:'s-mark',style:'stroke-width:1'},ship);}
+  // small plimsoll disc
+  S('circle',{cx:380,cy:-SD*PXM,r:7,class:'s-mark',style:'stroke-width:1.6'},ship);
+  S('line',{x1:368,x2:392,y1:-SD*PXM,y2:-SD*PXM,class:'s-mark',style:'stroke-width:1.6'},ship);
+  // front water
+  const wf={};['river','sea','dead'].forEach(id=>wf[id]=S('path',{class:'f-'+id,opacity:0},svg));
+  const surf=S('path',{class:'s-surface'},svg);
+  const bubG=S('g',{},svg);
+  // containers
+  const boxes=[];const COLORS=['--c1','--c2','--c3','--c4','--c5'];
+  for(let i=0;i<MAXN;i++){const r=Math.floor(i/8),c=i%8;const g=S('g',{opacity:0},boxG);
+    const x=160+c*54,y=-128-(r+1)*22;
+    S('rect',{x,y,width:50,height:21,rx:1.5,style:`fill:var(${COLORS[(c*3+r)%5]})`},g);
+    for(let k=1;k<5;k++)S('line',{x1:x+k*10,x2:x+k*10,y1:y+3,y2:y+18,style:'stroke:var(--ink);stroke-opacity:.18;stroke-width:1.2'},g);
+    boxes.push({g,off:Spring(0)});}
+  // inset (plimsoll mark close-up)
+  const IS=300,IY=110,yI=d=>IY-(d-SD)*IS;
+  const iwb={};['river','sea','dead'].forEach(id=>iwb[id]=S('path',{class:'f-'+id,opacity:0},inset));
+  const plate=S('g',{},inset);
+  S('rect',{x:0,y:0,width:360,height:240,class:'f-hull'},plate);
+  S('rect',{x:0,y:yI(SD)+18,width:360,height:240,class:'f-hullred'},plate);
+  S('circle',{cx:78,cy:IY,r:41.25,class:'s-mark',style:'stroke-width:7.5'},plate);
+  S('rect',{x:10.5,y:IY,width:135,height:7.5,class:'f-mark'},plate);
+  S('rect',{x:240,y:yI(MARKS.TF),width:4,height:yI(MARKS.W)-yI(MARKS.TF)+7.5,class:'f-mark'},plate);
+  [['TF',-1],['F',-1],['T',1],['S',1],['W',1]].forEach(([k,dir])=>{const y=yI(MARKS[k]);
+    S('rect',{x:dir>0?244:171,y,width:69,height:7.5,class:'f-mark'},plate);
+    S('text',{x:dir>0?318:166,y:y+7.5,class:'t-mark','text-anchor':dir>0?'start':'end',style:'font-size:12px'},plate).textContent=k;});
+  const iwf={};['river','sea','dead'].forEach(id=>iwf[id]=S('path',{class:'f-'+id,opacity:0},inset));
+  const isurf=S('path',{class:'s-surface'},inset);
+  const iTxt=S('text',{x:180,y:228,class:'t-mark','text-anchor':'middle',style:'font-size:12px'},inset);
+  const keel=Spring(YS+1*PXM),tilt=Spring(0);
+  let bub=[];
+
+  function draft(){return (EMPTY+BOX*n)/(rho.x*A);}
+  function setWater(w,animate){
+    wat=w;rho.from=rho.x;rho.to=w.rho;rho.p=animate&&!RM.matches?0:1;
+    ['river','sea','dead'].forEach(id=>mix[id].t=id===w.id?1:0);
+    btns.forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.id===w.id)));
+    update();
+  }
+  const btns=chips($('#h-water'),WATERS.map(w=>({...w,c:w.c})),wat.id,it=>setWater(WATERS.find(w=>w.id===it.id),true));
+  btns.forEach((b,i)=>b.dataset.id=WATERS[i].id);
+  function update(){
+    const M=EMPTY+BOX*n,dTarget=M/(wat.rho*A);
+    boxes.forEach((b,i)=>{const show=i<n;if(show&&b.g.getAttribute('opacity')==='0'){b.off.x=RM.matches?0:-70;b.off.v=0;}b.off.t=0;b.g.setAttribute('opacity',show?'1':'0');});
+    $('#h-n').textContent=n+' db';$('#h-m').textContent=nf(M)+' t';
+    $('#h-add').disabled=sunk||n>=MAXN;$('#h-rem').disabled=sunk||n<=0;
+    $('#h-add').textContent=n>=MAXN?'Megtelt a fedélzet':'+ konténer';
+    const seaBtn=$('#h-sea');seaBtn.hidden=wat.id==='dead';seaBtn.textContent=wat.id==='sea'?'Vissza a Dunára':'Irány a tenger!';seaBtn.disabled=sunk;
+    $('#h-raise').hidden=!sunk;
+    const st=$('#h-state');
+    const mk=wat.mark,mkD=wat.id==='river'?MARKS.F:MARKS.S;
+    if(sunk){st.className='state bad';st.textContent='Elsüllyedt! A víz átbukott a fedélzeten.';}
+    else if(DEPTH-dTarget<0.15){st.className='state bad';st.textContent='Mindjárt átcsap a víz a fedélzeten!';}
+    else if(dTarget>mkD+0.002){st.className='state mid';st.textContent=`Túlterhelve! Az ${mk}-jel már a víz alatt van.`;}
+    else if(dTarget>mkD-0.002){st.className='state up';st.textContent=`Pont a jelig megrakva! Ennél többet nem szabad.`;}
+    else{st.className='state up';st.textContent=n===0?'Üres hajó: magasan ül.':`Rendben: az ${mk}-jel a víz fölött van.`;}
+    readouts();
+  }
+  function readouts(){
+    const d=draft();const M=EMPTY+BOX*n;
+    $('#h-disp').textContent=sunk?'–':nf(M)+' t';
+    $('#h-d').textContent=sunk?'–':nf(d,2)+' m';
+    $('#h-free').textContent=sunk?'a hajó a fenéken van':(DEPTH-d>=0?`fedélzet: ${nf(DEPTH-d,2)} m-rel a víz fölött`:'');
+  }
+  function add(k){if(sunk)return;n=clamp(n+k,0,MAXN);update();}
+  $('#h-add').onclick=()=>add(1);$('#h-rem').onclick=()=>add(-1);
+  $('#h-sea').onclick=()=>setWater(wat.id==='sea'?WATERS[0]:WATERS[1],true);
+  $('#h-raise').onclick=()=>{sunk=false;sinkT=0;n=Math.max(0,n-1);tilt.t=0;keel.x=YS+draft()*PXM+40;update();};
+  update();keel.x=keel.t=YS+draft()*PXM;['river','sea','dead'].forEach(id=>mix[id].x=mix[id].t);
+  let lastRead='';
+  loop(svg,(dt,t)=>{
+    if(rho.p<1){rho.p=Math.min(1,rho.p+dt/2.4);}
+    const e=rho.p<.5?2*rho.p*rho.p:1-Math.pow(-2*rho.p+2,2)/2;rho.x=lerp(rho.from,rho.to,e);
+    ['river','sea','dead'].forEach(id=>step(mix[id],dt,4,4));
+    const d=draft();
+    if(!sunk&&d>=DEPTH){sunk=true;sinkT=0;update();}
+    if(sunk){sinkT+=dt;keel.t=YS+DEPTH*PXM+170;tilt.t=-7;}else{keel.t=YS+d*PXM;tilt.t=0;}
+    step(keel,dt,sunk?3:22,sunk?4:8);step(tilt,dt,6,5);
+    const tt=RM.matches?0:t,bob=(!sunk&&!RM.matches)?Math.sin(t*1.1)*1.2:0;
+    ship.setAttribute('transform',`translate(0 ${(keel.x+bob).toFixed(2)}) rotate(${tilt.x.toFixed(2)} 360 -64)`);
+    boxes.forEach(b=>{step(b.off,dt,60,10);b.g.setAttribute('transform',`translate(0 ${b.off.x.toFixed(1)})`);});
+    const back=wavePath(0,720,YS,2.4,130,tt*1.3,300),fr=wavePath(0,720,YS+1,2.4,130,tt*1.3+1,300);
+    ['river','sea','dead'].forEach(id=>{wb[id].setAttribute('d',back);wb[id].setAttribute('opacity',(mix[id].x*0.95).toFixed(3));wf[id].setAttribute('d',fr);wf[id].setAttribute('opacity',(mix[id].x*0.5).toFixed(3));});
+    surf.setAttribute('d',wavePath(0,720,YS+1,2.4,130,tt*1.3+1));
+    if(sunk&&!RM.matches&&sinkT<6&&Math.random()<dt*14)bub.push({x:200+Math.random()*320,y:290,r:2+Math.random()*4});
+    bub.forEach(b=>b.y-=60*dt);bub=bub.filter(b=>b.y>YS);
+    while(bubG.childNodes.length<bub.length)S('circle',{class:'bubble'},bubG);
+    [...bubG.childNodes].forEach((c,i)=>{const b=bub[i];if(b){c.setAttribute('cx',b.x.toFixed(1));c.setAttribute('cy',b.y.toFixed(1));c.setAttribute('r',b.r.toFixed(1));c.setAttribute('opacity','.8');}else c.setAttribute('opacity','0');});
+    // inset
+    const shown=sunk?SD+1:(keel.x-YS)/PXM;
+    const wy=clamp(yI(shown),-6,246);
+    const iw=wavePath(0,360,wy,2,70,tt*1.6,240);
+    ['river','sea','dead'].forEach(id=>{iwb[id].setAttribute('d','');iwf[id].setAttribute('d',iw);iwf[id].setAttribute('opacity',(mix[id].x*0.62).toFixed(3));});
+    isurf.setAttribute('d',wavePath(0,360,wy,2,70,tt*1.6));
+    iTxt.textContent=sunk?'':(yI(shown)>246?'a víz még lejjebb van ↓':'');
+    const key=`${n}|${sunk}|${d.toFixed(3)}`;if(key!==lastRead){readouts();lastRead=key;}
+  });
+})();
+
+// ---------- 6. Quiz ----------
+(function(){
+  const svg=$('#q-svg');
+  const OB=[
+    {id:'apple',em:'🍎',name:'Alma',rho:0.80,why:'Az alma kb. negyede levegő a sejtjei között.'},
+    {id:'orange',em:'🍊',name:'Narancs héjjal',rho:0.87,why:'A héjában rengeteg apró légbuborék van, mint egy mentőmellényben.'},
+    {id:'peeled',em:'🟠',name:'Hámozott narancs',rho:1.04,why:'Héj nélkül elvesztette a mentőmellényét.'},
+    {id:'potato',em:'🥔',name:'Krumpli',rho:1.08,why:'Sima vízben lemegy, erős sós vízben felúszik.'},
+    {id:'grape',em:'🍇',name:'Szőlőszem',rho:1.07,why:'Kicsit nehezebb a víznél, de jóval könnyebb a méznél.'},
+    {id:'ice',em:'🧊',name:'Jégkocka',rho:0.917,why:'A víz megfagyva kitágul, ezért a jég könnyebb a víznél. De csak egy kicsit!'},
+    {id:'egg',em:'🥚',name:'Friss tojás',rho:1.086,why:'Mint az első játékban: sós vízben felúszik.'},
+    {id:'oldegg',em:'🥚',name:'Záptojás',rho:0.984,why:'Megnőtt benne a légkamra. Ezt ne egyétek meg!'},
+    {id:'wood',em:'🪵',name:'Fadarab',rho:0.5,why:'A fa sejtjeiben sok a levegő.'},
+    {id:'candle',em:'🕯️',name:'Gyertya',rho:0.90,why:'A viasz egy kicsit könnyebb a víznél.'},
+    {id:'ping',em:'🏓',name:'Pingponglabda',rho:0.08,why:'Szinte csak levegő van benne.'},
+    {id:'rock',em:'🪨',name:'Kavics',rho:2.6,why:'A kő két és félszer nehezebb, mint ugyanannyi víz.'},
+    {id:'key',em:'🔑',name:'Kulcs',rho:8.4,why:'A fém nyolcszor nehezebb, mint ugyanannyi víz.'},
+  ];
+  const YS=110,YB=356,OH=30,HONEY=276,OIL=186;
+  const MODES=[{id:'water',name:'Víz'},{id:'brine',name:'Sós víz'},{id:'tower',name:'Rétegtorony'}];
+  let mode='water',pick=null,score=0,total=0,dropped=[],slot=0,busy=false;
+  function layers(){
+    if(mode==='water')return[{y0:YS,y1:YB,rho:1.0}];
+    if(mode==='brine')return[{y0:YS,y1:YB,rho:1.10}];
+    return[{y0:YS,y1:OIL,rho:0.92},{y0:OIL,y1:HONEY,rho:1.0},{y0:HONEY,y1:YB,rho:1.42}];
+  }
+  function eff(yTop){let s=0;for(const L of layers()){const o=Math.max(0,Math.min(yTop+OH,L.y1)-Math.max(yTop,L.y0));s+=L.rho*o/OH;}return s;}
+  function equil(r){const lo0=YS-OH,hi0=YB-OH;if(eff(hi0)<r)return{y:hi0,where:mode==='tower'?'bottom':'down'};let lo=lo0,hi=hi0;for(let i=0;i<50;i++){const m=(lo+hi)/2;if(eff(m)<r)lo=m;else hi=m;}const y=(lo+hi)/2;
+    let where='top';if(y>=YS-0.05){where=(y<OIL&&y+OH>OIL)?'ow':((y<HONEY&&y+OH>HONEY)?'wh':'top');}if(mode!=='tower')where=y<=YS?'up':'down';return{y,where};}
+  // scene
+  const defs=S('defs',{},svg);const cp=S('clipPath',{id:'q-clip'},defs);S('path',{d:'M52 52 L248 52 L242 356 L58 356 Z'},cp);
+  S('rect',{x:0,y:364,width:300,height:16,class:'f-table'},svg);
+  const liq=S('g',{'clip-path':'url(#q-clip)'},svg);
+  const objG=S('g',{},svg);
+  const front=S('g',{'clip-path':'url(#q-clip)'},svg);
+  const surf=S('path',{class:'s-surface'},svg);
+  S('path',{d:'M48 50 L55 352 Q56 362 66 362 L234 362 Q244 362 245 352 L252 50',class:'s-glass'},svg);
+  S('line',{x1:64,y1:70,x2:70,y2:330,class:'s-glint'},svg);
+  const labels=S('g',{},svg);
+  const preview=S('g',{},svg);
+  const prevLine=S('line',{x1:150,y1:0,x2:150,y2:16,class:'s-string'},preview);
+  const prevTxt=S('text',{x:150,y:32,class:'emoji','text-anchor':'middle','dominant-baseline':'central'},preview);
+  function drawLiquid(){
+    liq.innerHTML='';front.innerHTML='';labels.innerHTML='';
+    const cls={0.92:'f-oil',1:'f-water',1.1:'f-brine',1.42:'f-honey'};
+    layers().forEach(L=>{S('rect',{x:40,y:L.y0,width:220,height:L.y1-L.y0,class:cls[L.rho],style:L.rho===1?'fill-opacity:.7':''},liq);S('rect',{x:40,y:L.y0,width:220,height:L.y1-L.y0,class:cls[L.rho],style:'fill-opacity:.32'},front);});
+    if(mode==='tower'){[['olaj',(YS+OIL)/2],['víz',(OIL+HONEY)/2],['méz',(HONEY+YB)/2]].forEach(([t,y])=>{S('text',{x:262,y:y+4,class:'t-small'},labels).textContent=t;});}
+    else S('text',{x:262,y:(YS+YB)/2,class:'t-small'},labels).textContent=mode==='brine'?'sós víz':'víz';
+  }
+  function setOpts(){
+    const box=$('#q-opts');box.innerHTML='';
+    if(!pick){$('#q-prompt').textContent='Válassz egy tárgyat fent!';preview.setAttribute('opacity','0');return;}
+    preview.setAttribute('opacity','1');prevTxt.textContent=pick.em;
+    $('#q-prompt').textContent=`Szerinted mi lesz: ${pick.name.toLowerCase()}?`;
+    const opts=mode==='tower'?[['top','Az olaj tetején úszik'],['ow','Megáll az olaj és a víz között'],['wh','Megáll a víz és a méz között'],['bottom','Leér az aljára']]:[['up','Úszik'],['down','Elsüllyed']];
+    opts.forEach(([k,l],i)=>{const b=document.createElement('button');b.type='button';b.className='btn alt';b.textContent=l;b.disabled=busy;b.onclick=()=>guess(k);box.appendChild(b);});
+  }
+  function guess(k){
+    if(!pick||busy)return;
+    const o=pick,E=equil(o.rho);const ok=E.where===k;total++;if(ok)score++;
+    $('#q-score').textContent=`Találat: ${score} / ${total}`;
+    const L=mode==='brine'?'sós víz (1,10 g)':'víz (1 g)';
+    const why={up:`Könnyebb, mint ugyanannyi ${L}, ezért úszik.`,down:`Nehezebb, mint ugyanannyi ${L}, ezért lemegy.`,top:'Még az olajnál (0,92 g) is könnyebb, ezért az olaj tetején úszik.',ow:'Az olajnál nehezebb, a víznél könnyebb: a kettő határán áll meg.',wh:'A víznél nehezebb, a méznél (1,42 g) könnyebb: a méz tetején áll meg.',bottom:'Még a méznél is nehezebb, ezért leér az aljára.'}[E.where];
+    $('#q-result').innerHTML=`<span class="${ok?'good':'badc'}">${ok?'Talált!':'Nem talált.'}</span> ${o.name}: egy kockacukornyi darabja kb. ${nf(o.rho,o.rho>=2?1:(Math.abs(o.rho*100-Math.round(o.rho*100))<1e-6?2:3))} g. ${why} ${o.why}`;
+    // drop
+    const xs=[88,122,156,190,224];const x=xs[slot%5];
+    const old=dropped.find(d=>d.slot===slot%5);if(old){old.el.remove();dropped=dropped.filter(d=>d!==old);}
+    const el=S('text',{x,y:32,class:'emoji','text-anchor':'middle','dominant-baseline':'central'},objG);el.textContent=o.em;
+    dropped.push({el,slot:slot%5,y:32,v:0,target:E.y+OH/2,phase:'fall'});slot++;
+    pick=null;qbtns.forEach(b=>b.setAttribute('aria-pressed','false'));setOpts();
+  }
+  function clearGlass(){dropped.forEach(d=>d.el.remove());dropped=[];slot=0;}
+  seg($('#q-mode'),MODES,mode,it=>{mode=it.id;clearGlass();drawLiquid();$('#q-result').textContent='';setOpts();});
+  const qbtns=chips($('#q-objs'),OB,null,it=>{pick=it;setOpts();});
+  $('#q-clear').onclick=()=>{clearGlass();$('#q-result').textContent='';};
+  drawLiquid();setOpts();
+  loop(svg,(dt,t)=>{
+    const tt=RM.matches?0:t;
+    surf.setAttribute('d',wavePath(56,244,YS,1,60,tt*2));
+    prevTxt.setAttribute('y',(32+(RM.matches?0:Math.sin(t*2)*2)).toFixed(1));
+    dropped.forEach(d=>{
+      if(RM.matches||dt===0){d.y=d.target;d.v=0;}
+      else if(d.phase==='fall'){d.v+=700*dt;d.y+=d.v*dt;if(d.y+OH/2>YS){d.phase='swim';d.v*=0.35;}}
+      else{const a=16*(d.target-d.y)-4.5*d.v;d.v+=a*dt;d.y+=d.v*dt;}
+      d.el.setAttribute('y',d.y.toFixed(1));
+    });
+  });
+})();
+})();
+</script>
+
+</body></html>

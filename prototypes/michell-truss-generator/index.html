@@ -1,0 +1,400 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Michell Truss Generator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@400;600&display=swap">
+<style>
+/* Layout: drafting sheet. Parameters on top, drawing + rule sheet side by side (stacked on phones), Project code below */
+:root{
+  --paper:#f3f5f4; --sheet:#fbfcfb; --ink:#1b2a33; --muted:#5d6d74; --grid:#e3e9e6; --line:#c5d0cc;
+  --accent:#1e5aa8; --tens:#1d6fd0; --comp:#d23b2b; --support:#2b3a42;
+  --r1:#23845a; --r2:#c4850c; --r3:#7a4fc4; --r4:#4b5d65;
+  --display:"IBM Plex Sans Condensed","Arial Narrow",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#11171a; --sheet:#161e22; --ink:#e3ebe8; --muted:#93a4a9; --grid:#1d272b; --line:#2e3b40;
+  --accent:#7fb0f0; --tens:#5aa2f5; --comp:#f2735f; --support:#c9d4d1;
+  --r1:#5fcf95; --r2:#f0b43c; --r3:#b493f0; --r4:#a9babf; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#11171a; --sheet:#161e22; --ink:#e3ebe8; --muted:#93a4a9; --grid:#1d272b; --line:#2e3b40;
+  --accent:#7fb0f0; --tens:#5aa2f5; --comp:#f2735f; --support:#c9d4d1;
+  --r1:#5fcf95; --r2:#f0b43c; --r3:#b493f0; --r4:#a9babf; color-scheme:dark}
+body{background:var(--paper);color:var(--ink);font-family:var(--display);font-size:15px}
+.wrap{max-width:1180px;margin:0 auto;padding:20px 16px 40px;display:grid;gap:18px}
+h1{font-size:clamp(24px,4vw,34px);font-weight:600;margin:0;letter-spacing:-.01em;text-wrap:balance}
+.sub{color:var(--muted);margin:4px 0 0;max-width:68ch;line-height:1.45}
+.mode{display:flex;border:1px solid var(--line);border-radius:6px;overflow:hidden;width:max-content;max-width:100%}
+.mode button{font:inherit;font-size:14px;padding:8px 14px;border:0;background:var(--sheet);color:var(--muted);cursor:pointer}
+.mode button[aria-pressed="true"]{background:var(--accent);color:var(--sheet);font-weight:600}
+.params{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.field{display:grid;gap:4px}
+.field label{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.field .row{display:flex;align-items:center;gap:6px}
+.field input{font-family:var(--mono);font-size:15px;width:100%;min-width:0;padding:7px 8px;border:1px solid var(--line);border-radius:4px;background:var(--sheet);color:var(--ink);font-variant-numeric:tabular-nums}
+input:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.field .u{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.main{display:grid;grid-template-columns:minmax(0,1.75fr) minmax(0,1fr);gap:16px;align-items:start}
+@media (max-width:860px){.main{grid-template-columns:minmax(0,1fr)}}
+.sheet{background:var(--sheet);border:1px solid var(--line);border-radius:6px;overflow:hidden;min-width:0}
+.sheet svg{display:block;width:100%;height:auto}
+.stats{display:flex;flex-wrap:wrap;gap:6px 22px;padding:10px 14px;border-top:1px solid var(--line);font-family:var(--mono);font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+.stats b{color:var(--ink);font-weight:500}
+.ok{color:var(--r1)} .bad{color:var(--comp)}
+.sw{display:inline-block;width:18px;height:3px;vertical-align:middle;margin-right:5px}
+/* rule sheet */
+.rules{display:grid;gap:0;background:var(--sheet);border:1px solid var(--line);border-radius:6px;min-width:0}
+.rules h2{font-size:17px;font-weight:600;margin:0;padding:12px 14px 10px;border-bottom:1px solid var(--line)}
+.rule{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 10px;padding:11px 14px;border-bottom:1px solid var(--line)}
+.rule:last-child{border-bottom:0}
+.rule .no{grid-row:span 3;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-family:var(--mono);font-size:12.5px;font-weight:500;color:var(--sheet);background:var(--c)}
+.rule .hd{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.rule h3{margin:0;font-size:15px;font-weight:600}
+.rule p{margin:0;color:var(--muted);font-size:13.5px;line-height:1.45}
+.rule .chk{font-family:var(--mono);font-size:11.5px;color:var(--ink);font-variant-numeric:tabular-nums;line-height:1.5}
+.rule .chk .ok{font-weight:500}
+.tg{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--muted);cursor:pointer;white-space:nowrap}
+.tg input{accent-color:var(--c);width:15px;height:15px;margin:0}
+.rule.off .no{background:var(--line)}
+i.f{font-style:italic;font-family:Georgia,"Times New Roman",serif}
+/* layer focus on hover */
+svg .ly{transition:opacity .15s}
+svg[data-focus] .ly,svg[data-focus] .members{opacity:.12}
+svg[data-focus="1"] .L1,svg[data-focus="2"] .L2,svg[data-focus="3"] .L3,svg[data-focus="4"] .L4,svg[data-focus="5"] .members{opacity:1}
+@media (prefers-reduced-motion:reduce){svg .ly{transition:none}}
+.out{display:grid;gap:8px}
+.outhead{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
+.outhead h2{font-size:17px;margin:0;font-weight:600}
+.btn{font:inherit;font-size:14px;font-weight:600;padding:8px 16px;border-radius:5px;border:1px solid var(--accent);background:var(--accent);color:var(--sheet);cursor:pointer}
+textarea{width:100%;box-sizing:border-box;height:150px;font-family:var(--mono);font-size:11.5px;line-height:1.4;padding:10px;border:1px solid var(--line);border-radius:6px;background:var(--sheet);color:var(--ink);resize:vertical}
+.note{color:var(--muted);font-size:13.5px;line-height:1.5;max-width:75ch;margin:0}
+.toast{font-family:var(--mono);font-size:12.5px;color:var(--r1)}
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>Michell rácsos tartó generátor</h1>
+    <p class="sub">Diszkrét Michell-háló a szerkesztési szabályaival együtt. Minden szabály saját színnel jelenik meg a rajzon, és az oldal élőben ellenőrzi, hogy a generált geometria tényleg teljesíti. Vidd az egeret egy szabály fölé, és csak az ő rétege marad kiemelve.</p>
+  </header>
+
+  <div class="mode" role="group" aria-label="Változat">
+    <button id="m-hemp" aria-pressed="true">Két támasz (klasszikus konzol)</button>
+    <button id="m-circ" aria-pressed="false">Körtárcsa támasz (log. spirálok)</button>
+  </div>
+
+  <div class="params">
+    <div class="field"><label for="span">Kinyúlás L</label><div class="row"><input id="span" type="number" step="0.5" min="0.5" value="12"><span class="u">m</span></div></div>
+    <div class="field"><label for="h" id="hlab">Támaszköz 2h</label><div class="row"><input id="h" type="number" step="0.5" min="0.2" value="4"><span class="u">m</span></div></div>
+    <div class="field"><label for="n">Osztás n</label><div class="row"><input id="n" type="number" step="1" min="1" max="14" value="5"></div></div>
+    <div class="field"><label for="P">Teher P (lefelé)</label><div class="row"><input id="P" type="number" step="1" value="100"><span class="u">kN</span></div></div>
+    <div class="field"><label for="od">Cső Ø × t</label><div class="row"><input id="od" type="number" step="1" min="5" value="114.3"><span class="u">×</span><input id="t" type="number" step="0.1" min="0.5" value="6"><span class="u">mm</span></div></div>
+  </div>
+
+  <div class="main">
+    <div class="sheet">
+      <svg id="svg" viewBox="0 0 800 520" role="img" aria-label="A generált Michell-rács rajza a szerkesztési szabályok rétegeivel"></svg>
+      <div class="stats" id="stats"></div>
+    </div>
+
+    <section class="rules" aria-label="Szerkesztési szabályok">
+      <h2>A szabályok</h2>
+      <div class="rule" data-r="1" style="--c:var(--r1)">
+        <span class="no">1</span>
+        <div class="hd"><h3>Merőleges rúdcsaládok</h3><label class="tg"><input type="checkbox" id="ly1" checked>mutat</label></div>
+        <p>Michell-feltétel: az optimális rács rúdjai a főnyúlási irányokban futnak, ezért a két család mindenhol derékszögben metszi egymást. Diszkréten minden csomópontban két szög pontosan 90°, a másik kettő 90°+Δ és 90°−Δ.</p>
+        <div class="chk" id="c1"></div>
+      </div>
+      <div class="rule" data-r="2" style="--c:var(--r2)">
+        <span class="no">2</span>
+        <div class="hd"><h3>Állandó törésszög Δ</h3><label class="tg"><input type="checkbox" id="ly2" checked>mutat</label></div>
+        <p>Hencky első tétele: minden rúdvonal minden csomópontban ugyanannyit fordul, Δ = γ/n. A támaszoknál a legyező n egyforma, Δ nyílású cikkre oszlik. Ahol egyenes sugár fut be a hálóba, ott a törés Δ/2 (halvány cikk).</p>
+        <div class="chk" id="c2"></div>
+      </div>
+      <div class="rule" data-r="3" style="--c:var(--r3)">
+        <span class="no">3</span>
+        <div class="hd"><h3>Thalész-körök</h3><label class="tg"><input type="checkbox" id="ly3" checked>mutat</label></div>
+        <p>Minden négyszögcella két szemközti sarka derékszög, ezért a másik átló a cella köré írt kör átmérője. Ez a merőlegesség diszkrét alakja: minden cella húrnégyszög.</p>
+        <div class="chk" id="c3"></div>
+      </div>
+      <div class="rule" data-r="4" style="--c:var(--r4)">
+        <span class="no">4</span>
+        <div class="hd"><h3 id="r4t">Kezdő körök</h3><label class="tg"><input type="checkbox" id="ly4" checked>mutat</label></div>
+        <p id="r4p"></p>
+        <div class="chk" id="c4"></div>
+      </div>
+      <div class="rule" data-r="5" style="--c:var(--tens)">
+        <span class="no">5</span>
+        <div class="hd"><h3>Családonként egy előjel</h3></div>
+        <p>Csúcsteher esetén az egyik család végig húzott, a másik végig nyomott. Ezért lehet a két családot két különböző anyagból vagy szelvényből építeni.</p>
+        <div class="chk" id="c5"></div>
+      </div>
+      <div class="rule" data-r="6" style="--c:var(--accent)">
+        <span class="no">6</span>
+        <div class="hd"><h3>Egyetlen szabad paraméter</h3></div>
+        <p id="r6p">Adott n és támaszköz mellett az egész geometria Δ-tól függ. A kinyúlás Δ-val közel exponenciálisan nő, ezért kis szögváltozás nagy arányváltozást ad. A generátor felezéssel keresi meg azt a Δ-t, amelyhez a kért L tartozik.</p>
+        <div class="chk" id="c6"></div>
+      </div>
+    </section>
+  </div>
+
+  <div class="out">
+    <div class="outhead">
+      <h2>Truzme Project code</h2>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        <span class="toast" id="toast" aria-live="polite"></span>
+        <button class="btn" id="copy">Kód másolása</button>
+      </div>
+    </div>
+    <textarea id="code" readonly spellcheck="false" aria-label="Project code JSON"></textarea>
+    <p class="note">Egységek: m, mm, kN, MPa; S235 acél. A rajzon a rúderők egy saját, gyors rácsszámításból jönnek (kék húzás, piros nyomás, vonalvastagság az erővel arányos); a méretezést a Truzme végzi. A szerkezet statikailag határozott, m + r = 2j, és minden csomópont két korábbi, nem egy egyenesbe eső rúdra épül.</p>
+  </div>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const D=Math.PI/180, Q=Math.PI/4;
+let mode='hemp';
+
+function inter(p,a,q,b){const dx=Math.cos(a),dy=Math.sin(a),ex=Math.cos(b),ey=Math.sin(b);
+  const det=-dx*ey+dy*ex, rx=q[0]-p[0], ry=q[1]-p[1]; const s=(-rx*ey+ry*ex)/det; return [p[0]+s*dx,p[1]+s*dy];}
+
+/* Közös felépítés: rácsindexek (i,j). Az i-irányú húr iránya θ−Δ/2, a j-irányúé θ+90°+Δ/2 típusú,
+   ahol θ a csomópont helyén az i-család érintője. Ebből jön minden szabály. */
+function finish(g){
+  g.mem=[]; g.lines.forEach(l=>{for(let k=1;k<l.ids.length;k++)g.mem.push([l.ids[k-1],l.ids[k],l.fam]);});
+  return g;
+}
+// Klasszikus konzol: A=(0,h), B=(0,−h), legyezők h√2 sugárral
+function hemp(h,n,d){
+  const r=h*Math.SQRT2, A=[0,h], B=[0,-h], P=[...Array(n+1)].map(()=>Array(n+1));
+  for(let k=0;k<=n;k++){const a=-Q+k*d; P[0][k]=[r*Math.cos(a),h+r*Math.sin(a)]; P[k][0]=[P[0][k][0],-P[0][k][1]];}
+  for(let i=1;i<=n;i++)for(let j=1;j<=n;j++) P[i][j]=inter(P[i-1][j],-Q+(j-i+0.5)*d, P[i][j-1],Q+(j-i-0.5)*d);
+  const nodes=[A,B], ids=new Map(), key=(i,j)=>i+','+j;
+  for(let i=0;i<=n;i++)for(let j=0;j<=n;j++){nodes.push(P[i][j]);ids.set(key(i,j),nodes.length);}
+  const id=(i,j)=>ids.get(key(i,j)), lines=[], cells=[];
+  for(let j=0;j<=n;j++)lines.push({fam:'i',ids:[1,...[...Array(n+1).keys()].map(i=>id(i,j))]});
+  for(let i=0;i<=n;i++)lines.push({fam:'j',ids:[2,...[...Array(n+1).keys()].map(j=>id(i,j))]});
+  for(let i=0;i<n;i++)for(let j=0;j<n;j++)cells.push([id(i,j),id(i+1,j),id(i+1,j+1),id(i,j+1)]);
+  return finish({nodes,ids,key,lines,cells,d,n,
+    fans:[{c:1,arc:[...Array(n+1).keys()].map(k=>id(0,k))},{c:2,arc:[...Array(n+1).keys()].map(k=>id(k,0))}],
+    rings:[{c:A,r,label:'r = h√2'},{c:B,r,label:'r = h√2'}],
+    sup:[1,2], tip:id(n,n), dimH:[1,id(n,n)], dimV:[2,1]});
+}
+// Körtárcsa: peremcsomópontok a körön 2Δ-nként, a szintek koncentrikus körökön
+const qOf=d=>Math.cos(d)+Math.sin(d)/Math.tan(Q-d/2);
+function circ(a,n,d){
+  const ids=new Map(), key=(i,j)=>i+','+j, nodes=[], P=new Map();
+  for(let i=-n;i<=n;i++)P.set(key(i,-i),[a*Math.cos(2*i*d),a*Math.sin(2*i*d)]);
+  for(let L=1;L<=2*n;L++)for(let i=-n;i<=n;i++){const j=L-i;if(j<-n||j>n)continue;
+    P.set(key(i,j),inter(P.get(key(i-1,j)),(i-j-0.5)*d+Q,P.get(key(i,j-1)),(i-j+0.5)*d-Q));}
+  for(const [k,p] of P){nodes.push(p);ids.set(k,nodes.length);}
+  const id=(i,j)=>ids.get(key(i,j)), lines=[], cells=[], sup=[];
+  for(let j=-n;j<=n;j++){const l=[];for(let i=Math.max(-n,-j);i<=n;i++)l.push(id(i,j));if(l.length>1)lines.push({fam:'i',ids:l});}
+  for(let i=-n;i<=n;i++){const l=[];for(let j=Math.max(-n,-i);j<=n;j++)l.push(id(i,j));if(l.length>1)lines.push({fam:'j',ids:l});}
+  for(let i=-n;i<n;i++)for(let j=-n;j<n;j++)if(i+j>=0)cells.push([id(i,j),id(i+1,j),id(i+1,j+1),id(i,j+1)]);
+  for(let i=-n;i<=n;i++)sup.push(id(i,-i));
+  const q=qOf(d), rings=[];
+  for(let k=0;k<=2*n;k++)rings.push({c:[0,0],r:a*q**k,label:k===0?'a':k===1?'a·q':k===2*n?`a·q^${2*n} = L`:''});
+  return finish({nodes,ids,key,lines,cells,d,n,q,fans:[],rings,sup,tip:id(n,n),dimH:[id(0,0),id(n,n)],disk:a});
+}
+
+function bisect(f,lo,hi,target){for(let k=0;k<70;k++){const m=(lo+hi)/2;if(f(m)<target)lo=m;else hi=m;}return (lo+hi)/2;}
+function build(L,H,n){
+  if(mode==='hemp'){
+    const h=H/2, tipX=d=>hemp(h,n,d).nodes.at(-1)[0], dMax=172*D/n, dMin=0.05*D;
+    if(tipX(dMax)<L) return {err:`L/2h = ${(L/H).toFixed(1)}: ehhez n = ${n} mellett túl nagy legyezőszög kellene. Növeld n-t vagy a támaszközt.`};
+    if(tipX(dMin)>L) return {err:'A kinyúlás túl kicsi a támaszközhöz képest. L legyen nagyobb, mint kb. 0,75 · 2h.'};
+    return hemp(h,n,bisect(tipX,dMin,dMax,L));
+  }
+  const a=H/2; if(L<=a*1.02) return {err:'A kinyúlásnak nagyobbnak kell lennie a tárcsa sugaránál.'};
+  const dMax=85*D/n, target=(L/a)**(1/(2*n));
+  if(qOf(dMax)<target) return {err:`L/a = ${(L/a).toFixed(1)}: a spirálok körbeérnének a tárcsán. Csökkentsd L-t vagy növeld az átmérőt.`};
+  return circ(a,n,bisect(qOf,1e-6,dMax,target));
+}
+
+function solve(g,P){
+  const {nodes,mem,sup,tip}=g, N=nodes.length, nd=2*N, K=[...Array(nd)].map(()=>new Float64Array(nd)), f=new Float64Array(nd);
+  const geo=mem.map(([a,b])=>{const p=nodes[a-1],q=nodes[b-1],L=Math.hypot(q[0]-p[0],q[1]-p[1]);return [L,(q[0]-p[0])/L,(q[1]-p[1])/L];});
+  mem.forEach(([a,b],k)=>{const [L,c,s]=geo[k],m=[[c*c,c*s],[c*s,s*s]],ix=[2*a-2,2*a-1,2*b-2,2*b-1],sg=[1,1,-1,-1];
+    for(let u=0;u<4;u++)for(let v=0;v<4;v++)K[ix[u]][ix[v]]+=sg[u]*sg[v]*m[u%2][v%2]/L;});
+  f[2*tip-1]=-P;
+  const fixed=new Set(sup.flatMap(s=>[2*s-2,2*s-1])), fr=[...Array(nd).keys()].filter(i=>!fixed.has(i)), n=fr.length;
+  const M=fr.map(i=>{const r=new Float64Array(n+1);fr.forEach((j,c)=>r[c]=K[i][j]);r[n]=f[i];return r;});
+  for(let c=0;c<n;c++){let p=c;for(let r=c+1;r<n;r++)if(Math.abs(M[r][c])>Math.abs(M[p][c]))p=r;[M[c],M[p]]=[M[p],M[c]];
+    if(Math.abs(M[c][c])<1e-12)return null;
+    for(let r=0;r<n;r++)if(r!==c&&M[r][c]!==0){const q=M[r][c]/M[c][c];for(let k=c;k<=n;k++)M[r][k]-=q*M[c][k];}}
+  const u=new Float64Array(nd); fr.forEach((gi,i)=>u[gi]=M[i][n]/M[i][i]);
+  return mem.map(([a,b],k)=>{const [L,c,s]=geo[k];return ((u[2*b-2]-u[2*a-2])*c+(u[2*b-1]-u[2*a-1])*s)/L;});
+}
+
+/* ---- szabályok ellenőrzése (világkoordinátában) ---- */
+const sub=(a,b)=>[a[0]-b[0],a[1]-b[1]], len=v=>Math.hypot(v[0],v[1]);
+const angBetween=(u,v)=>Math.acos(Math.max(-1,Math.min(1,(u[0]*v[0]+u[1]*v[1])/len(u)/len(v))));
+const wrap=a=>Math.atan2(Math.sin(a),Math.cos(a));
+function rules(g){
+  const N=g.nodes, pt=id=>N[id-1], R={right:[],turns:[],thales:[],fanW:[]};
+  // 1: derékszögek – (i−1,j)⟂(i,j+1) és (i+1,j)⟂(i,j−1) minden csomópontban, ahol a két szomszéd létezik
+  let dev1=0;
+  for(const [k,id] of g.ids){const [i,j]=k.split(',').map(Number), at=(a,b)=>g.ids.get(g.key(a,b));
+    for(const [p,q] of [[at(i-1,j),at(i,j+1)],[at(i+1,j),at(i,j-1)]]){if(!p||!q)continue;
+      const u=sub(pt(p),pt(id)), v=sub(pt(q),pt(id)), a=angBetween(u,v); dev1=Math.max(dev1,Math.abs(a/D-90)); R.right.push([id,p,q]);}}
+  // 2: törésszögek minden vonal minden belső csúcsában
+  let dev2=0, full=0, half=0;
+  for(const l of g.lines)for(let k=1;k<l.ids.length-1;k++){
+    const p=pt(l.ids[k-1]),v=pt(l.ids[k]),r=pt(l.ids[k+1]), u=sub(v,p), w=sub(r,v);
+    const t=wrap(Math.atan2(w[1],w[0])-Math.atan2(u[1],u[0])), at=Math.abs(t);
+    const isFull=Math.abs(at-g.d)<Math.abs(at-g.d/2);
+    dev2=Math.max(dev2,Math.abs(at-(isFull?g.d:g.d/2))/D); isFull?full++:half++;
+    R.turns.push({v,u,t,full:isFull,lin:len(u),lout:len(w)});}
+  for(const f of g.fans)for(let k=1;k<f.arc.length;k++){const c=pt(f.c),a=sub(pt(f.arc[k-1]),c),b=sub(pt(f.arc[k]),c);
+    dev2=Math.max(dev2,Math.abs(angBetween(a,b)-g.d)/D); R.fanW.push({c,a,b,k});}
+  // 3: Thalész – a (i,j)–(i+1,j+1) átló az átmérő
+  let dev3=0;
+  for(const [a,b,c,e] of g.cells){const A=pt(a),C=pt(c),M=[(A[0]+C[0])/2,(A[1]+C[1])/2],r=len(sub(A,C))/2;
+    dev3=Math.max(dev3,Math.abs(len(sub(pt(b),M))-r)/r,Math.abs(len(sub(pt(e),M))-r)/r); R.thales.push({M,r});}
+  return {...R,dev1,dev2,dev3,full,half};
+}
+
+const r4=v=>Math.round(v*1e4)/1e4;
+function projectCode(g,P,od,t){
+  const doc={units:{length:"m",sectionLength:"mm",force:"kN",materialStrength:"MPa",area:"mm²",density:"kg/m³"},
+    nodes:g.nodes.map(([x,y],i)=>({id:i+1,x:r4(x),y:r4(y)})),
+    members:g.mem.map(([a,b],i)=>({id:i+1,from:a,to:b,section:1,material:1})),
+    supports:g.sup.map((s,i)=>({id:i+1,node:s,x:true,y:true})),
+    nodalLoads:[{id:1,node:g.tip,x:0,y:-P}],
+    materials:[{id:1,name:"S235",EModulus:210000,fMax:235,density:7850}],
+    sections:[{id:1,name:`CHS ${od}×${t}`,sectionType:"pipe",outerDiameter:od,thickness:t}],
+    dimensions:[]};
+  const ys=g.nodes.map(p=>p[1]), ymin=Math.min(...ys), ymax=Math.max(...ys), xmin=Math.min(...g.nodes.map(p=>p[0]));
+  const pad=(ymax-ymin)*0.12+0.3;
+  if(g.dimH){const [a,b]=g.dimH;doc.dimensions.push({id:1,from:a,to:b,kind:"horizontal",anchor:{x:r4((g.nodes[a-1][0]+g.nodes[b-1][0])/2),y:r4(ymin-pad)}});}
+  if(g.dimV){const [a,b]=g.dimV;doc.dimensions.push({id:2,from:a,to:b,kind:"vertical",anchor:{x:r4(xmin-pad),y:0}});}
+  return JSON.stringify(doc);
+}
+
+/* ---- rajz ---- */
+const W=800,H=520,PAD=40;
+function draw(g,F,R){
+  const svg=$('svg'), xs=g.nodes.map(p=>p[0]), ys=g.nodes.map(p=>p[1]);
+  let x0=Math.min(...xs),x1=Math.max(...xs),y0=Math.min(...ys),y1=Math.max(...ys);
+  if($('ly4').checked)for(const c of g.rings.slice(0,mode==='hemp'?2:1)){x0=Math.min(x0,c.c[0]-c.r);y0=Math.min(y0,c.c[1]-c.r);y1=Math.max(y1,c.c[1]+c.r);}
+  if(g.disk){x0=Math.min(x0,-g.disk);}
+  y1+=(y1-y0)*0.07;
+  const sc=Math.min((W-2*PAD)/(x1-x0||1),(H-2*PAD)/(y1-y0||1));
+  const ox=(W-(x1-x0)*sc)/2-x0*sc, oy=(H+(y1-y0)*sc)/2+y0*sc;
+  const X=x=>+(ox+x*sc).toFixed(1), Y=y=>+(oy-y*sc).toFixed(1), S=p=>X(p[0])+','+Y(p[1]);
+  const fmax=F?Math.max(...F.map(Math.abs)):1, pt=id=>g.nodes[id-1];
+  // körcikk világkoordinátában, sokszöggel közelítve (nincs SVG-ív irány-zűr)
+  const sector=(c,a0,da,rho)=>{const k=Math.max(4,Math.ceil(Math.abs(da)/(4*D)));let s='M'+S(c);
+    for(let m=0;m<=k;m++){const a=a0+da*m/k;s+='L'+S([c[0]+rho*Math.cos(a),c[1]+rho*Math.sin(a)]);}return s+'Z';};
+  let s=`<defs><pattern id="gp" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M20 0H0V20" fill="none" stroke="var(--grid)" stroke-width="1"/></pattern></defs><rect width="${W}" height="${H}" fill="url(#gp)"/>`;
+  if(g.disk)s+=`<circle cx="${X(0)}" cy="${Y(0)}" r="${(g.disk*sc).toFixed(1)}" fill="var(--grid)" stroke="var(--support)" stroke-width="1.4" stroke-dasharray="4 3"/>`;
+
+  // 4 – kezdő / koncentrikus körök
+  let L4='';
+  if($('ly4').checked){
+    g.rings.forEach((c,k)=>{L4+=`<circle cx="${X(c.c[0])}" cy="${Y(c.c[1])}" r="${(c.r*sc).toFixed(1)}" fill="none" stroke="var(--r4)" stroke-width="${mode==='hemp'?1.3:1}" stroke-dasharray="6 4" opacity="${mode==='hemp'?.9:.55}"/>`;
+      if(c.label){const a=mode==='hemp'?(k===0?100*D:-100*D):(k===0?-150*D:-6*D),lx=c.c[0]+c.r*Math.cos(a), ly=c.c[1]+c.r*Math.sin(a);
+        L4+=`<text x="${X(lx)+5}" y="${Y(ly)+(mode==='hemp'&&k===1?14:-5)}" fill="var(--r4)" font-family="IBM Plex Mono,monospace" font-size="12">${c.label}</text>`;}});
+    if(mode==='hemp'){const A=pt(1),B=pt(2),P0=pt(g.ids.get('0,0'));
+      L4+=`<path d="M${S(A)}L${S(P0)}L${S(B)}" fill="none" stroke="var(--r4)" stroke-width="1" stroke-dasharray="2 3"/>`;}
+  }
+  // 3 – Thalész-körök
+  let L3='';
+  if($('ly3').checked)R.thales.forEach(c=>{L3+=`<circle cx="${X(c.M[0])}" cy="${Y(c.M[1])}" r="${(c.r*sc).toFixed(1)}" fill="var(--r3)" fill-opacity=".05" stroke="var(--r3)" stroke-width="1" opacity=".75"/>`;});
+  // rudak
+  let M='';
+  g.mem.forEach(([a,b],k)=>{const f=F?F[k]:0;const col=!F?'var(--ink)':Math.abs(f)<1e-6*fmax?'var(--muted)':f>0?'var(--tens)':'var(--comp)';
+    const w=F?0.9+2.4*Math.abs(f)/fmax:1.2;
+    M+=`<line x1="${X(pt(a)[0])}" y1="${Y(pt(a)[1])}" x2="${X(pt(b)[0])}" y2="${Y(pt(b)[1])}" stroke="${col}" stroke-width="${w.toFixed(2)}" stroke-linecap="round"/>`;});
+  // 2 – egyforma szögek: legyezőcikkek + törések
+  let L2='';
+  if($('ly2').checked){
+    R.fanW.forEach(f=>{const r0=len(f.a)*0.36, a0=Math.atan2(f.a[1],f.a[0]), da=wrap(Math.atan2(f.b[1],f.b[0])-a0);
+      L2+=`<path d="${sector(f.c,a0,da,r0)}" fill="var(--r2)" fill-opacity="${f.k%2?.55:.32}" stroke="var(--r2)" stroke-width=".8"/>`;});
+    R.turns.forEach(t=>{const rho=Math.min(0.42*Math.min(t.lin,t.lout),26/sc), a0=Math.atan2(t.u[1],t.u[0]);
+      // a bejövő rúd meghosszabbítása halványan, hogy látsszon, mihez képest fordul
+      const e=[t.v[0]+rho*1.15*Math.cos(a0),t.v[1]+rho*1.15*Math.sin(a0)];
+      L2+=`<path d="M${S(t.v)}L${S(e)}" stroke="var(--r2)" stroke-width=".8" stroke-dasharray="2 2"/>`;
+      L2+=`<path d="${sector(t.v,a0,t.t,rho)}" fill="var(--r2)" fill-opacity="${t.full?.75:.25}" stroke="var(--r2)" stroke-width="${t.full?0:.8}"/>`;});
+    if(mode==='hemp'){const A=pt(1), r=g.rings[0].r*0.36, a=-Q+g.d*g.n/2;
+      L2+=`<text x="${X(A[0]+r*1.25*Math.cos(a))+4}" y="${Y(A[1]+r*1.25*Math.sin(a))}" fill="var(--r2)" font-family="IBM Plex Mono,monospace" font-size="12.5" font-weight="500">Δ = ${(g.d/D).toFixed(2)}°</text>`;}
+  }
+  // 1 – derékszögjelek
+  let L1='';
+  if($('ly1').checked)R.right.forEach(([v,p,q])=>{const V=pt(v),u=sub(pt(p),V),w=sub(pt(q),V),lu=len(u),lw=len(w);
+    const s0=Math.min(0.2*Math.min(lu,lw),8/sc), a=[V[0]+u[0]/lu*s0,V[1]+u[1]/lu*s0], b=[V[0]+w[0]/lw*s0,V[1]+w[1]/lw*s0], c=[a[0]+b[0]-V[0],a[1]+b[1]-V[1]];
+    L1+=`<path d="M${S(a)}L${S(c)}L${S(b)}" fill="none" stroke="var(--r1)" stroke-width="1.3"/>`;});
+  // csomópontok, támaszok, teher
+  let T='';
+  g.nodes.forEach(p=>{T+=`<circle cx="${X(p[0])}" cy="${Y(p[1])}" r="1.9" fill="var(--sheet)" stroke="var(--ink)" stroke-width=".9"/>`;});
+  g.sup.forEach(i=>{const x=X(pt(i)[0]),y=Y(pt(i)[1]);
+    if(mode==='hemp')T+=`<path d="M${x} ${y}L${x-14} ${y-8}L${x-14} ${y+8}Z" fill="var(--sheet)" stroke="var(--support)" stroke-width="1.6"/><path d="M${x-18} ${y-11}V${y+11}" stroke="var(--support)" stroke-width="1.6"/>`;
+    else T+=`<circle cx="${x}" cy="${y}" r="3" fill="var(--support)"/>`;});
+  if(mode==='hemp'){T+=`<text x="${X(pt(1)[0])-30}" y="${Y(pt(1)[1])+4}" text-anchor="end" fill="var(--ink)" font-size="13" font-weight="600">A</text><text x="${X(pt(2)[0])-30}" y="${Y(pt(2)[1])+4}" text-anchor="end" fill="var(--ink)" font-size="13" font-weight="600">B</text>`;
+    const P0=pt(g.ids.get('0,0'));T+=`<text x="${X(P0[0])-6}" y="${Y(P0[1])+4}" text-anchor="end" fill="var(--ink)" font-size="12">P₀</text>`;}
+  const t=pt(g.tip),tx=X(t[0]),ty=Y(t[1]);
+  T+=`<path d="M${tx} ${ty-44}V${ty-6}" stroke="var(--accent)" stroke-width="2.2"/><path d="M${tx-6} ${ty-14}L${tx} ${ty-3}L${tx+6} ${ty-14}Z" fill="var(--accent)"/>`;
+  T+=`<text x="${tx-8}" y="${ty-34}" text-anchor="end" fill="var(--accent)" font-family="IBM Plex Mono,monospace" font-size="12.5">P = ${$('P').value} kN</text>`;
+  svg.innerHTML=s+`<g class="ly L4">${L4}</g><g class="ly L3">${L3}</g><g class="members">${M}</g><g class="ly L2">${L2}</g><g class="ly L1">${L1}</g>${T}`;
+}
+
+const ex=v=>v<1e-15?'0':v.toExponential(0).replace('e-','·10⁻').replace(/\d+$/,m=>[...m].map(c=>'⁰¹²³⁴⁵⁶⁷⁸⁹'[c]).join(''));
+const okb=(dev,tol)=>`<span class="${dev<tol?'ok':'bad'}">${dev<tol?'✓':'✗'}</span>`;
+
+function update(){
+  const L=+$('span').value, Hs=+$('h').value, n=Math.max(1,Math.min(14,Math.round(+$('n').value)));
+  const P=+$('P').value, od=+$('od').value, t=+$('t').value;
+  const g=build(L,Hs,n);
+  if(g.err){$('svg').innerHTML=`<rect width="${W}" height="${H}" fill="var(--sheet)"/><text x="${W/2}" y="${H/2}" text-anchor="middle" fill="var(--comp)" font-size="15">${g.err}</text>`;
+    $('stats').innerHTML='';$('code').value='';['c1','c2','c3','c4','c5','c6'].forEach(c=>$(c).textContent='');return;}
+  const F=solve(g,P), R=rules(g);
+  draw(g,F,R);
+  const dg=g.d/D;
+  $('c1').innerHTML=`${okb(R.dev1,1e-7)} ${R.right.length} derékszög · max eltérés ${ex(R.dev1)}°`;
+  $('c2').innerHTML=`Δ = <b>${dg.toFixed(3)}°</b> · ${mode==='hemp'?`γ = nΔ = ${(n*dg).toFixed(2)}°`:`tárcsaív = 4nΔ = ${(4*n*dg).toFixed(1)}°`}<br>${okb(R.dev2,1e-7)} ${R.full} teljes Δ, ${R.half} fél Δ${R.fanW.length?`, ${R.fanW.length} legyezőcikk`:''} · max eltérés ${ex(R.dev2)}°`;
+  $('c3').innerHTML=`${okb(R.dev3,1e-9)} ${R.thales.length} cella · max relatív eltérés ${ex(R.dev3)}`;
+  if(mode==='hemp'){
+    $('r4t').textContent='Kezdő körök';
+    $('r4p').textContent='A legyezők középpontja a két támasz, sugaruk h·√2. A két kör a szimmetriatengelyen merőlegesen metszi egymást: A–P₀–B egyenlő szárú derékszögű háromszög. Innen minden további csomópont két korábbiból adódik, két ismert irányú egyenes metszéspontjaként.';
+    const P0=g.nodes[g.ids.get('0,0')-1], a1=angBetween(sub(g.nodes[0],P0),sub(g.nodes[1],P0))/D;
+    $('c4').innerHTML=`r = ${(Hs/2*Math.SQRT2).toFixed(3)} m · r/h = √2 · ∠AP₀B = ${a1.toFixed(6)}° ${okb(Math.abs(a1-90),1e-7)}`;
+  } else {
+    $('r4t').textContent='Koncentrikus körök';
+    $('r4p').innerHTML='Minden csomópontszint egy körön ül, a sugarak mértani sorozatot alkotnak: r<sub>k</sub> = a·q<sup>k</sup>, ahol q = cos Δ + sin Δ / tg(45° − Δ/2). A kinyúlás L = a·q<sup>2n</sup>. Kis Δ-nál q ≈ e<sup>Δ</sup>, ez a folytonos logaritmikus spirál.';
+    let dv=0; for(const [k,id] of g.ids){const [i,j]=k.split(',').map(Number);const r=len(g.nodes[id-1]);dv=Math.max(dv,Math.abs(r-g.disk*g.q**(i+j))/r);}
+    $('c4').innerHTML=`q = ${g.q.toFixed(5)} · q<sup>${2*n}</sup> = ${(g.q**(2*n)).toFixed(3)} = L/a · ${okb(dv,1e-9)} ${g.ids.size} csomópont a saját körén`;
+  }
+  if(F){const cnt={i:[0,0],j:[0,0]};g.mem.forEach(([,,fam],k)=>{if(Math.abs(F[k])>1e-9)cnt[fam][F[k]>0?0:1]++;});
+    const d=f=>cnt[f][0]&&cnt[f][1]?'<span class="bad">vegyes</span>':cnt[f][0]?'<span style="color:var(--tens)">mind húzott</span>':'<span style="color:var(--comp)">mind nyomott</span>';
+    $('c5').innerHTML=`${mode==='hemp'?'A-ból induló':'1.'} család (${cnt.i[0]+cnt.i[1]} rúd): ${d('i')}<br>${mode==='hemp'?'B-ből induló':'2.'} család (${cnt.j[0]+cnt.j[1]} rúd): ${d('j')}`;}
+  $('c6').innerHTML=mode==='hemp'?`L/2h = ${(L/Hs).toFixed(3)} ⇒ Δ = ${dg.toFixed(3)}° (n = ${n})`:`L/a = ${(2*L/Hs).toFixed(3)} ⇒ Δ = ${dg.toFixed(3)}° (n = ${n})`;
+
+  const j=g.nodes.length, r=2*g.sup.length, mm=g.mem.length;
+  const A=Math.PI/4*(od*od-(od-2*t)**2), I=Math.PI/64*(od**4-(od-2*t)**4);
+  let util='';
+  if(F){let ss=0,bb=0;g.mem.forEach(([a,b],k)=>{const p=g.nodes[a-1],q=g.nodes[b-1],Lm=Math.hypot(q[0]-p[0],q[1]-p[1])*1000;
+      ss=Math.max(ss,Math.abs(F[k])*1000/A/235); if(F[k]<0)bb=Math.max(bb,-F[k]*1000/(Math.PI**2*210000*I/Lm**2));});
+    util=`<span>max húzás <b>${Math.max(...F).toFixed(1)} kN</b></span><span>max nyomás <b>${Math.min(...F).toFixed(1)} kN</b></span>
+    <span>szilárdság <b class="${ss>1?'bad':''}">${Math.round(ss*100)}%</b></span><span>kihajlás (K=1) <b class="${bb>1?'bad':''}">${Math.round(bb*100)}%</b></span>`;}
+  $('stats').innerHTML=`<span>j <b>${j}</b> · m <b>${mm}</b> · r <b>${r}</b> → m+r = <b class="${mm+r===2*j?'ok':'bad'}">${mm+r}</b> / 2j = <b>${2*j}</b></span>${util}
+   <span><i class="sw" style="background:var(--tens)"></i>húzott <i class="sw" style="background:var(--comp);margin-left:8px"></i>nyomott</span>`;
+  $('code').value=projectCode(g,P,od,t);
+}
+
+function setMode(k){mode=k;$('m-hemp').setAttribute('aria-pressed',k==='hemp');$('m-circ').setAttribute('aria-pressed',k==='circ');
+  $('hlab').textContent=k==='hemp'?'Támaszköz 2h':'Tárcsa átmérő 2a';
+  if(k==='circ'&&+$('h').value>=+$('span').value)$('h').value=2; update();}
+$('m-hemp').onclick=()=>setMode('hemp'); $('m-circ').onclick=()=>setMode('circ');
+['span','h','n','P','od','t','ly1','ly2','ly3','ly4'].forEach(id=>$(id).addEventListener('input',update));
+['ly1','ly2','ly3','ly4'].forEach(id=>$(id).addEventListener('change',()=>{$(id).closest('.rule').classList.toggle('off',!$(id).checked);}));
+document.querySelectorAll('.rule:not([data-r="6"])').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{$('svg').dataset.focus=el.dataset.r;});
+  el.addEventListener('mouseleave',()=>{delete $('svg').dataset.focus;});});
+$('copy').onclick=()=>{const v=$('code').value;
+  navigator.clipboard.writeText(v).then(()=>{$('toast').textContent='Másolva. Truzme canvas → Ctrl+V.';},
+   ()=>{$('code').focus();$('code').select();$('toast').textContent='Jelöld ki és másold: Ctrl+C.';});
+  setTimeout(()=>$('toast').textContent='',4000);};
+update();
+</script>
+
+</body></html>

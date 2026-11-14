@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Book II, Proposition II</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Display&amp;family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#C2311F}a:hover{color:#8E2416}
+</style>
+</helmet>
+<div style="width: 720px; height: 1020px; box-sizing: border-box; padding: 56px 72px 48px; background: {{paper}}; color: #1B1A17; font-family: 'Libre Caslon Text', Georgia, serif; display: flex; flex-direction: column; gap: 18px">
+<div style="display: flex; justify-content: space-between; font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: #5C574C; border-bottom: 1px solid #1B1A17; padding-bottom: 10px">
+<span>Book II · Forces in the plane</span>
+<span>Prop. II</span>
+</div>
+<h2 style="margin: 6px 0 0; font-family: 'Libre Caslon Display', Georgia, serif; font-weight: 400; font-size: 22px; letter-spacing: 0.2em; text-transform: uppercase; text-align: center">Proposition II. Theorem.</h2>
+<p style="margin: 0; font-style: italic; font-size: 17px; line-height: 1.6; text-align: center; padding: 0 24px">About any point, the turning of a resultant equals the turnings of its parts together. Each turning is a triangle with its apex at the point.</p>
+<svg width="100%" viewBox="100 90 370 270" role="img" aria-label="A red and a blue force at one point and their black resultant; a pivot point stands to the right, and thin lines join it to the start and to each arrow tip, making three triangles">
+<defs>
+<marker id="vr" viewBox="0 0 10 10" refX="3" refY="5" markerWidth="3.33" markerHeight="3.33" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#C2311F"></path></marker>
+<marker id="vb" viewBox="0 0 10 10" refX="3" refY="5" markerWidth="3.33" markerHeight="3.33" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#1F4E96"></path></marker>
+<marker id="vk" viewBox="0 0 10 10" refX="3" refY="5" markerWidth="3.33" markerHeight="3.33" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#1B1A17"></path></marker>
+</defs>
+<polygon points="430,330 140,300 400,110" fill="#1B1A17" fill-opacity="0.08"></polygon>
+<line x1="430" y1="330" x2="140" y2="300" stroke="#1B1A17" stroke-width="1.5"></line>
+<line x1="430" y1="330" x2="340" y2="260" stroke="#C2311F" stroke-width="1.5"></line>
+<line x1="430" y1="330" x2="200" y2="150" stroke="#1F4E96" stroke-width="1.5"></line>
+<line x1="430" y1="330" x2="400" y2="110" stroke="#1B1A17" stroke-width="1.5"></line>
+<line x1="340" y1="260" x2="400" y2="110" stroke="#F4EEDF" stroke-width="3"></line>
+<line x1="200" y1="150" x2="400" y2="110" stroke="#F4EEDF" stroke-width="3"></line>
+<line x1="340" y1="260" x2="400" y2="110" stroke="#1B1A17" stroke-width="1.2" stroke-dasharray="5 5"></line>
+<line x1="200" y1="150" x2="400" y2="110" stroke="#1B1A17" stroke-width="1.2" stroke-dasharray="5 5"></line>
+<line x1="140" y1="300" x2="388.7" y2="118.3" stroke="#1B1A17" stroke-width="6" marker-end="url(#vk)"></line>
+<line x1="140" y1="300" x2="326.3" y2="262.7" stroke="#C2311F" stroke-width="6" marker-end="url(#vr)"></line>
+<line x1="140" y1="300" x2="194.8" y2="163" stroke="#1F4E96" stroke-width="6" marker-end="url(#vb)"></line>
+<circle cx="140" cy="300" r="5" fill="#1B1A17"></circle>
+<circle cx="430" cy="330" r="7" fill="#F4EEDF" stroke="#1B1A17" stroke-width="2.5"></circle>
+<circle cx="430" cy="330" r="2" fill="#1B1A17"></circle>
+</svg>
+<div style="display: flex; align-items: center; justify-content: center; gap: 14px">
+<svg width="120" height="94" viewBox="0 0 140 110" role="img" aria-label="Red triangle"><polygon points="136,106 5.5,92.5 95.5,74.5" fill="#C2311F"></polygon></svg>
+<span style="font-size: 22px">+</span>
+<svg width="120" height="94" viewBox="0 0 140 110" role="img" aria-label="Blue triangle"><polygon points="136,106 5.5,92.5 32.5,25" fill="#1F4E96"></polygon></svg>
+<span style="font-size: 22px">=</span>
+<svg width="120" height="94" viewBox="0 0 140 110" role="img" aria-label="Black triangle"><polygon points="136,106 5.5,92.5 122.5,7" fill="#1B1A17"></polygon></svg>
+</div>
+<div style="display: flex; flex-direction: column; gap: 10px; font-size: 15px; line-height: 1.5">
+<p style="margin: 0">All three triangles share the side from the pivot to the start of the forces. On that side, their heights add just as the forces do (Ax. II), so their areas add too.</p>
+<p style="margin: 0; font-style: italic; color: #5C574C">Corollary. Split a force any way you like; the turning about any point stays the same.</p>
+</div>
+<div style="flex-grow: 1"></div>
+<div style="display: flex; justify-content: space-between; align-items: baseline; font-size: 12px; letter-spacing: 0.18em; color: #5C574C">
+<span style="width: 60px"></span>
+<span>10</span>
+<span style="width: 60px; text-align: right; font-family: 'Libre Caslon Display', Georgia, serif; font-size: 16px; letter-spacing: 0.1em; color: #1B1A17">Q.E.D.</span>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"paper":{"editor":"color","default":"#F4EEDF","options":["#F4EEDF","#FFFFFF","#EFE6CF"]},"$preview":{"width":720,"height":1020}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { paper: this.props.paper ?? '#F4EEDF' };
+  }
+}
+</script>
+</body>
+</html>

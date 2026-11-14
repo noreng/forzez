@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Book II, Proposition I</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Display&amp;family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#C2311F}a:hover{color:#8E2416}
+</style>
+</helmet>
+<div style="width: 720px; height: 1020px; box-sizing: border-box; padding: 56px 72px 48px; background: {{paper}}; color: #1B1A17; font-family: 'Libre Caslon Text', Georgia, serif; display: flex; flex-direction: column; gap: 20px">
+<div style="display: flex; justify-content: space-between; font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: #5C574C; border-bottom: 1px solid #1B1A17; padding-bottom: 10px">
+<span>Book II · Forces in the plane</span>
+<span>Prop. I</span>
+</div>
+<h2 style="margin: 6px 0 0; font-family: 'Libre Caslon Display', Georgia, serif; font-weight: 400; font-size: 22px; letter-spacing: 0.2em; text-transform: uppercase; text-align: center">Proposition I. Theorem.</h2>
+<p style="margin: 0; font-style: italic; font-size: 17px; line-height: 1.6; text-align: center; padding: 0 24px">A lever balances when each force, multiplied by its distance from the pivot, makes the same rectangle.</p>
+<svg width="100%" viewBox="20 20 440 300" role="img" aria-label="A beam on a pivot carries a large red force near the pivot and a small blue force twice as far away. Below the beam, a red rectangle as wide as the short arm and as tall as the red force, and a blue rectangle as wide as the long arm and as tall as the blue force, have equal areas">
+<defs>
+<marker id="lr" viewBox="0 0 10 10" refX="3" refY="5" markerWidth="3.33" markerHeight="3.33" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#C2311F"></path></marker>
+<marker id="lb" viewBox="0 0 10 10" refX="3" refY="5" markerWidth="3.33" markerHeight="3.33" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#1F4E96"></path></marker>
+</defs>
+<rect x="100" y="200" width="100" height="100" fill="#C2311F"></rect>
+<rect x="200" y="200" width="200" height="50" fill="#1F4E96"></rect>
+<line x1="100" y1="156" x2="100" y2="200" stroke="#1B1A17" stroke-width="1.2" stroke-dasharray="5 5"></line>
+<line x1="400" y1="156" x2="400" y2="200" stroke="#1B1A17" stroke-width="1.2" stroke-dasharray="5 5"></line>
+<polygon points="200,154 184,184 216,184" fill="none" stroke="#1B1A17" stroke-width="2.5"></polygon>
+<line x1="168" y1="187" x2="232" y2="187" stroke="#1B1A17" stroke-width="2.5"></line>
+<line x1="40" y1="150" x2="440" y2="150" stroke="#1B1A17" stroke-width="8"></line>
+<line x1="100" y1="40" x2="100" y2="132" stroke="#C2311F" stroke-width="6" marker-end="url(#lr)"></line>
+<line x1="400" y1="93" x2="400" y2="132" stroke="#1F4E96" stroke-width="6" marker-end="url(#lb)"></line>
+</svg>
+<div style="display: flex; flex-direction: column; gap: 12px; font-size: 15px; line-height: 1.5">
+<div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap">
+<svg width="40" height="14" viewBox="0 0 40 14" aria-hidden="true"><line x1="2" y1="7" x2="38" y2="7" stroke="#C2311F" stroke-width="5"></line></svg>
+<span>× its arm =</span>
+<svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><rect x="0" y="0" width="20" height="20" fill="#C2311F"></rect></svg>
+<span style="width: 18px"></span>
+<svg width="40" height="14" viewBox="0 0 40 14" aria-hidden="true"><line x1="2" y1="7" x2="38" y2="7" stroke="#1F4E96" stroke-width="5"></line></svg>
+<span>× its arm =</span>
+<svg width="28" height="14" viewBox="0 0 28 14" aria-hidden="true"><rect x="0" y="0" width="28" height="14" fill="#1F4E96"></rect></svg>
+</div>
+<div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap">
+<svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><rect x="0" y="0" width="20" height="20" fill="#C2311F"></rect></svg>
+<span>=</span>
+<svg width="28" height="14" viewBox="0 0 28 14" aria-hidden="true"><rect x="0" y="0" width="28" height="14" fill="#1F4E96"></rect></svg>
+<span>so neither side turns the beam more than the other.</span>
+</div>
+<p style="margin: 4px 0 0">Half the force, twice the arm: the rectangle changes shape, never size.</p>
+<p style="margin: 0; font-style: italic; color: #5C574C">Archimedes asked for a place to stand. A long enough rectangle would do.</p>
+</div>
+<div style="flex-grow: 1"></div>
+<div style="display: flex; justify-content: space-between; align-items: baseline; font-size: 12px; letter-spacing: 0.18em; color: #5C574C">
+<span style="width: 60px"></span>
+<span>9</span>
+<span style="width: 60px; text-align: right; font-family: 'Libre Caslon Display', Georgia, serif; font-size: 16px; letter-spacing: 0.1em; color: #1B1A17">Q.E.D.</span>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"paper":{"editor":"color","default":"#F4EEDF","options":["#F4EEDF","#FFFFFF","#EFE6CF"]},"$preview":{"width":720,"height":1020}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { paper: this.props.paper ?? '#F4EEDF' };
+  }
+}
+</script>
+</body>
+</html>

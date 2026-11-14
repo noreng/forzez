@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Book I, Proposition II</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Display&amp;family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#C2311F}a:hover{color:#8E2416}
+</style>
+</helmet>
+<div style="width: 720px; height: 1020px; box-sizing: border-box; padding: 56px 72px 48px; background: {{paper}}; color: #1B1A17; font-family: 'Libre Caslon Text', Georgia, serif; display: flex; flex-direction: column; gap: 20px">
+<div style="display: flex; justify-content: space-between; font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: #5C574C; border-bottom: 1px solid #1B1A17; padding-bottom: 10px">
+<span>Book I · Forces at a point</span>
+<span>Prop. II</span>
+</div>
+<h2 style="margin: 6px 0 0; font-family: 'Libre Caslon Display', Georgia, serif; font-weight: 400; font-size: 22px; letter-spacing: 0.2em; text-transform: uppercase; text-align: center">Proposition II. Theorem.</h2>
+<p style="margin: 0; font-style: italic; font-size: 17px; line-height: 1.6; text-align: center; padding: 0 24px">Any number of forces at one point are in balance when, drawn tip to tail, they close a polygon.</p>
+<svg width="100%" viewBox="0 0 580 380" role="img" aria-label="Four forces red, blue, yellow and black act at one point; beside them the same forces placed tip to tail close a quadrilateral, with dashed diagonals folding pairs of forces into one">
+<defs>
+<marker id="qr" viewBox="0 0 10 10" refX="3" refY="5" markerWidth="3.33" markerHeight="3.33" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#C2311F"></path></marker>
+<marker id="qb" viewBox="0 0 10 10" refX="3" refY="5" markerWidth="3.33" markerHeight="3.33" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#1F4E96"></path></marker>
+<marker id="qy" viewBox="0 0 10 10" refX="3" refY="5" markerWidth="3.33" markerHeight="3.33" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#E3A81B"></path></marker>
+<marker id="qk" viewBox="0 0 10 10" refX="3" refY="5" markerWidth="3.33" markerHeight="3.33" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#1B1A17"></path></marker>
+</defs>
+<line x1="150" y1="200" x2="52" y2="147" stroke="#C2311F" stroke-width="6" marker-end="url(#qr)"></line>
+<line x1="150" y1="200" x2="186" y2="83" stroke="#1F4E96" stroke-width="6" marker-end="url(#qb)"></line>
+<line x1="150" y1="200" x2="256.7" y2="235.6" stroke="#E3A81B" stroke-width="6" marker-end="url(#qy)"></line>
+<line x1="150" y1="200" x2="104.4" y2="336.7" stroke="#1B1A17" stroke-width="6" marker-end="url(#qk)"></line>
+<circle cx="150" cy="200" r="6" fill="#1B1A17"></circle>
+<line x1="420" y1="330" x2="350" y2="140" stroke="#1B1A17" stroke-width="1.5" stroke-dasharray="6 5"></line>
+<line x1="420" y1="330" x2="470" y2="180" stroke="#1B1A17" stroke-width="1.5" stroke-dasharray="6 5"></line>
+<line x1="420" y1="330" x2="322.3" y2="276.7" stroke="#C2311F" stroke-width="6" marker-end="url(#qr)"></line>
+<line x1="310" y1="270" x2="345.9" y2="153.4" stroke="#1F4E96" stroke-width="6" marker-end="url(#qb)"></line>
+<line x1="350" y1="140" x2="456.7" y2="175.6" stroke="#E3A81B" stroke-width="6" marker-end="url(#qy)"></line>
+<line x1="470" y1="180" x2="424.4" y2="316.7" stroke="#1B1A17" stroke-width="6" marker-end="url(#qk)"></line>
+</svg>
+<div style="display: flex; flex-direction: column; gap: 12px; font-size: 15px; line-height: 1.5">
+<div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap">
+<svg width="40" height="14" viewBox="0 0 40 14" aria-hidden="true"><line x1="2" y1="7" x2="38" y2="7" stroke="#C2311F" stroke-width="5"></line></svg>
+<span>+</span>
+<svg width="40" height="14" viewBox="0 0 40 14" aria-hidden="true"><line x1="2" y1="7" x2="38" y2="7" stroke="#1F4E96" stroke-width="5"></line></svg>
+<span>= the first</span>
+<svg width="40" height="14" viewBox="0 0 40 14" aria-hidden="true"><line x1="2" y1="7" x2="38" y2="7" stroke="#1B1A17" stroke-width="3" stroke-dasharray="6 4"></line></svg>
+<span style="font-style: italic; color: #5C574C">(Ax. II)</span>
+</div>
+<div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap">
+<span>that</span>
+<svg width="40" height="14" viewBox="0 0 40 14" aria-hidden="true"><line x1="2" y1="7" x2="38" y2="7" stroke="#1B1A17" stroke-width="3" stroke-dasharray="6 4"></line></svg>
+<span>+</span>
+<svg width="40" height="14" viewBox="0 0 40 14" aria-hidden="true"><line x1="2" y1="7" x2="38" y2="7" stroke="#E3A81B" stroke-width="5"></line></svg>
+<span>= the second</span>
+<svg width="40" height="14" viewBox="0 0 40 14" aria-hidden="true"><line x1="2" y1="7" x2="38" y2="7" stroke="#1B1A17" stroke-width="3" stroke-dasharray="6 4"></line></svg>
+<span style="font-style: italic; color: #5C574C">(Ax. II)</span>
+</div>
+<div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap">
+<span>and that</span>
+<svg width="40" height="14" viewBox="0 0 40 14" aria-hidden="true"><line x1="2" y1="7" x2="38" y2="7" stroke="#1B1A17" stroke-width="3" stroke-dasharray="6 4"></line></svg>
+<span>+</span>
+<svg width="40" height="14" viewBox="0 0 40 14" aria-hidden="true"><line x1="2" y1="7" x2="38" y2="7" stroke="#1B1A17" stroke-width="5"></line></svg>
+<span>= 0</span>
+<span style="font-style: italic; color: #5C574C">(Ax. I)</span>
+<span>so the last side returns to the first point.</span>
+</div>
+<p style="margin: 4px 0 0">The polygon is Proposition I, repeated: every dashed diagonal folds two forces into one.</p>
+<p style="margin: 0; font-style: italic; color: #5C574C">Corollary. Leave one side out, and the gap is the force that would balance the rest.</p>
+</div>
+<div style="flex-grow: 1"></div>
+<div style="display: flex; justify-content: space-between; align-items: baseline; font-size: 12px; letter-spacing: 0.18em; color: #5C574C">
+<span style="width: 60px"></span>
+<span>2</span>
+<span style="width: 60px; text-align: right; font-family: 'Libre Caslon Display', Georgia, serif; font-size: 16px; letter-spacing: 0.1em; color: #1B1A17">Q.E.D.</span>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"paper":{"editor":"color","default":"#F4EEDF","options":["#F4EEDF","#FFFFFF","#EFE6CF"]},"$preview":{"width":720,"height":1020}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { paper: this.props.paper ?? '#F4EEDF' };
+  }
+}
+</script>
+</body>
+</html>

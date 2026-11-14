@@ -1,0 +1,959 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Truss rebuild review</title>
+<meta name="claude:viewport-fit-sides" content="cover" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link
+  rel="stylesheet"
+  href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Figtree:wght@400;500;600&family=JetBrains+Mono:wght@400&display=swap"
+/>
+<style>
+  /* Layout: one reading column; a sticky progress bar; questions first, then one list per app area */
+  :root {
+    --bg: #f6f8fb;
+    --surface: #ffffff;
+    --fg: #1d2433;
+    --muted: #5d6779;
+    --line: #dde3ec;
+    --accent: #1c6fd1;
+    --accent-soft: #e4effc;
+    --keep: #2b8a3e;
+    --keep-soft: #e3f4e6;
+    --change: #a86400;
+    --change-soft: #fff1d6;
+    --drop: #c92a2a;
+    --drop-soft: #fde6e6;
+    --chip: #eef1f6;
+    --display: "Bricolage Grotesque", "Figtree", system-ui, sans-serif;
+    --body: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #12161d;
+      --surface: #1a2029;
+      --fg: #e6eaf1;
+      --muted: #9aa4b5;
+      --line: #2c3442;
+      --accent: #6aa8f0;
+      --accent-soft: #1d3150;
+      --keep: #69c37a;
+      --keep-soft: #193a22;
+      --change: #f0b44c;
+      --change-soft: #3d2f12;
+      --drop: #f07a7a;
+      --drop-soft: #451e1e;
+      --chip: #252c38;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #12161d;
+    --surface: #1a2029;
+    --fg: #e6eaf1;
+    --muted: #9aa4b5;
+    --line: #2c3442;
+    --accent: #6aa8f0;
+    --accent-soft: #1d3150;
+    --keep: #69c37a;
+    --keep-soft: #193a22;
+    --change: #f0b44c;
+    --change-soft: #3d2f12;
+    --drop: #f07a7a;
+    --drop-soft: #451e1e;
+    --chip: #252c38;
+    color-scheme: dark;
+  }
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--body);
+    font-size: 15px;
+    line-height: 1.5;
+  }
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0 0 auto;
+    height: env(safe-area-inset-top, 0px);
+    z-index: 10;
+    background: var(--surface);
+  }
+  .wrap {
+    max-width: 860px;
+    margin: 0 auto;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+  }
+  header.top {
+    position: sticky;
+    top: env(safe-area-inset-top, 0px);
+    z-index: 5;
+    background: var(--surface);
+    border-bottom: 1px solid var(--line);
+  }
+  header.top .wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-block: 12px;
+  }
+  .title-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  h1 {
+    font-family: var(--display);
+    font-size: 22px;
+    margin: 0;
+    text-wrap: balance;
+  }
+  .progress-text {
+    color: var(--muted);
+    font-size: 13px;
+    font-variant-numeric: tabular-nums;
+  }
+  .bar {
+    height: 6px;
+    border-radius: 3px;
+    background: var(--chip);
+    overflow: hidden;
+    display: flex;
+  }
+  .bar span {
+    display: block;
+    height: 100%;
+    transition: width 0.2s;
+  }
+  .bar .k {
+    background: var(--keep);
+  }
+  .bar .c {
+    background: var(--change);
+  }
+  .bar .d {
+    background: var(--drop);
+  }
+  .filters {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .filter {
+    border: 1px solid var(--line);
+    background: var(--surface);
+    color: var(--fg);
+    border-radius: 999px;
+    padding: 4px 12px;
+    font: inherit;
+    font-size: 13px;
+    cursor: pointer;
+  }
+  .filter[aria-pressed="true"] {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--surface);
+  }
+  .filters .spacer {
+    flex: 1;
+  }
+  .copy {
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    background: transparent;
+    border-radius: 8px;
+    padding: 4px 12px;
+    font: inherit;
+    font-size: 13px;
+    cursor: pointer;
+  }
+  .notice {
+    margin-top: 16px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    background: var(--change-soft);
+    color: var(--fg);
+    font-size: 14px;
+  }
+  main {
+    padding-block: 20px 60px;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+  .intro {
+    color: var(--muted);
+    max-width: 65ch;
+    margin: 0;
+  }
+  h2 {
+    font-family: var(--display);
+    font-size: 19px;
+    margin: 0;
+  }
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+  }
+  .section-head .count {
+    color: var(--muted);
+    font-size: 13px;
+    font-variant-numeric: tabular-nums;
+  }
+  .linkbtn {
+    background: none;
+    border: none;
+    color: var(--accent);
+    font: inherit;
+    font-size: 13px;
+    cursor: pointer;
+    padding: 0;
+  }
+  .linkbtn:disabled {
+    color: var(--muted);
+    cursor: default;
+  }
+  .q {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    scroll-margin-top: 140px;
+  }
+  .q + .q {
+    margin-top: 12px;
+  }
+  .q h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+  }
+  .q h3 .num {
+    color: var(--accent);
+    margin-right: 6px;
+    font-variant-numeric: tabular-nums;
+  }
+  .q p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 14px;
+    max-width: 65ch;
+  }
+  .opts {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .opt {
+    display: grid;
+    grid-template-columns: 28px 1fr;
+    gap: 8px;
+    align-items: start;
+    text-align: left;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    color: var(--fg);
+    border-radius: 8px;
+    padding: 8px 10px;
+    font: inherit;
+    cursor: pointer;
+  }
+  .opt:hover {
+    border-color: var(--accent);
+  }
+  .opt[aria-pressed="true"] {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+  }
+  .opt .letter {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: var(--chip);
+    font-weight: 600;
+    font-size: 13px;
+  }
+  .opt[aria-pressed="true"] .letter {
+    background: var(--accent);
+    color: var(--surface);
+  }
+  .opt .head {
+    font-weight: 500;
+  }
+  .opt .why {
+    color: var(--muted);
+    font-size: 13.5px;
+  }
+  .rec {
+    display: inline-block;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--keep);
+    background: var(--keep-soft);
+    border-radius: 999px;
+    padding: 1px 8px;
+    margin-left: 6px;
+    vertical-align: 1px;
+  }
+  textarea,
+  input.note {
+    width: 100%;
+    border: 1px solid var(--line);
+    background: var(--bg);
+    color: var(--fg);
+    border-radius: 8px;
+    padding: 6px 10px;
+    font: inherit;
+    font-size: 14px;
+    resize: vertical;
+  }
+  textarea:focus,
+  input.note:focus,
+  button:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 1px;
+  }
+  .list {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 6px 16px;
+    padding: 12px 16px;
+    border-top: 1px solid var(--line);
+  }
+  .row:first-child {
+    border-top: none;
+  }
+  .row[data-mark="keep"] {
+    box-shadow: inset 3px 0 var(--keep);
+  }
+  .row[data-mark="change"] {
+    box-shadow: inset 3px 0 var(--change);
+  }
+  .row[data-mark="drop"] {
+    box-shadow: inset 3px 0 var(--drop);
+  }
+  .row .body {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .row .feat {
+    font-weight: 500;
+  }
+  .row[data-mark="drop"] .feat {
+    color: var(--muted);
+    text-decoration: line-through;
+    text-decoration-color: var(--drop);
+  }
+  .meta {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    font-size: 12.5px;
+    color: var(--muted);
+    align-items: center;
+  }
+  .chip {
+    background: var(--chip);
+    border-radius: 999px;
+    padding: 1px 9px;
+  }
+  .chip.truss {
+    background: var(--accent-soft);
+    color: var(--accent);
+  }
+  .chip.unsure {
+    background: var(--change-soft);
+    color: var(--change);
+  }
+  .chip a {
+    color: inherit;
+  }
+  .where {
+    font-size: 12px;
+    color: var(--muted);
+    overflow-wrap: anywhere;
+  }
+  code {
+    font-family: var(--mono);
+    font-size: 0.92em;
+  }
+  .marks {
+    display: flex;
+    gap: 4px;
+    align-self: start;
+  }
+  .mark {
+    border: 1px solid var(--line);
+    background: var(--surface);
+    color: var(--muted);
+    border-radius: 8px;
+    padding: 4px 10px;
+    font: inherit;
+    font-size: 13px;
+    cursor: pointer;
+  }
+  .mark[data-v="keep"][aria-pressed="true"] {
+    background: var(--keep-soft);
+    border-color: var(--keep);
+    color: var(--keep);
+  }
+  .mark[data-v="change"][aria-pressed="true"] {
+    background: var(--change-soft);
+    border-color: var(--change);
+    color: var(--change);
+  }
+  .mark[data-v="drop"][aria-pressed="true"] {
+    background: var(--drop-soft);
+    border-color: var(--drop);
+    color: var(--drop);
+  }
+  .notebtn {
+    font-size: 12.5px;
+  }
+  .row .note-wrap {
+    grid-column: 1 / -1;
+  }
+  .empty {
+    padding: 16px;
+    color: var(--muted);
+    font-size: 14px;
+  }
+  .saved {
+    font-size: 12px;
+    color: var(--muted);
+  }
+  @media (max-width: 560px) {
+    .row {
+      grid-template-columns: 1fr;
+    }
+    .marks {
+      justify-self: start;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .bar span {
+      transition: none;
+    }
+  }
+</style>
+
+<header class="top">
+  <div class="wrap">
+    <div class="title-row">
+      <h1>Truss rebuild review</h1>
+      <span class="progress-text" id="progress">Loading your marks…</span>
+    </div>
+    <div class="bar" aria-hidden="true">
+      <span class="k" id="bar-k"></span><span class="c" id="bar-c"></span
+      ><span class="d" id="bar-d"></span>
+    </div>
+    <div class="filters" role="group" aria-label="Show">
+      <button class="filter" data-f="all" aria-pressed="true" id="f-all">
+        All
+      </button>
+      <button class="filter" data-f="todo" aria-pressed="false" id="f-todo">
+        Not marked
+      </button>
+      <button class="filter" data-f="unsure" aria-pressed="false" id="f-unsure">
+        Unsure
+      </button>
+      <button class="filter" data-f="truss" aria-pressed="false" id="f-truss">
+        Truss-only
+      </button>
+      <button
+        class="filter"
+        data-f="noframe"
+        aria-pressed="false"
+        id="f-noframe"
+      >
+        Frame doesn't have it
+      </button>
+      <span class="spacer"></span>
+      <button class="copy" id="copy-answers">Copy answers</button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="notice" id="offline" hidden>
+    Your marks can't be saved for Claude from this view, so they stay in this
+    browser only.
+  </div>
+  <main>
+    <p class="intro">
+      Everything the truss calculator does today, from
+      <code>docs/truss-spec.md</code> (G117). Answer the questions, then mark
+      each feature: keep it in the rebuild, change it, or drop it. Each mark is
+      saved as you click, and Claude reads them from here.
+    </p>
+    <section>
+      <div class="section-head">
+        <h2>Questions</h2>
+        <button class="linkbtn" id="accept-recs">
+          Take every recommendation I haven't answered
+        </button>
+      </div>
+      <div id="questions"></div>
+    </section>
+    <div id="areas"></div>
+  </main>
+</div>
+
+<script>
+  const DATA = {"questions": [{"id": "q1", "num": 1, "title": "Which loads and supports does the truss mode offer?", "intro": "Today the truss app has only nodal forces and pin and roller supports. The frame engine also has moments, member loads, self weight and fixed supports, and these bend members.", "options": [{"letter": "A", "head": "nodal forces and pin and roller supports only, as today", "why": "Every member stays a two-force member, so the joint and force-triangle explanations stay true.", "rec": true}, {"letter": "B", "head": "also self weight and member loads, with each member's own bending shown", "why": "More real, but harder to explain at school level.", "rec": false}, {"letter": "C", "head": "let each model choose; the mode only sets the defaults", "why": "The most flexible, but students meet more options.", "rec": false}]}, {"id": "q2", "num": 2, "title": "The \"how forces balance\" explanations", "intro": "(the stability report's \"Up equals down\" and the forces panel's free body and tip to tail). The frame app has none of them yet; card #292, the frame's Joint forces view, is the first.", "options": [{"letter": "A", "head": "shared, written once for both apps", "why": "Balance is the same idea in a frame; tip to tail only works at a truss joint, so it shows only where it applies.", "rec": true}, {"letter": "B", "head": "truss-only", "why": "Less work, but the frame app keeps no explanations.", "rec": false}, {"letter": "C", "head": "drop them from the rebuild and design new ones", "why": "A clean start, but loses the feature students use most for learning.", "rec": false}]}, {"id": "q3", "num": 3, "title": "Unstable structures.", "intro": "Truss: a red line on the members that can move, eight named messages, and rotation points where the support lines meet. Frame: the mechanism animated, with up to three fix hints.", "options": [{"letter": "A", "head": "the frame's animation and hints, plus the truss app's messages as the hint text", "why": "One system, and the clearest wording.", "rec": true}, {"letter": "B", "head": "keep the truss app's way in truss mode", "why": "Familiar, but two systems to maintain.", "rec": false}, {"letter": "C", "head": "the frame's way only", "why": "The simplest, but loses the messages.", "rec": false}]}, {"id": "q4", "num": 4, "title": "Strength checks.", "intro": "Truss: Strength, Tension and Buckling (Euler, K = 1) percentages, both checks off by default, with the formulas worked out. Frame: one Utilisation view of σ against strength, without buckling.", "options": [{"letter": "A", "head": "shared checks with buckling added to the frame", "why": "Buckling of a compressed member applies to both apps.", "rec": true}, {"letter": "B", "head": "buckling for trusses only", "why": "Less work, but frames under compression go unchecked.", "rec": false}, {"letter": "C", "head": "keep each app's own checks", "why": "No work now, but two sets of rules.", "rec": false}]}, {"id": "q5", "num": 5, "title": "Support angles.", "intro": "Truss: any angle (dial, −180° to 180°) plus a vertical roller. Frame: 0, ±45, ±90 and 180°.", "options": [{"letter": "A", "head": "any angle in both apps, with the frame's steps as snap points", "why": "Keeps the truss examples that use odd angles.", "rec": true}, {"letter": "B", "head": "the frame's steps only", "why": "Simpler, but old files with other angles can't be shown as they are.", "rec": false}]}, {"id": "q6", "num": 6, "title": "Side features the frame app doesn't have:", "intro": "background image, DXF import and export, the generator, the AI chat, sound, SVG/PNG export.", "options": [{"letter": "A", "head": "keep them as shared features, ported after the core", "why": "None is truss-specific; they wait until the editor works.", "rec": true}, {"letter": "B", "head": "keep only the ones in use (the background image and DXF), drop the rest", "why": "Less to port, but needs analytics to decide.", "rec": false}, {"letter": "C", "head": "drop them all from the first rebuild", "why": "Ships fastest, but students lose features they have today.", "rec": false}]}, {"id": "q7", "num": 7, "title": "The Statistics section", "intro": "(total length, volume and mass per section).", "options": [{"letter": "A", "head": "shared", "why": "It's cheap, and a frame has the same quantities.", "rec": true}, {"letter": "B", "head": "truss-only, as today", "why": "", "rec": false}]}], "areas": [{"title": "Canvas editor", "slug": "canvas-editor", "items": [{"id": "canvas-editor-01", "feature": "Select: click, Shift-click toggles, a click on a selected element deselects on release", "where": "<code>calc/editor/SelectTool.ts<\/code>", "frame": "has", "frameNote": "", "sugg": "shared", "suggNote": "", "q": []}, {"id": "canvas-editor-02", "feature": "Box select: left-to-right \"Window\" (inside), right-to-left \"Crossing\" (touching), two colours and a hint", "where": "<code>calc/editor/tool-states-common.ts<\/code>, <code>SelectRectOverlay.tsx<\/code>", "frame": "has", "frameNote": "", "sugg": "shared", "suggNote": "", "q": []}, {"id": "canvas-editor-03", "feature": "Drag to move the selection after a 5 px dead zone; the nearest node snaps", "where": "<code>calc/editor/SelectTool.ts<\/code>", "frame": "has", "frameNote": "live solve while dragging", "sugg": "shared", "suggNote": "", "q": []}, {"id": "canvas-editor-04", "feature": "The selection is kept when switching tools", "where": "<code>calc/editor/selection-*.ts<\/code>", "frame": "has", "frameNote": "", "sugg": "shared", "suggNote": "", "q": []}, {"id": "canvas-editor-05", "feature": "Hand tool: left-drag pans", "where": "<code>calc/editor/HandTool.ts<\/code>", "frame": "has", "frameNote": "", "sugg": "shared", "suggNote": "", "q": []}, {"id": "canvas-editor-06", "feature": "Member tool: click-click or press-drag-release, merges into the existing drawing", "where": "<code>calc/editor/MemberTool.ts<\/code>, <code>merge-graphs.ts<\/code>", "frame": "has", "frameNote": "also chains, splits on a member", "sugg": "shared", "suggNote": "", "q": []}, {"id": "canvas-editor-07", "feature": "Member tool, Single line / Polyline modes", "where": "<code>calc/components/panels/MemberToolPanel.tsx<\/code>", "frame": "similar", "frameNote": "always chains", "sugg": "shared", "suggNote": "", "q": []}, {"id": "canvas-editor-08", "feature": "Member tool, Edit mode: click members to give them the panel's material and section; Pick copies them; Delete mode", "where": "<code>calc/editor/MemberTool.ts<\/code>", "frame": "similar", "frameNote": "sections from the properties panel", "sugg": "shared", "suggNote": "", "q": []}, {"id": "canvas-editor-09", "feature": "Typed member: dx/dy or length/angle; keys x, y, l, a focus the fields", "where": "<code>calc/components/panels/CoordinatePicker.tsx<\/code>", "frame": "similar", "frameNote": "type a length, Tab, angle", "sugg": "shared", "suggNote": "", "q": []}, {"id": "canvas-editor-10", "feature": "Live length label on the member being drawn", "where": "<code>calc/components/canvas-primitives/EditedMemberOverlay.tsx<\/code>", "frame": "has", "frameNote": "", "sugg": "shared", "suggNote": "", "q": []}, {"id": "canvas-editor-11", "feature": "Support tool: pin, roller, vertical roller; click a node to place or replace; any angle on a dial; the last angle is kept", "where": "<code>calc/editor/SupportTool.ts<\/code>, <code>SupportAngleEditor.tsx<\/code>", "frame": "similar", "frameNote": "adds fixed; angles in steps", "sugg": "unsure", "suggNote": "Q5", "q": ["q5"]}, {"id": "canvas-editor-12", "feature": "Support tool: a type chosen while supports are selected changes them all; Delete mode", "where": "<code>calc/components/panels/SupportToolPanel.tsx<\/code>", "frame": "similar", "frameNote": "", "sugg": "shared", "suggNote": "", "q": []}, {"id": "canvas-editor-13", "feature": "Load tool: click a node for the panel's load; drag from a node to draw a load (Pull at first)", "where": "<code>calc/editor/LoadTool.ts<\/code>, <code>load-drag.ts<\/code>", "frame": "has", "frameNote": "and moments, member loads", "sugg": "unsure", "suggNote": "Q1", "q": ["q1"]}, {"id": "canvas-editor-14", "feature": "Load tool: a click on a load selects it and copies its value; drag a load to redraw it; dragged to zero it's removed; Pick and Delete modes", "where": "<code>calc/editor/LoadTool.ts<\/code>", "frame": "similar", "frameNote": "no Pick mode", "sugg": "shared", "suggNote": "", "q": []}, {"id": "canvas-editor-15", "feature": "Load values as Fx/Fy or F/α, Push/Pull, a direction picker, flip", "where": "<code>calc/components/panels/LoadToolPanel.tsx<\/code>, <code>LoadDirectionPicker.tsx<\/code>", "frame": "similar", "frameNote": "Push/Pull, Flip direction", "sugg": "shared", "suggNote": "", "q": []}, {"id": "canvas-editor-16", "feature": "Eraser: click, or swipe across elements to erase them in one step", "where": "<code>calc/editor/EraserTool.ts<\/code>", "frame": "has", "frameNote": "", "sugg": "shared", "suggNote": "", "q": []}, {"id": "canvas-editor-17", "feature": "Dimension tool: node, node, offset; horizontal, vertical, aligned; drag the line to move it", "where": "<code>calc/editor/DimensionTool.ts<\/code>", "frame": "has", "frameNote": "built from the truss app's design", "sugg": "shared", "suggNote": "", "q": []}, {"id": "canvas-editor-18", "feature": "Background image: add, drag, opacity, \"Set scale\" from two points and a typed length", "where": "<code>calc/editor/BackgroundImageTool.ts<\/code>", "frame": "no", "frameNote": "", "sugg": "unsure", "suggNote": "Q6", "q": ["q6"]}, {"id": "canvas-editor-19", "feature": "Clone: origin then target, each click another copy until Esc", "where": "<code>calc/editor/clone-helpers.ts<\/code>, <code>CloneLayer.tsx<\/code>", "frame": "has", "frameNote": "Transform, Move with Copy", "sugg": "shared", "suggNote": "", "q": []}, {"id": "canvas-editor-20", "feature": "Mirror across a line from two points", "where": "<code>calc/components/panels/SelectToolPanel.tsx<\/code>", "frame": "has", "frameNote": "Transform", "sugg": "shared", "suggNote": "", "q": []}, {"id": "canvas-editor-21", "feature": "Rotate round a pivot, Preview or Instant, with Copy; unselected loads keep their direction", "where": "<code>calc/components/panels/AngleInput.tsx<\/code>", "frame": "similar", "frameNote": "loads turn with the structure", "sugg": "shared", "suggNote": "", "q": []}, {"id": "canvas-editor-22", "feature": "Intersect: split selected members where they cross", "where": "<code>calc/helpers/intersect.helpers.ts<\/code>", "frame": "similar", "frameNote": "\"connect crossings\" switch", "sugg": "shared", "suggNote": "", "q": []}, {"id": "canvas-editor-23", "feature": "Duplicate (Ctrl+D): a copy to the right, repeatable", "where": "<code>calc/editor/<\/code>", "frame": "no", "frameNote": "", "sugg": "shared", "suggNote": "", "q": []}, {"id": "canvas-editor-24", "feature": "Copy, cut, paste through the system clipboard as project code; paste places copies until Esc", "where": "<code>calc/editor/CanvasClipboard.ts<\/code>, <code>paste-project-code.ts<\/code>", "frame": "similar", "frameNote": "frame clipboard, not project code", "sugg": "shared", "suggNote": "", "q": []}, {"id": "canvas-editor-25", "feature": "Buttons next to the selection: Clone, Mirror, Delete", "where": "<code>calc/components/SelectionPanel.tsx<\/code>", "frame": "no", "frameNote": "", "sugg": "shared", "suggNote": "", "q": []}, {"id": "canvas-editor-26", "feature": "Quick tools: mirror the whole model to the right or top edge, flip every load", "where": "<code>calc/components/QuickToolsMenu.tsx<\/code>", "frame": "no", "frameNote": "", "sugg": "shared", "suggNote": "", "q": []}, {"id": "canvas-editor-27", "feature": "On a tablet, Clone, Mirror and Paste wait for Apply", "where": "<code>calc/editor/<\/code> (<code>isTabletPlatform<\/code>)", "frame": "similar", "frameNote": "touch Apply in Transform", "sugg": "shared", "suggNote": "", "q": []}, {"id": "canvas-editor-28", "feature": "Undo and redo, one step per gesture or slider drag; toolbar buttons", "where": "<code>calc/store/history-manager.ts<\/code>", "frame": "has", "frameNote": "", "sugg": "shared", "suggNote": "", "q": []}, {"id": "canvas-editor-29", "feature": "Edit menu with every shortcut, for tablets", "where": "<code>calc/components/EditMenu.tsx<\/code>", "frame": "no", "frameNote": "", "sugg": "shared", "suggNote": "", "q": []}, {"id": "canvas-editor-30", "feature": "Shortcuts: Esc, Enter, Delete, Ctrl+Z/Y, Ctrl+D, Ctrl+A (the tool's kinds), Ctrl+C/X/V, F fit, P presentation, Ctrl+S, Ctrl+Shift+S; no single-key tools", "where": "<code>calc/editor/CanvasKeyboardShortcuts.ts<\/code>", "frame": "similar", "frameNote": "no save or presentation", "sugg": "shared", "suggNote": "", "q": []}, {"id": "canvas-editor-31", "feature": "Zoom with the wheel, pan with the middle button, pinch and two-finger pan; double-click zoom off", "where": "<code>calc/components/Canvas.tsx<\/code>", "frame": "has", "frameNote": "", "sugg": "shared", "suggNote": "", "q": []}, {"id": "canvas-editor-32", "feature": "Zoom to fit (animated), zoom to selection (capped)", "where": "<code>calc/components/Canvas.tsx<\/code>", "frame": "has", "frameNote": "", "sugg": "shared", "suggNote": "", "q": []}, {"id": "canvas-editor-33", "feature": "Snapping: master switch plus Grid, Alignment, Horizontal & vertical, Geometry (node, midpoint, perpendicular, crossing, on a diagonal member)", "where": "<code>calc/editor/snap-helpers.ts<\/code>, <code>ModelSnapInfo.tsx<\/code>", "frame": "similar", "frameNote": "one snapper, magnet and grid switches, Alt", "sugg": "shared", "suggNote": "", "q": []}, {"id": "canvas-editor-34", "feature": "Snap badges on the cursor; red cursor for Delete, eyedropper for Pick", "where": "<code>calc/editor/custom-cursors.ts<\/code>", "frame": "similar", "frameNote": "marks on the model", "sugg": "shared", "suggNote": "", "q": []}, {"id": "canvas-editor-35", "feature": "Grid adapting to the zoom, \"Lock grid to\" a size, on/off", "where": "<code>calc/components/grid/ModelGrid.tsx<\/code>", "frame": "has", "frameNote": "Auto follows the zoom", "sugg": "shared", "suggNote": "", "q": []}, {"id": "canvas-editor-36", "feature": "Scale bar and rulers along the edges", "where": "<code>calc/components/grid/ScaleBar.tsx<\/code>, <code>CanvasRuler.tsx<\/code>", "frame": "no", "frameNote": "", "sugg": "shared", "suggNote": "", "q": []}, {"id": "canvas-editor-37", "feature": "Context menu by element kind (load edit, flip, push/pull, support type, material and section, labels, fit, cancel while busy)", "where": "<code>calc/components/context-menu/*<\/code>", "frame": "has", "frameNote": "", "sugg": "shared", "suggNote": "", "q": []}, {"id": "canvas-editor-38", "feature": "Hover highlight and a tooltip that follows the pointer", "where": "<code>calc/editor/hover-service.ts<\/code>, <code>HoverTooltip.tsx<\/code>", "frame": "has", "frameNote": "", "sugg": "shared", "suggNote": "", "q": []}, {"id": "canvas-editor-39", "feature": "Cursor hint that follows the tool's state (\"Pick first point\", \"Swipe over elements to erase\")", "where": "<code>calc/components/CanvasHint.tsx<\/code>", "frame": "similar", "frameNote": "hints", "sugg": "shared", "suggNote": "", "q": []}, {"id": "canvas-editor-40", "feature": "Drop a file on the window to open it", "where": "<code>calc/components/FileDropOpen.tsx<\/code>", "frame": "no", "frameNote": "", "sugg": "shared", "suggNote": "", "q": []}, {"id": "canvas-editor-41", "feature": "Floating numpad for typing on touch", "where": "<code>src/components/ui/floating-numpad/FloatingNumpad.tsx<\/code>", "frame": "no", "frameNote": "", "sugg": "shared", "suggNote": "", "q": []}, {"id": "canvas-editor-42", "feature": "The last tool is back after a reload", "where": "<code>calc/store/<\/code> (<code>toolName<\/code>)", "frame": "no", "frameNote": "", "sugg": "shared", "suggNote": "", "q": []}]}, {"title": "Model", "slug": "model", "items": [{"id": "model-01", "feature": "Nodes: free points, numbered", "where": "<code>calc/store/model-store.types.ts<\/code>", "frame": "has", "frameNote": "", "sugg": "shared", "suggNote": "", "q": []}, {"id": "model-02", "feature": "Members: two nodes, a material and a section; always pin-jointed", "where": "<code>calc/store/model-store.types.ts<\/code>", "frame": "similar", "frameNote": "a member can be a truss member, <code>setTrussMember<\/code>", "sugg": "truss", "suggNote": "all joints pinned", "q": []}, {"id": "model-03", "feature": "Supports: pin, roller, vertical roller, any angle; no fixed support", "where": "<code>calc/components/panels/SupportToolPanel.tsx<\/code>", "frame": "similar", "frameNote": "pin, roller, fixed", "sugg": "unsure", "suggNote": "Q1, Q5", "q": ["q1", "q5"]}, {"id": "model-04", "feature": "Loads: nodal forces only; no moments, member loads or self weight", "where": "<code>calc/components/panels/LoadToolPanel.tsx<\/code>", "frame": "similar", "frameNote": "all four", "sugg": "unsure", "suggNote": "Q1", "q": ["q1"]}, {"id": "model-05", "feature": "Materials: name, E, strength, density, colour; presets Rubber, Spaghetti, Balsa wood, Timber, Aluminium, Steel, in metric and imperial", "where": "<code>calc/data/defaults.ts<\/code>, <code>MaterialEditor.tsx<\/code>", "frame": "similar", "frameNote": "Material view", "sugg": "shared", "suggNote": "", "q": []}, {"id": "model-06", "feature": "Sections: solid round, pipe, solid square, hollow square, custom; area and I_min worked out; I_min only for buckling", "where": "<code>calc/components/ui/member-tool/SectionEditor.tsx<\/code>, <code>calc/helpers/section-geometry.ts<\/code>", "frame": "has", "frameNote": "built from these; rectangles, I about the bending axis", "sugg": "shared", "suggNote": "", "q": []}, {"id": "model-07", "feature": "Library dialog: materials and sections, the default for new members, add, edit, delete, recolour; import and export behind the unstable switch", "where": "<code>calc/components/ui/library/*<\/code>", "frame": "similar", "frameNote": "Sections panel, no materials list", "sugg": "shared", "suggNote": "", "q": []}, {"id": "model-08", "feature": "Dimensions (horizontal, vertical, aligned), never solved", "where": "<code>calc/element-utils/dimension-*<\/code>", "frame": "has", "frameNote": "", "sugg": "shared", "suggNote": "", "q": []}, {"id": "model-09", "feature": "Units: Metric or Imperial, or a unit per quantity (length, force incl. kg, moment, displacement, area, E, stress, density)", "where": "<code>calc/constants/units.ts<\/code>, <code>UnitController.tsx<\/code>", "frame": "has", "frameNote": "built from these", "sugg": "shared", "suggNote": "", "q": []}]}, {"title": "Solve and results", "slug": "solve-and-results", "items": [{"id": "solve-and-results-01", "feature": "Live solve in a web worker on every change; a slow solve is dropped for a newer model; a crashed worker is retried once", "where": "<code>calc/solver/SolverWorkerManager.ts<\/code>", "frame": "similar", "frameNote": "live solve", "sugg": "shared", "suggNote": "", "q": []}, {"id": "solve-and-results-02", "feature": "Engine: axial-only stiffness method, each separate structure solved on its own (\"N of M structures\")", "where": "<code>sc/truss2d/multi-solver.ts<\/code>", "frame": "similar", "frameNote": "frame elements, structures solved apart", "sugg": "unsure", "suggNote": "Q1", "q": ["q1"]}, {"id": "solve-and-results-03", "feature": "Determinacy counts (m + r vs 2j) worked out but never shown", "where": "<code>sc/truss2d/<\/code>", "frame": "no", "frameNote": "", "sugg": "truss", "suggNote": "", "q": []}, {"id": "solve-and-results-04", "feature": "Unstable: forces withheld, unstable members drawn red, eight named messages", "where": "<code>calc/constants/stability-messages.ts<\/code>, <code>MemberErrorLine.tsx<\/code>", "frame": "similar", "frameNote": "mechanism animated, fix hints", "sugg": "unsure", "suggNote": "Q3", "q": ["q3"]}, {"id": "solve-and-results-05", "feature": "Support lines of action and rotation points (\"could turn either way\")", "where": "<code>calc/components/entities/SupportRotationPoints.tsx<\/code>", "frame": "no", "frameNote": "", "sugg": "unsure", "suggNote": "Q3", "q": ["q3"]}, {"id": "solve-and-results-06", "feature": "Results dropdown: Geometry, Material, Section, To scale; Forces (blue compression, red tension, with reactions); Joint forces; Stress; Strength %, Tension %, Buckling %; dx, dy, dr", "where": "<code>calc/components/DiagramModeSelect.tsx<\/code>", "frame": "similar", "frameNote": "Off, Section, Material, To scale, M, V, N, σ, Utilisation, Deformed, dx, dy, Reactions", "sugg": "shared", "suggNote": "the list per mode", "q": []}, {"id": "solve-and-results-07", "feature": "Joint forces view: how each member pulls or pushes on its joints", "where": "<code>calc/components/DiagramModeSelect.tsx<\/code>", "frame": "no", "frameNote": "card #292", "sugg": "shared", "suggNote": "", "q": []}, {"id": "solve-and-results-08", "feature": "Colour scale bar with a settings panel, \"Show values on nodes\"; Steps and Min/Max behind the unstable switch", "where": "<code>calc/components/DiagramSettings.tsx<\/code>", "frame": "similar", "frameNote": "", "sugg": "shared", "suggNote": "", "q": []}, {"id": "solve-and-results-09", "feature": "Deformed shape with a Max amplitude slider; Play, Pause, Stop; \"Ramp up the load\"", "where": "<code>calc/components/DeformationController.tsx<\/code>", "frame": "has", "frameNote": "", "sugg": "shared", "suggNote": "", "q": []}, {"id": "solve-and-results-10", "feature": "\"Apply deformed shape as new geometry\"", "where": "<code>calc/editor/ModelEditor.ts<\/code> (<code>applyDeformedShape<\/code>)", "frame": "no", "frameNote": "", "sugg": "shared", "suggNote": "", "q": []}, {"id": "solve-and-results-11", "feature": "Grey skeleton of the undeformed shape, a marker where each load sits", "where": "<code>calc/components/layers/SkeletonLayer.tsx<\/code>", "frame": "has", "frameNote": "", "sugg": "shared", "suggNote": "", "q": []}, {"id": "solve-and-results-12", "feature": "Hover tooltips per element (member: tension/compression, utilisation; node: displacements)", "where": "<code>calc/components/HoverTooltip.tsx<\/code>", "frame": "has", "frameNote": "", "sugg": "shared", "suggNote": "", "q": []}, {"id": "solve-and-results-13", "feature": "Stability report: \"This structure is stable\", the numbered problems, \"Up equals down\", \"Left equals right\", moment balance about a node with a pivot marker and arm guides", "where": "<code>calc/components/ui/stability/*<\/code>", "frame": "no", "frameNote": "", "sugg": "unsure", "suggNote": "Q2", "q": ["q2"]}, {"id": "solve-and-results-14", "feature": "Forces panel, node: Free body, Tip to tail, Components; \"too crowded\" over 5 members; Lock keeps the panel on one element", "where": "<code>calc/components/ui/forces/*<\/code>", "frame": "no", "frameNote": "", "sugg": "unsure", "suggNote": "Q2", "q": ["q2"]}, {"id": "solve-and-results-15", "feature": "Forces panel, member: the length triangle and the force triangle with the sums worked out", "where": "<code>calc/components/ui/forces/*<\/code>", "frame": "no", "frameNote": "", "sugg": "truss", "suggNote": "", "q": []}, {"id": "solve-and-results-16", "feature": "Forces panel, support and load: Rx, Ry and R² = Rx² + Ry²", "where": "<code>calc/components/ui/forces/*<\/code>", "frame": "similar", "frameNote": "Reactions view", "sugg": "shared", "suggNote": "", "q": []}, {"id": "solve-and-results-17", "feature": "Utilisation report: Strength and Buckling switches (off at first), the worst member, the count over the limit, \"Could tear / crush / buckle\", the formulas with values, link to the buckling guide", "where": "<code>calc/components/ui/utilization/*<\/code>", "frame": "similar", "frameNote": "Utilisation view, a report", "sugg": "unsure", "suggNote": "Q4", "q": ["q4"]}, {"id": "solve-and-results-18", "feature": "Statistics: counts, total length, volume, mass; a table per section", "where": "<code>calc/components/ui/statistics/StatisticsSection.tsx<\/code>", "frame": "similar", "frameNote": "the Report has member, section and material tables, no totals", "sugg": "unsure", "suggNote": "Q7", "q": ["q7"]}, {"id": "solve-and-results-19", "feature": "Sound: a creak at each end of the deformation swing (behind the unstable switch)", "where": "<code>calc/audio/SoundEngine.ts<\/code>", "frame": "no", "frameNote": "", "sugg": "unsure", "suggNote": "Q6", "q": ["q6"]}]}, {"title": "Panels, display and settings", "slug": "panels-display-and-settings", "items": [{"id": "panels-display-and-settings-01", "feature": "Top bar: side panel, main menu, logo, file status, undo/redo, results, labels, display, the stability/forces/utilisation indicators, What's new", "where": "<code>calc/components/TopToolbar.tsx<\/code>", "frame": "similar", "frameNote": "", "sugg": "shared", "suggNote": "", "q": []}, {"id": "panels-display-and-settings-02", "feature": "Side rail: Info, My trusses (flag), Examples, Project code, Share, AI chat (flag), presentation mode", "where": "<code>calc/components/SidePanelRail.tsx<\/code>", "frame": "no", "frameNote": "examples only", "sugg": "shared", "suggNote": "", "q": []}, {"id": "panels-display-and-settings-03", "feature": "Display menu: units on labels; labels on reactions, loads, dimensions; result labels on nodes and members; node and member property lines; the section drawn at mid-span; default member colour and width", "where": "<code>calc/components/VisibilityMenu.tsx<\/code>", "frame": "similar", "frameNote": "Loads, numbers, load and result values, Solid/Lines, theme", "sugg": "shared", "suggNote": "", "q": []}, {"id": "panels-display-and-settings-04", "feature": "Labels switch in the top bar", "where": "<code>calc/components/LabelsToggle.tsx<\/code>", "frame": "similar", "frameNote": "", "sugg": "shared", "suggNote": "", "q": []}, {"id": "panels-display-and-settings-05", "feature": "Presentation mode: hides tools and hints; only Select, Eraser and Hand", "where": "<code>calc/store/demo-mode.ts<\/code>, <code>DemoPanel.tsx<\/code>", "frame": "no", "frameNote": "", "sugg": "shared", "suggNote": "", "q": []}, {"id": "panels-display-and-settings-06", "feature": "Welcome dialog: Metric or Imperial, start, tour, examples, open a file", "where": "<code>calc/components/SetupModal.tsx<\/code>", "frame": "no", "frameNote": "", "sugg": "shared", "suggNote": "", "q": []}, {"id": "panels-display-and-settings-07", "feature": "Interface tour, 10 steps (members, supports, loads, results, animation, units, display, select, examples, help)", "where": "<code>calc/tour/interfaceTour.ts<\/code>", "frame": "no", "frameNote": "", "sugg": "shared", "suggNote": "steps per mode", "q": []}, {"id": "panels-display-and-settings-08", "feature": "Help button: tour, guides, learn, YouTube, contact, legal pages", "where": "<code>src/about/HelpButton.tsx<\/code>", "frame": "no", "frameNote": "", "sugg": "shared", "suggNote": "", "q": []}, {"id": "panels-display-and-settings-09", "feature": "What's new button and badge", "where": "<code>src/changelog/WhatsNewButton.tsx<\/code>", "frame": "no", "frameNote": "", "sugg": "shared", "suggNote": "", "q": []}, {"id": "panels-display-and-settings-10", "feature": "AI chat (flag, signed-in only): the student's own Anthropic key; builds and edits trusses through project code and checks the results", "where": "<code>calc/ai-chat/*<\/code>", "frame": "no", "frameNote": "", "sugg": "unsure", "suggNote": "Q6", "q": ["q6"]}, {"id": "panels-display-and-settings-11", "feature": "Settings page: unstable features, debug, analytics off, no canvas hint, no What's new", "where": "<code>src/pages/settings/index.tsx<\/code>", "frame": "no", "frameNote": "", "sugg": "shared", "suggNote": "", "q": []}, {"id": "panels-display-and-settings-12", "feature": "Theme (the truss app has none)", "where": "(none)", "frame": "has", "frameNote": "light and dark", "sugg": "shared", "suggNote": "", "q": []}, {"id": "panels-display-and-settings-13", "feature": "Printable report (the truss app has none)", "where": "(none)", "frame": "has", "frameNote": "the Report button", "sugg": "shared", "suggNote": "", "q": []}]}, {"title": "Saving, opening and sharing", "slug": "saving-opening-and-sharing", "items": [{"id": "saving-opening-and-sharing-01", "feature": "Autosave to the browser; the truss is back after a refresh", "where": "<code>calc/services/local-truss-store.ts<\/code>, <code>truss-idb.ts<\/code>", "frame": "no", "frameNote": "", "sugg": "shared", "suggNote": "", "q": []}, {"id": "saving-opening-and-sharing-02", "feature": "Open file, Save (Ctrl+S, when a file is connected), Save as, Download a copy; autosave into a connected file", "where": "<code>calc/services/project-file-commands.ts<\/code>, <code>file-system-service.ts<\/code>", "frame": "no", "frameNote": "", "sugg": "shared", "suggNote": "", "q": []}, {"id": "saving-opening-and-sharing-03", "feature": "File status in the top bar: Local, File, Example, reconnect; autosave switch", "where": "<code>calc/components/ui/file-connection/*<\/code>", "frame": "no", "frameNote": "", "sugg": "shared", "suggNote": "", "q": []}, {"id": "saving-opening-and-sharing-04", "feature": "The file is reconnected after a refresh; <code>?project=<\/code> and <code>?example=<\/code> open one", "where": "<code>calc/services/useStoredFileProject.ts<\/code>", "frame": "no", "frameNote": "<code>?case=<\/code> for verification", "sugg": "shared", "suggNote": "", "q": []}, {"id": "saving-opening-and-sharing-05", "feature": "Reset canvas: keeps materials and sections, can be undone", "where": "<code>calc/components/MainMenu.tsx<\/code>", "frame": "no", "frameNote": "", "sugg": "shared", "suggNote": "", "q": []}, {"id": "saving-opening-and-sharing-06", "feature": "DXF import and export (members only, mm)", "where": "<code>calc/services/dxf-service.ts<\/code>", "frame": "no", "frameNote": "", "sugg": "unsure", "suggNote": "Q6", "q": ["q6"]}, {"id": "saving-opening-and-sharing-07", "feature": "SVG and PNG export (behind the unstable switch)", "where": "<code>calc/services/export-service.ts<\/code>", "frame": "no", "frameNote": "Studio exports video", "sugg": "unsure", "suggNote": "Q6", "q": ["q6"]}, {"id": "saving-opening-and-sharing-08", "feature": "Share panel: \"As a file\", \"As text\" (project code), a guide link", "where": "<code>calc/components/SharePanelTab.tsx<\/code>", "frame": "no", "frameNote": "", "sugg": "shared", "suggNote": "", "q": []}, {"id": "saving-opening-and-sharing-09", "feature": "Share with URL: the link built live, its length, whether it fits a QR code (behind the unstable switch)", "where": "<code>calc/components/ShareUrlSection.tsx<\/code>", "frame": "no", "frameNote": "", "sugg": "shared", "suggNote": "", "q": []}, {"id": "saving-opening-and-sharing-10", "feature": "<code>/t<\/code> opens a shared link as an unsaved \"Shared truss\"; named errors (cut off, needs a newer Truzme, damaged)", "where": "<code>src/components/SharedLinkPage.tsx<\/code>", "frame": "no", "frameNote": "", "sugg": "shared", "suggNote": "", "q": []}, {"id": "saving-opening-and-sharing-11", "feature": "Project code panel: live JSON, validation, Format, Copy, Paste, Apply", "where": "<code>calc/components/ProjectCodeTab.tsx<\/code>", "frame": "no", "frameNote": "", "sugg": "shared", "suggNote": "", "q": []}, {"id": "saving-opening-and-sharing-12", "feature": "Examples panel: categories (Basics, Fun, Stability, Utilisation), info cards; an example stays unsaved until \"Fork to local\" or \"Fork to file\"", "where": "<code>calc/components/ExamplesPanelTab.tsx<\/code>", "frame": "similar", "frameNote": "Examples panel, open replaces the model", "sugg": "shared", "suggNote": "the examples per mode", "q": []}, {"id": "saving-opening-and-sharing-13", "feature": "<code>/examples<\/code> page with previews", "where": "<code>src/example-projects/ExamplesPage.tsx<\/code>", "frame": "no", "frameNote": "", "sugg": "shared", "suggNote": "", "q": []}, {"id": "saving-opening-and-sharing-14", "feature": "My trusses: in this browser, recent files (flag), in your account", "where": "<code>src/truss-list/*<\/code>, <code>calc/components/MyTrussesPanelTab.tsx<\/code>", "frame": "no", "frameNote": "", "sugg": "shared", "suggNote": "", "q": []}, {"id": "saving-opening-and-sharing-15", "feature": "Cloud trusses: new, save to cloud, duplicate, rename, delete; <code>/truss/[uid]<\/code> with autosave; Google sign-in", "where": "<code>src/pages/api/trusses/*<\/code>, <code>src/server/auth.ts<\/code>", "frame": "no", "frameNote": "", "sugg": "shared", "suggNote": "", "q": []}, {"id": "saving-opening-and-sharing-16", "feature": "Generator: a JS script with sliders, presets Warren, Pratt, Howe, Arched, run in a sandbox, copied as project code", "where": "<code>src/generator/*<\/code>", "frame": "no", "frameNote": "", "sugg": "unsure", "suggNote": "Q6", "q": ["q6"]}]}]};
+  const state = { marks: {}, answers: {}, filter: "all", openNotes: new Set() };
+  let db = null;
+  const LS = "truss-review-v1";
+
+  function loadLocal() {
+    try {
+      const s = JSON.parse(localStorage.getItem(LS) || "{}");
+      state.marks = s.marks || {};
+      state.answers = s.answers || {};
+    } catch (e) {}
+  }
+  function saveLocal() {
+    try {
+      localStorage.setItem(
+        LS,
+        JSON.stringify({ marks: state.marks, answers: state.answers }),
+      );
+    } catch (e) {}
+  }
+
+  const allItems = DATA.areas.flatMap((a) => a.items);
+  const frameLabel = {
+    has: "Frame has it",
+    similar: "Frame: similar",
+    no: "Frame doesn't have it",
+  };
+  const suggLabel = { shared: "Shared", truss: "Truss-only", unsure: "Unsure" };
+
+  function el(tag, attrs = {}, html) {
+    const e = document.createElement(tag);
+    for (const [k, v] of Object.entries(attrs)) {
+      if (k === "class") e.className = v;
+      else if (k.startsWith("on")) e.addEventListener(k.slice(2), v);
+      else e.setAttribute(k, v);
+    }
+    if (html != null) e.innerHTML = html;
+    return e;
+  }
+
+  async function writeDoc(path, body) {
+    if (!db) {
+      saveLocal();
+      return;
+    }
+    try {
+      await (body ? db.doc(path).set(body) : db.doc(path).delete());
+    } catch (e) {
+      document.getElementById("offline").hidden = false;
+      saveLocal();
+    }
+  }
+
+  function setMark(id, mark) {
+    const cur = state.marks[id] || {};
+    const next = cur.mark === mark ? { ...cur, mark: null } : { ...cur, mark };
+    if (!next.mark && !next.note) {
+      delete state.marks[id];
+      writeDoc("marks/" + id, null);
+    } else {
+      state.marks[id] = next;
+      writeDoc("marks/" + id, {
+        mark: next.mark || null,
+        note: next.note || "",
+      });
+    }
+    if (mark === "change" && next.mark === "change") state.openNotes.add(id);
+    render();
+  }
+  function setNote(id, note) {
+    const cur = state.marks[id] || {};
+    if ((cur.note || "") === note) return;
+    const next = { ...cur, note };
+    if (!next.mark && !note) {
+      delete state.marks[id];
+      writeDoc("marks/" + id, null);
+    } else {
+      state.marks[id] = next;
+      writeDoc("marks/" + id, { mark: next.mark || null, note });
+    }
+    renderProgress();
+  }
+  function setAnswer(qid, option) {
+    const cur = state.answers[qid] || {};
+    const next = { ...cur, option: cur.option === option ? null : option };
+    state.answers[qid] = next;
+    writeDoc("answers/" + qid, { option: next.option, note: next.note || "" });
+    render();
+  }
+  function setAnswerNote(qid, note) {
+    const cur = state.answers[qid] || {};
+    if ((cur.note || "") === note) return;
+    state.answers[qid] = { ...cur, note };
+    writeDoc("answers/" + qid, { option: cur.option || null, note });
+    renderProgress();
+  }
+
+  function visible(it) {
+    const m = state.marks[it.id]?.mark;
+    switch (state.filter) {
+      case "todo":
+        return !m;
+      case "unsure":
+        return it.sugg === "unsure";
+      case "truss":
+        return it.sugg === "truss";
+      case "noframe":
+        return it.frame === "no";
+      default:
+        return true;
+    }
+  }
+
+  function renderQuestions() {
+    const box = document.getElementById("questions");
+    box.replaceChildren();
+    for (const q of DATA.questions) {
+      const ans = state.answers[q.id] || {};
+      const card = el("div", { class: "q", id: q.id });
+      card.append(el("h3", {}, `<span class="num">${q.num}</span>${q.title}`));
+      if (q.intro) card.append(el("p", {}, q.intro));
+      const opts = el("div", { class: "opts" });
+      for (const o of q.options) {
+        const b = el("button", {
+          class: "opt",
+          "aria-pressed": String(ans.option === o.letter),
+          id: `${q.id}-${o.letter}`,
+          onclick: () => setAnswer(q.id, o.letter),
+        });
+        b.append(el("span", { class: "letter" }, o.letter));
+        b.append(
+          el(
+            "span",
+            {},
+            `<span class="head">${o.head}</span>${o.rec ? '<span class="rec">recommended</span>' : ""}<br><span class="why">${o.why}</span>`,
+          ),
+        );
+        opts.append(b);
+      }
+      card.append(opts);
+      const ta = el("textarea", {
+        rows: "1",
+        placeholder: "Note (optional)",
+        id: `${q.id}-note`,
+        "aria-label": `Note for question ${q.num}`,
+      });
+      ta.value = ans.note || "";
+      ta.addEventListener("change", () => setAnswerNote(q.id, ta.value.trim()));
+      card.append(ta);
+      box.append(card);
+    }
+  }
+
+  function renderAreas() {
+    const box = document.getElementById("areas");
+    const focusId = document.activeElement?.id;
+    box.replaceChildren();
+    for (const a of DATA.areas) {
+      const items = a.items.filter(visible);
+      const sec = el("section", {
+        style: "display:flex;flex-direction:column;gap:0",
+      });
+      const done = a.items.filter((i) => state.marks[i.id]?.mark).length;
+      const head = el("div", { class: "section-head" });
+      head.append(el("h2", {}, a.title));
+      const right = el(
+        "span",
+        { class: "count" },
+        `${done} of ${a.items.length} marked · `,
+      );
+      const rest = a.items.filter((i) => !state.marks[i.id]?.mark);
+      const keepRest = el(
+        "button",
+        { class: "linkbtn", onclick: () => keepAll(rest) },
+        `Keep the ${rest.length} not marked`,
+      );
+      if (!rest.length) {
+        keepRest.disabled = true;
+        keepRest.textContent = "All marked";
+      }
+      right.append(keepRest);
+      head.append(right);
+      sec.append(head);
+      const list = el("div", { class: "list" });
+      if (!items.length)
+        list.append(
+          el("div", { class: "empty" }, "Nothing here with this filter."),
+        );
+      for (const it of items) {
+        const m = state.marks[it.id] || {};
+        const row = el("div", { class: "row", "data-mark": m.mark || "" });
+        const body = el("div", { class: "body" });
+        body.append(el("div", { class: "feat" }, it.feature));
+        const meta = el("div", { class: "meta" });
+        meta.append(
+          el(
+            "span",
+            { class: "chip" },
+            frameLabel[it.frame] + (it.frameNote ? ` (${it.frameNote})` : ""),
+          ),
+        );
+        let s = suggLabel[it.sugg];
+        if (it.q.length)
+          s +=
+            " · " +
+            it.q
+              .map((q) => `<a href="#${q}">question ${q.slice(1)}</a>`)
+              .join(", ");
+        else if (it.suggNote) s += ` (${it.suggNote})`;
+        meta.append(el("span", { class: "chip " + it.sugg }, s));
+        body.append(meta);
+        body.append(el("div", { class: "where" }, it.where));
+        row.append(body);
+        const marks = el("div", {
+          class: "marks",
+          role: "group",
+          "aria-label": "Mark",
+        });
+        for (const [v, label] of [
+          ["keep", "Keep"],
+          ["change", "Change"],
+          ["drop", "Drop"],
+        ]) {
+          marks.append(
+            el(
+              "button",
+              {
+                class: "mark",
+                "data-v": v,
+                id: `${it.id}-${v}`,
+                "aria-pressed": String(m.mark === v),
+                onclick: () => setMark(it.id, v),
+              },
+              label,
+            ),
+          );
+        }
+        row.append(marks);
+        const showNote = state.openNotes.has(it.id) || m.note;
+        if (showNote) {
+          const nw = el("div", { class: "note-wrap" });
+          const inp = el("input", {
+            class: "note",
+            id: `${it.id}-note`,
+            placeholder: m.mark === "change" ? "What should change?" : "Note",
+            "aria-label": "Note",
+          });
+          inp.value = m.note || "";
+          inp.addEventListener("change", () =>
+            setNote(it.id, inp.value.trim()),
+          );
+          nw.append(inp);
+          row.append(nw);
+        } else {
+          const nb = el(
+            "button",
+            {
+              class: "linkbtn notebtn",
+              onclick: () => {
+                state.openNotes.add(it.id);
+                render();
+                document.getElementById(`${it.id}-note`)?.focus();
+              },
+            },
+            "Add a note",
+          );
+          body.append(nb);
+        }
+        list.append(row);
+      }
+      sec.append(list);
+      box.append(sec);
+    }
+    if (focusId) document.getElementById(focusId)?.focus();
+  }
+
+  async function keepAll(items) {
+    for (const it of items) {
+      state.marks[it.id] = { ...(state.marks[it.id] || {}), mark: "keep" };
+    }
+    render();
+    for (const it of items)
+      await writeDoc("marks/" + it.id, {
+        mark: "keep",
+        note: state.marks[it.id].note || "",
+      });
+  }
+
+  function renderProgress() {
+    const total = allItems.length;
+    const c = { keep: 0, change: 0, drop: 0 };
+    for (const it of allItems) {
+      const m = state.marks[it.id]?.mark;
+      if (m) c[m]++;
+    }
+    const marked = c.keep + c.change + c.drop;
+    const answered = DATA.questions.filter(
+      (q) => state.answers[q.id]?.option,
+    ).length;
+    document.getElementById("progress").textContent =
+      `${answered} of ${DATA.questions.length} questions · ${marked} of ${total} features marked`;
+    for (const [k, id] of [
+      ["keep", "bar-k"],
+      ["change", "bar-c"],
+      ["drop", "bar-d"],
+    ])
+      document.getElementById(id).style.width = (100 * c[k]) / total + "%";
+    document.getElementById("accept-recs").disabled =
+      answered === DATA.questions.length;
+  }
+
+  function render() {
+    renderQuestions();
+    renderAreas();
+    renderProgress();
+  }
+
+  document.querySelectorAll(".filter").forEach((b) =>
+    b.addEventListener("click", () => {
+      state.filter = b.dataset.f;
+      document
+        .querySelectorAll(".filter")
+        .forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+      renderAreas();
+    }),
+  );
+
+  document.getElementById("accept-recs").addEventListener("click", async () => {
+    const todo = DATA.questions.filter((q) => !state.answers[q.id]?.option);
+    for (const q of todo)
+      state.answers[q.id] = {
+        ...(state.answers[q.id] || {}),
+        option: q.options.find((o) => o.rec)?.letter || null,
+      };
+    render();
+    for (const q of todo)
+      await writeDoc("answers/" + q.id, {
+        option: state.answers[q.id].option,
+        note: state.answers[q.id].note || "",
+      });
+  });
+
+  document
+    .getElementById("copy-answers")
+    .addEventListener("click", async (ev) => {
+      const btn = ev.currentTarget;
+      const text =
+        DATA.questions
+          .map((q) =>
+            state.answers[q.id]?.option
+              ? q.num + state.answers[q.id].option.toLowerCase()
+              : null,
+          )
+          .filter(Boolean)
+          .join(" ") || "No answers yet";
+      try {
+        await navigator.clipboard.writeText(text);
+        btn.textContent = "Copied: " + text;
+      } catch (e) {
+        btn.textContent = text;
+      }
+      setTimeout(() => {
+        btn.textContent = "Copy answers";
+      }, 2500);
+    });
+
+  loadLocal();
+  render();
+
+  (async () => {
+    try {
+      db = await window.claude?.use?.("db");
+    } catch (e) {
+      db = null;
+    }
+    if (!db) {
+      document.getElementById("offline").hidden = false;
+      renderProgress();
+      return;
+    }
+    let gotMarks = false,
+      gotAnswers = false;
+    const timer = setTimeout(() => {
+      if (!gotMarks || !gotAnswers)
+        document.getElementById("offline").hidden = false;
+    }, 10000);
+    const done = () => {
+      if (gotMarks && gotAnswers) {
+        clearTimeout(timer);
+        document.getElementById("offline").hidden = true;
+      }
+    };
+    db.collection("marks").onSnapshot(
+      (snap) => {
+        const m = {};
+        for (const d of snap.docs) {
+          const v = d.data();
+          if (v) m[d.id] = { mark: v.mark || null, note: v.note || "" };
+        }
+        state.marks = m;
+        if (!snap.metadata.fromCache) {
+          gotMarks = true;
+          done();
+        }
+        renderAreas();
+        renderProgress();
+      },
+      () => {
+        document.getElementById("offline").hidden = false;
+      },
+    );
+    db.collection("answers").onSnapshot(
+      (snap) => {
+        const a = {};
+        for (const d of snap.docs) {
+          const v = d.data();
+          if (v) a[d.id] = { option: v.option || null, note: v.note || "" };
+        }
+        state.answers = a;
+        if (!snap.metadata.fromCache) {
+          gotAnswers = true;
+          done();
+        }
+        renderQuestions();
+        renderProgress();
+      },
+      () => {
+        document.getElementById("offline").hidden = false;
+      },
+    );
+  })();
+</script>
+
+</body></html>

@@ -1,0 +1,482 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Erők egyensúlya</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root{
+  --bg:#F1F2EE; --surface:#FBFBF8; --ink:#1B1F24; --muted:#5E656D; --rule:#D5D8D0; --grid:#DADDD5; --member:#C9CCC3;
+  --f1:#2D59D1; --f2:#C9531C; --f3:#0C8580; --f4:#8A43C6;
+  --ok:#2C7A3D; --bad:#B42335;
+  --serif:"Newsreader",Georgia,"Times New Roman",serif;
+  --mono:"JetBrains Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+  --scene-h:50svh;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#121518; --surface:#181C20; --ink:#E6E8E3; --muted:#9AA1A8; --rule:#2B3137; --grid:#232A30; --member:#343C43;
+    --f1:#7F9DFF; --f2:#FF8B52; --f3:#3CC4B8; --f4:#C38FF5; --ok:#6BC47F; --bad:#FF6B7D;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#121518; --surface:#181C20; --ink:#E6E8E3; --muted:#9AA1A8; --rule:#2B3137; --grid:#232A30; --member:#343C43;
+  --f1:#7F9DFF; --f2:#FF8B52; --f3:#3CC4B8; --f4:#C38FF5; --ok:#6BC47F; --bad:#FF6B7D;
+}
+html{background:var(--bg)}
+body{background:var(--bg);color:var(--ink);font-family:var(--serif);font-size:19px;line-height:1.55;-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box}
+
+/* ---------- layout: mobile first (scene fixed to bottom) ---------- */
+.text{padding-inline:16px;padding-bottom:calc(var(--scene-h) + 30svh);max-width:40rem;margin-inline:auto}
+.scene{position:fixed;left:0;right:0;bottom:0;height:var(--scene-h);background:var(--surface);border-top:1px solid var(--rule);
+  display:flex;flex-direction:column;padding-bottom:env(safe-area-inset-bottom,0px);z-index:2}
+.stage{position:relative;flex:1;min-height:0;overflow:hidden}
+.stage svg{position:absolute;inset:0;width:100%;height:100%;display:block;overflow:visible}
+
+@media (min-width:860px){
+  :root{--scene-h:100svh}
+  .wrap{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr)}
+  .scene{position:sticky;top:0;height:100svh;border-top:0;border-right:1px solid var(--rule);grid-column:1;grid-row:1}
+  .text{grid-column:2;grid-row:1;padding-inline:clamp(24px,4vw,56px);padding-bottom:55svh;max-width:none}
+  .text > *{max-width:34rem}
+}
+
+/* ---------- steps ---------- */
+.step{padding-block:14svh;opacity:.38;transition:opacity .35s ease}
+.step.on{opacity:1}
+.step.intro{padding-top:max(32px,8svh);padding-bottom:18svh}
+.step p{margin:0 0 .8em}
+.step p:last-child{margin-bottom:0}
+h1{font-size:clamp(2.6rem,9vw,4rem);line-height:1;font-weight:400;letter-spacing:-.02em;margin:.2em 0 .35em;text-wrap:balance}
+h2{font-size:1.45rem;font-weight:600;line-height:1.2;margin:0 0 .45em;text-wrap:balance}
+.eyebrow{font-family:var(--mono);font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.lede{color:var(--muted);font-style:italic}
+.t-f1{color:var(--f1)}.t-f2{color:var(--f2)}.t-f3{color:var(--f3)}.t-f4{color:var(--f4)}
+b[class^="t-"]{font-weight:600}
+.live{font-family:var(--mono);font-size:.82em;font-variant-numeric:tabular-nums;background:color-mix(in srgb,var(--ink) 7%,transparent);padding:.05em .35em;border-radius:3px;white-space:nowrap}
+.hint{font-family:var(--mono);font-size:.78rem;color:var(--muted);border-left:2px solid var(--rule);padding-left:.8em}
+a{color:inherit;text-decoration-color:var(--muted);text-underline-offset:3px}
+
+/* ---------- readout ---------- */
+.readout{position:absolute;top:10px;left:12px;font-family:var(--mono);font-size:11.5px;line-height:1.6;color:var(--muted);
+  font-variant-numeric:tabular-nums;pointer-events:none;transition:opacity .3s}
+.readout sub{font-size:.8em}
+.readout .row b{color:var(--ink);font-weight:600;display:inline-block;min-width:5.5ch;text-align:right}
+.badge{display:inline-block;margin-top:4px;padding:1px 7px;border-radius:2px;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;font-weight:600;
+  color:var(--surface);background:var(--ok);transition:background .2s}
+.badge.bad{background:var(--bad)}
+
+/* ---------- sliders ---------- */
+.controls{display:grid;gap:4px 14px;padding:8px 14px 10px;border-top:1px solid var(--rule);font-family:var(--mono);font-size:12px}
+.controls:empty{display:none}
+.ctl{display:grid;grid-template-columns:8.5ch 1fr 6ch;align-items:center;gap:10px;animation:rise .35s ease both}
+.ctl label{color:var(--muted);white-space:nowrap}
+.ctl output{text-align:right;font-variant-numeric:tabular-nums;color:var(--ink)}
+.ctl input{width:100%;height:28px;margin:0}
+@keyframes rise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (min-width:860px){.controls{padding:14px 24px 20px;font-size:13px}}
+
+/* ---------- svg ---------- */
+.gridfill{fill:var(--grid)}
+.c-f1{stroke:var(--f1);fill:var(--f1)}.c-f2{stroke:var(--f2);fill:var(--f2)}.c-f3{stroke:var(--f3);fill:var(--f3)}.c-f4{stroke:var(--f4);fill:var(--f4)}
+.c-r{stroke:var(--ink);fill:var(--ink)}
+.c-r line{stroke-dasharray:5 4}
+.arrow line{stroke-width:2.6;stroke-linecap:round}
+.arrow path{stroke:none}
+.lbl{font-family:var(--mono);font-size:10.5px;stroke:none;paint-order:stroke}
+.loa{stroke-width:1;stroke-dasharray:2 5;fill:none}
+.member{stroke:var(--member);stroke-width:9;stroke-linecap:round;fill:none}
+.body-disk{fill:var(--surface);stroke:var(--ink);stroke-width:1.6}
+.body-mark{stroke:var(--ink);stroke-width:1.6;stroke-linecap:round;fill:none}
+.body-hole{fill:var(--bg);stroke:var(--ink);stroke-width:1.2}
+.ghost circle,.ghost line{fill:none;stroke:var(--muted);stroke-width:1.2;stroke-dasharray:3 3}
+.poly{fill:var(--ink);stroke:none}
+.axes line{stroke:var(--muted);stroke-width:.8}
+.axes text,.arc-lbl{font-family:var(--mono);font-size:11px;fill:var(--muted);font-style:italic}
+.comp line{stroke-width:1.6;stroke-linecap:round;opacity:.75}
+.comp path{opacity:.75}
+.comp .lbl{font-size:9.5px}
+.proj{stroke-width:.8;stroke-dasharray:2 3;fill:none}
+.arc{fill:none;stroke:var(--f1);stroke-width:1}
+.reset{position:absolute;top:10px;right:12px;font-family:var(--mono);font-size:11.5px;padding:6px 10px;border-radius:3px;cursor:pointer;
+  background:var(--ink);color:var(--surface);border:1px solid var(--ink);transition:opacity .2s,background .2s}
+.reset:disabled{background:transparent;color:var(--muted);border-color:var(--rule);cursor:default}
+.reset:focus-visible{outline:2px solid var(--f1);outline-offset:2px}
+.ctab{border-collapse:collapse;font-family:var(--mono);font-size:.78rem;font-variant-numeric:tabular-nums;margin:0 0 .9em}
+.ctab th,.ctab td{padding:3px 14px 3px 0;text-align:right}
+.ctab th:first-child,.ctab td:first-child{text-align:left;font-weight:600}
+.ctab th{color:var(--muted);font-weight:400;border-bottom:1px solid var(--rule)}
+.ctab .sum td{color:var(--ink);border-top:1px solid var(--ink);font-weight:600}
+.origin{fill:var(--ink)}
+
+.step a:focus-visible,.ctl input:focus-visible{outline:2px solid var(--f1);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){.step,.ctl{transition:none;animation:none}}
+</style>
+
+<div class="wrap">
+  <aside class="scene" aria-label="Interaktív erőábra">
+    <div class="stage">
+      <svg id="svg" viewBox="-185 -125 370 250" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Erők egy testen"></svg>
+      <div class="readout" id="readout">
+        <div class="row">ΣF<sub>x</sub> <b id="ro-fx">0,00</b> kN</div>
+        <div class="row">ΣF<sub>y</sub> <b id="ro-fy">0,00</b> kN</div>
+        <div class="row" id="ro-mrow">ΣM <b id="ro-m">0,00</b> kNm</div>
+        <div class="badge" id="badge">egyensúly</div>
+      </div>
+      <button class="reset" id="reset" type="button" hidden>↺ Vissza egyensúlyba</button>
+    </div>
+    <div class="controls" id="controls"></div>
+  </aside>
+
+  <main class="text" id="text"></main>
+</div>
+
+<script>
+(() => {
+/* ================================================================
+   1. MODEL — every animatable parameter, with its default value
+   ================================================================ */
+const FORCES = ['F1','F2','F3'];
+const SUB = {F1:'₁',F2:'₂',F3:'₃',F4:'₄'};
+const DEF = { chain:0, lines:0, bodyOp:1, bodyR:26, resOp:0, ghost:0, polyFill:0, showM:0, members:0, comps:0, axes:0, arc:0 };
+const FDEF = { F1:[10,0], F2:[10,110], F3:[8,250] };
+for (const f of FORCES){
+  DEF[f+'.mag']=FDEF[f][0]; DEF[f+'.ang']=FDEF[f][1];
+  DEF[f+'.op']=0; DEF[f+'.s']=26; DEF[f+'.off']=0;
+}
+const KEYS = Object.keys(DEF);
+
+// helpers for writing steps
+const F = (f, mag, ang, extra={}) => {
+  const o = {[f+'.mag']:mag, [f+'.ang']:ang, [f+'.op']:1};
+  for (const k in extra) o[f+'.'+k]=extra[k];
+  return o;
+};
+const equilibrant = (list) => {           // [[mag,deg],...] -> [mag,deg] closing the polygon
+  let x=0,y=0;
+  for (const [m,a] of list){ x+=m*Math.cos(a*Math.PI/180); y+=m*Math.sin(a*Math.PI/180); }
+  let a = Math.atan2(-y,-x)*180/Math.PI; if (a<0) a+=360;
+  return [Math.hypot(x,y), a];
+};
+const fmt = (v,d=1) => v.toFixed(d).replace('.',',').replace(/^-(0,0+)$/,'$1');
+const S = (keys,label,min,max,step,show,color) => ({keys,label,min,max,step,show,color});
+const deg = v => fmt(v,0)+'°', kn = v => fmt(v,1), plain = v => fmt(v,2);
+
+const E3 = equilibrant([[8,20],[7,140]]);
+const three = {...F('F1',8,20), ...F('F2',7,140), ...F('F3',E3[0],E3[1])};
+const ctab = `<table class="ctab"><thead><tr><th></th><th>F<sub>x</sub></th><th>F<sub>y</sub></th></tr></thead><tbody>
+  <tr class="t-f1"><td>F₁</td><td data-live="F1x"></td><td data-live="F1y"></td></tr>
+  <tr class="t-f2"><td>F₂</td><td data-live="F2x"></td><td data-live="F2y"></td></tr>
+  <tr class="t-f3"><td>F₃</td><td data-live="F3x"></td><td data-live="F3y"></td></tr>
+  <tr class="sum"><td>Σ</td><td data-live="Sx"></td><td data-live="Sy"></td></tr></tbody></table>`;
+
+/* ================================================================
+   2. SCENE SCRIPT — each step is a full snapshot: defaults + overrides.
+      `free` params follow the user's slider; everything else is scripted.
+      `eq` = the values the "back to equilibrium" button restores.
+   ================================================================ */
+const STEPS = [
+  { id:'cim', cls:'intro', set:{},
+    html:`<div class="eyebrow">Statika · 1. fejezet</div>
+      <h1>Egyensúly</h1>
+      <p class="lede">Egy erőtől a vektorháromszögig, a csomóponti módszer előszobájáig.</p>
+      <p>Görgess lefelé. Az ábra a szöveggel együtt halad, és ahol csúszka jelenik meg, azzal te irányítasz.</p>` },
+
+  { id:'egy', set:{...F('F1',10,0), resOp:1, ghost:1},
+    html:`<h2>Egy erő</h2>
+      <p>A testre egyetlen erő hat: <b class="t-f1">F₁</b> = 10 kN, vízszintesen jobbra.</p>
+      <p>Nincs, ami ellensúlyozza. Az eredő maga az erő, a test gyorsulni kezd az irányába. A szaggatott körvonal mutatja, merre indul.</p>` },
+
+  { id:'felbontas', set:{...F('F1',10,35,{s:0}), bodyOp:0.2, axes:1, comps:1, arc:1},
+    free:['F1.ang','F1.mag'],
+    sliders:[ S(['F1.ang'],'α',0,360,1,deg,'f1'), S(['F1.mag'],'F₁ kN',0,14,0.1,kn,'f1') ],
+    html:`<h2>Felbontás komponensekre</h2>
+      <p>Egy ferde erő két merőleges erőként is felírható: egy vízszintes és egy függőleges összetevőként. A kettő együtt pontosan ugyanazt teszi a testtel, mint az eredeti.</p>
+      <p>F<sub>x</sub> = F·cos α = <span class="live" data-live="F1x"></span> kN<br>
+         F<sub>y</sub> = F·sin α = <span class="live" data-live="F1y"></span> kN</p>
+      <p>Forgasd körbe. Az előjel az irányt jelöli: balra és lefelé negatív.</p>
+      <p class="hint">A bal felső sarokban ΣF<sub>x</sub> és ΣF<sub>y</sub> mostantól ezt jelenti: az összes erő vízszintes és függőleges összetevőinek összege.</p>` },
+
+  { id:'ket', set:{...F('F1',10,0), ...F('F2',10,180), resOp:1, ghost:1},
+    html:`<h2>Két erő</h2>
+      <p>Tegyünk <b class="t-f1">F₁</b> vele szembe egy ugyanakkora <b class="t-f2">F₂</b>-t. Az eredő eltűnik: ΣF<sub>x</sub> = 10 − 10 = 0, ΣF<sub>y</sub> = 0.</p>
+      <p>Két erő akkor tart egyensúlyt, ha egyenlő nagyok, ellentétes irányúak, és <em>egy egyenesbe esnek</em>. Az utolsó feltételre még visszatérünk.</p>` },
+
+  { id:'ket-probald', set:{...F('F1',10,0), ...F('F2',10,180), resOp:1, ghost:1},
+    free:['F2.ang','F2.mag'], eq:{'F2.ang':180,'F2.mag':10},
+    sliders:[ S(['F2.ang'],'F₂ irány',90,270,1,deg,'f2'), S(['F2.mag'],'F₂ kN',0,15,0.1,kn,'f2') ],
+    html:`<h2>Próbáld ki</h2>
+      <p>Fordítsd el <b class="t-f2">F₂</b>-t, vagy változtasd a nagyságát. Az eredő azonnal visszajön: most R = <span class="live" data-live="R"></span> kN.</p>
+      <p>Egyensúly egyetlen állásban van: 180°-nál és 10 kN-nál. Ha elvesztetted, a <em>vissza egyensúlyba</em> gomb visszaállítja.</p>` },
+
+  { id:'eropar', set:{...F('F1',10,0,{s:0,off:34}), ...F('F2',10,180,{s:0,off:34}), bodyR:64, resOp:1, ghost:1, showM:1},
+    free:['F1.off','F2.off'], eq:{'F1.off':0,'F2.off':0},
+    sliders:[ S(['F1.off','F2.off'],'kar ½d',0,55,0.5,v=>fmt(v/100,2)+' m','ink') ],
+    html:`<h2>Erőpár</h2>
+      <p>A harmadik feltétel könnyen elsikkad. Toljuk el a két erőt egymással párhuzamosan. ΣF<sub>x</sub> és ΣF<sub>y</sub> továbbra is nulla, a test mégsem nyugszik: <em>forog</em>.</p>
+      <p>Ez az erőpár. Nyomatéka M = F·d, most <span class="live" data-live="M"></span> kNm. Húzd a kart nullára, és a forgás megszűnik.</p>
+      <p class="hint">egyensúly: ΣF<sub>x</sub> = 0, ΣF<sub>y</sub> = 0, ΣM = 0</p>` },
+
+  { id:'harom', set:{...three, lines:1, resOp:1, ghost:1, showM:1},
+    html:`<h2>Három erő</h2>
+      <p><b class="t-f1">F₁</b>, <b class="t-f2">F₂</b>, <b class="t-f3">F₃</b>: három különböző irány, három különböző nagyság, mégis egyensúly.</p>
+      <p>A szaggatott vonalak a hatásvonalak. Három nem párhuzamos erő csak akkor lehet egyensúlyban, ha a hatásvonalaik egy pontban metszik egymást. Itt ez a középpont, ezért nyomaték nem keletkezik.</p>` },
+
+  { id:'harom-komp', set:{...three, 'F1.s':0,'F2.s':0,'F3.s':0, bodyOp:0.2, axes:1, comps:1, resOp:1, showM:1},
+    free:['F2.ang'], eq:{'F2.ang':140},
+    sliders:[ S(['F2.ang'],'F₂ irány',100,180,1,deg,'f2') ],
+    html:`<h2>Miért nulla?</h2>
+      <p>Bontsuk fel mindhármat. A vízszintes összetevők kioltják egymást, és a függőlegesek is:</p>
+      ${ctab}
+      <p>Ez az egyensúly számolható alakja: két egyenlet, ΣF<sub>x</sub> = 0 és ΣF<sub>y</sub> = 0. Fordítsd el <b class="t-f2">F₂</b>-t, és nézd, melyik sor romlik el.</p>` },
+
+  { id:'haromszog', set:{...three, chain:1, bodyOp:0.12, resOp:1, polyFill:1, showM:1},
+    html:`<h2>Vektorháromszög</h2>
+      <p>Ugyanez rajzban: fűzzük össze az erőket úgy, hogy mindegyik ott kezdődjön, ahol az előző véget ért.</p>
+      <p>Ha az erők egyensúlyban vannak, a lánc bezárul. Nincs hézag, tehát nincs eredő.</p>` },
+
+  { id:'haromszog-probald', set:{...three, chain:1, bodyOp:0.12, resOp:1, polyFill:1, showM:1},
+    free:['chain','F3.ang','F3.mag'], eq:{'F3.ang':E3[1],'F3.mag':E3[0]},
+    sliders:[ S(['chain'],'lánc',0,1,0.01,plain,'ink'), S(['F3.ang'],'F₃ irány',190,320,1,deg,'f3'), S(['F3.mag'],'F₃ kN',0,14,0.1,kn,'f3') ],
+    html:`<h2>Nyisd ki</h2>
+      <p>Húzd a <em>lánc</em> csúszkát oda-vissza: ugyanaz a három erő, kétféle rajzban.</p>
+      <p>Aztán nyúlj <b class="t-f3">F₃</b>-hoz. A háromszög kinyílik, és a hézagot pont az eredő tölti ki: R = <span class="live" data-live="R"></span> kN.</p>
+      <p>Ez fordítva is működik. Ha két erőt ismersz, a harmadikat a háromszög bezárása adja meg. A grafosztatika erre épül.</p>` },
+
+  { id:'csomopont', set:{...three, 'F1.s':10,'F2.s':10,'F3.s':10, bodyR:10, members:1, resOp:1},
+    html:`<h2>Csomópont</h2>
+      <p>Cseréljük a korongot egy csomópontra, az erőket pedig három rúdra, amelyek húzzák. Ugyanaz a három erő, ugyanaz a zárt háromszög.</p>
+      <p>A csomóponti módszer ennyi: minden csomópontra felírjuk, hogy ΣF<sub>x</sub> = 0 és ΣF<sub>y</sub> = 0. Csomópontonként két egyenlet, tehát két ismeretlen rúderő. A <a href="https://truzme.com" target="_blank" rel="noopener">Truzme</a> pontosan ezt számolja, csomópontról csomópontra.</p>` },
+];
+for (const s of STEPS){ s.merged = {...DEF, ...s.set}; s.free = new Set(s.free||[]); }
+
+/* ================================================================
+   3. SPRINGS — every param chases its target; user values live in `user`
+   ================================================================ */
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const spring = {}, user = {};
+for (const k of KEYS){ spring[k] = {x:STEPS[0].merged[k], v:0}; user[k] = STEPS[0].merged[k]; }
+const K = 170, C = 2*Math.sqrt(K)*0.92;
+
+let active = -1;
+function enterStep(i){
+  if (i===active) return;
+  active = i;
+  const s = STEPS[i];
+  // scripted params snap their target; free params keep what the user set unless the step names a start value
+  for (const k of KEYS) if (!s.free.has(k) || k in s.set) user[k] = s.merged[k];
+  document.querySelectorAll('.step').forEach((el,j)=>el.classList.toggle('on', j===i));
+  buildControls(s);
+}
+
+/* ================================================================
+   4. CONTROLS
+   ================================================================ */
+const controls = document.getElementById('controls');
+const resetBtn = document.getElementById('reset');
+let syncers = [];
+resetBtn.addEventListener('click', ()=>{
+  const s = STEPS[active]; if (!s.eq) return;
+  for (const k in s.eq) user[k] = s.eq[k];
+  syncers.forEach(f=>f());
+});
+function buildControls(s){
+  controls.innerHTML = ''; syncers = [];
+  resetBtn.hidden = !s.eq;
+  (s.sliders||[]).forEach((d,n)=>{
+    const id = 'ctl-'+s.id+'-'+n;
+    const row = document.createElement('div'); row.className='ctl';
+    const color = d.color==='ink' ? 'var(--ink)' : `var(--${d.color})`;
+    row.innerHTML = `<label for="${id}" style="color:${color}">${d.label}</label>
+      <input type="range" id="${id}" min="${d.min}" max="${d.max}" step="${d.step}" style="accent-color:${color}">
+      <output></output>`;
+    const inp = row.querySelector('input'), out = row.querySelector('output');
+    const sync = ()=>{ inp.value = user[d.keys[0]]; out.textContent = d.show(+inp.value); };
+    sync(); syncers.push(sync);
+    inp.addEventListener('input', ()=>{ for (const k of d.keys) user[k] = +inp.value; out.textContent = d.show(+inp.value); });
+    controls.appendChild(row);
+  });
+}
+
+/* ================================================================
+   5. SVG SETUP
+   ================================================================ */
+const NS='http://www.w3.org/2000/svg', svg=document.getElementById('svg');
+const el=(t,a={},p=svg)=>{ const e=document.createElementNS(NS,t); for(const k in a) e.setAttribute(k,a[k]); p.appendChild(e); return e; };
+
+const defs = el('defs');
+const pat = el('pattern',{id:'dots',width:20,height:20,patternUnits:'userSpaceOnUse',x:-10,y:-10},defs);
+el('circle',{cx:10,cy:10,r:0.9,class:'gridfill'},pat);
+el('rect',{x:-600,y:-600,width:1200,height:1200,fill:'url(#dots)'});
+
+const gAxes = el('g',{class:'axes'});
+el('line',{x1:-175,y1:0,x2:175,y2:0},gAxes); el('line',{x1:0,y1:115,x2:0,y2:-115},gAxes);
+el('text',{x:172,y:-5,'text-anchor':'end'},gAxes).textContent='x';
+el('text',{x:6,y:-106},gAxes).textContent='y';
+const gMembers = el('g'), gLines = el('g');
+const poly = el('polygon',{class:'poly'});
+const ghost = el('g',{class:'ghost'});
+const ghostC = el('circle',{cx:0,cy:0},ghost), ghostM = el('line',{},ghost);
+const body = el('g');
+const bodyDisk = el('circle',{class:'body-disk',cx:0,cy:0}, body);
+const bodyMark = el('line',{class:'body-mark'}, body);
+el('circle',{class:'body-hole',cx:0,cy:0,r:3}, body);
+const gComps = el('g');
+const arcPath = el('path',{class:'arc'}), arcLbl = el('text',{class:'arc-lbl'});
+const gArrows = el('g');
+const origin = el('circle',{class:'origin',r:2.5});
+
+const members={}, loas={}, arrows={}, comps={};
+const mkArrow=(cls,parent)=>{ const g=el('g',{class:'arrow '+cls},parent); return {g, line:el('line',{},g), head:el('path',{},g), lbl:el('text',{class:'lbl'},g)}; };
+for (const f of FORCES){
+  const c='c-'+f.toLowerCase();
+  members[f]=el('line',{class:'member'},gMembers);
+  loas[f]=el('line',{class:'loa '+c},gLines);
+  arrows[f]=mkArrow(c,gArrows);
+  comps[f]={x:mkArrow('comp '+c,gComps), y:mkArrow('comp '+c,gComps),
+            dx:el('line',{class:'proj '+c},gComps), dy:el('line',{class:'proj '+c},gComps)};
+}
+const resArrow = mkArrow('c-r',gArrows);
+
+function setArrow(a,x1,y1,x2,y2,alpha,label){
+  const dx=x2-x1, dy=y2-y1, L=Math.hypot(dx,dy);
+  if (alpha<0.01 || L<0.8){ a.g.style.display='none'; return; }
+  a.g.style.display=''; a.g.style.opacity=alpha;
+  const ux=dx/L, uy=dy/L, h=Math.min(11,L*0.45), w=h*0.5, bx=x2-ux*h, by=y2-uy*h;
+  a.line.setAttribute('x1',x1); a.line.setAttribute('y1',-y1); a.line.setAttribute('x2',bx); a.line.setAttribute('y2',-by);
+  a.head.setAttribute('d',`M${x2},${-y2}L${bx-uy*w},${-(by+ux*w)}L${bx+uy*w},${-(by-ux*w)}Z`);
+  // label sits beyond the tip, nudged sideways
+  const lx=x2+ux*8-uy*9, ly=y2+uy*8+ux*9;
+  a.lbl.setAttribute('x',lx); a.lbl.setAttribute('y',-ly+3.5);
+  a.lbl.setAttribute('text-anchor', ux>0.35?'start':ux<-0.35?'end':'middle');
+  a.lbl.textContent=label;
+}
+
+/* ================================================================
+   6. SCROLL -> active step
+   ================================================================ */
+const text = document.getElementById('text');
+STEPS.forEach(s=>{ const sec=document.createElement('section'); sec.className='step '+(s.cls||''); sec.id='s-'+s.id; sec.innerHTML=s.html; text.appendChild(sec); });
+const sections=[...text.querySelectorAll('.step')];
+const wide = matchMedia('(min-width: 860px)');
+const scene = document.querySelector('.scene');
+function pickStep(){
+  const vh = innerHeight;
+  const trigger = wide.matches ? vh*0.55 : (vh - scene.offsetHeight)*0.62;
+  let idx=0;
+  sections.forEach((s,i)=>{ if (s.getBoundingClientRect().top < trigger) idx=i; });
+  enterStep(idx);
+}
+const lives=[...document.querySelectorAll('[data-live]')];
+
+/* ================================================================
+   7. FRAME LOOP — integrate springs, compute physics live, draw
+   ================================================================ */
+const P=100;            // svg units per metre
+const SC=10;            // svg units per kN
+const ro={fx:document.getElementById('ro-fx'),fy:document.getElementById('ro-fy'),m:document.getElementById('ro-m'),mrow:document.getElementById('ro-mrow'),badge:document.getElementById('badge'),box:document.getElementById('readout')};
+let last=performance.now(), t0=last;
+
+function frame(now){
+  pickStep();
+  let dt=Math.min(0.033,(now-last)/1000); last=now;
+  for (const k of KEYS){
+    const s=spring[k], target=user[k];
+    if (reduce){ s.x=target; s.v=0; continue; }
+    for (let i=0;i<2;i++){ const h=dt/2; s.v += (-K*(s.x-target) - C*s.v)*h; s.x += s.v*h; }
+  }
+  const V=k=>spring[k].x;
+
+  // --- physics from current (animated) values
+  const chain=Math.max(0,Math.min(1,V('chain')));
+  const fs = FORCES.map(f=>{
+    const op=Math.max(0,Math.min(1,V(f+'.op'))), a=V(f+'.ang')*Math.PI/180, m=Math.max(0,V(f+'.mag'));
+    const ux=Math.cos(a), uy=Math.sin(a), s=V(f+'.s'), off=V(f+'.off');
+    return {f, op, m, ux, uy, fx:m*ux*op, fy:m*uy*op, px:s*ux-off*uy, py:s*uy+off*ux};
+  });
+  let Rx=0,Ry=0,M=0;
+  for (const q of fs){ Rx+=q.fx; Ry+=q.fy; M += (q.px*q.fy - q.py*q.fx)/P; }
+  const R=Math.hypot(Rx,Ry);
+
+  // --- chain layout: vertices of the force polygon, centred
+  const verts=[[0,0]];
+  for (const q of fs){ const [x,y]=verts[verts.length-1]; verts.push([x+q.fx*SC, y+q.fy*SC]); }
+  const cx=verts.reduce((a,v)=>a+v[0],0)/verts.length, cy=verts.reduce((a,v)=>a+v[1],0)/verts.length;
+  const ox=-cx*chain, oy=-cy*chain;
+
+  // --- draw
+  const bodyR=V('bodyR'), bodyOp=V('bodyOp');
+  body.style.opacity=bodyOp;
+  bodyDisk.setAttribute('r',bodyR);
+  bodyMark.setAttribute('x1',0); bodyMark.setAttribute('y1',-bodyR*0.45); bodyMark.setAttribute('x2',0); bodyMark.setAttribute('y2',-bodyR*0.82);
+
+  const lines=V('lines')*(1-chain), mem=V('members'), cmp=Math.max(0,V('comps'))*(1-chain);
+  fs.forEach((q,i)=>{
+    const lo=loas[q.f]; lo.style.opacity=Math.max(0,lines*q.op*0.8);
+    lo.setAttribute('x1',q.px-q.ux*400); lo.setAttribute('y1',-(q.py-q.uy*400)); lo.setAttribute('x2',q.px+q.ux*400); lo.setAttribute('y2',-(q.py+q.uy*400));
+    const mb=members[q.f]; mb.style.opacity=mem*q.op;
+    mb.setAttribute('x1',0); mb.setAttribute('y1',0); mb.setAttribute('x2',q.ux*200); mb.setAttribute('y2',-q.uy*200);
+
+    const tx = q.px*(1-chain) + (ox+verts[i][0])*chain;
+    const ty = q.py*(1-chain) + (oy+verts[i][1])*chain;
+    const ex=tx+q.fx*SC, ey=ty+q.fy*SC;
+    setArrow(arrows[q.f], tx, ty, ex, ey, Math.min(1,q.op*1.6), `F${SUB[q.f]} ${fmt(q.m*q.op)} kN`);
+    // components: projections onto x and y from the force's tail
+    const ca = cmp*Math.min(1,q.op*1.6), c=comps[q.f];
+    setArrow(c.x, tx, ty, ex, ty, ca, Math.abs(q.fx)>0.6 ? `${fmt(q.fx)}` : '');
+    setArrow(c.y, tx, ty, tx, ey, ca, Math.abs(q.fy)>0.6 ? `${fmt(q.fy)}` : '');
+    for (const [ln,x1,y1] of [[c.dx,ex,ty],[c.dy,tx,ey]]){
+      ln.style.opacity=ca*0.7; ln.setAttribute('x1',x1); ln.setAttribute('y1',-y1); ln.setAttribute('x2',ex); ln.setAttribute('y2',-ey);
+    }
+  });
+  gAxes.style.opacity=V('axes');
+  // angle arc for F1
+  const arcA=V('arc')*fs[0].op, a1=Math.atan2(fs[0].uy,fs[0].ux), aEnd=a1<0?a1+2*Math.PI:a1, rA=26;
+  arcPath.style.opacity=arcLbl.style.opacity=arcA;
+  arcPath.setAttribute('d',`M${rA},0 A${rA},${rA} 0 ${aEnd>Math.PI?1:0} 0 ${rA*Math.cos(aEnd)},${-rA*Math.sin(aEnd)}`);
+  arcLbl.setAttribute('x',(rA+10)*Math.cos(aEnd/2)); arcLbl.setAttribute('y',-(rA+10)*Math.sin(aEnd/2)+4);
+  arcLbl.textContent='α';
+
+  const pf=V('polyFill')*chain;
+  poly.style.opacity=Math.max(0,pf*0.09);
+  poly.setAttribute('points', verts.map(v=>`${v[0]+ox},${-(v[1]+oy)}`).join(' '));
+  origin.setAttribute('cx',ox); origin.setAttribute('cy',-oy); origin.style.opacity=chain*Math.min(1,fs[0].op);
+
+  const rAlpha=V('resOp')*Math.min(1,Math.max(0,(R-0.05)/0.8));
+  setArrow(resArrow, ox, oy, ox+Rx*SC, oy+Ry*SC, rAlpha, `R ${fmt(R)}`);
+
+  // ghost: where the body is heading (translation from ΣF, rotation from ΣM)
+  const gW=V('ghost')*(1-chain)*bodyOp;
+  const moving = R>0.05 || Math.abs(M)>0.05;
+  if (gW>0.01 && moving && !reduce){
+    const ph=((now-t0)/1700)%1, e=ph*ph;
+    const tr=R>0.05 ? 70*Math.min(1,0.35+R/8)*e : 0;
+    const rot=Math.abs(M)>0.05 ? -Math.sign(M)*80*Math.min(1,0.3+Math.abs(M)/6)*e : 0;
+    ghost.style.opacity=gW*0.9*(1-ph);
+    ghost.setAttribute('transform',`translate(${Rx/R*tr||0},${-(Ry/R*tr)||0}) rotate(${rot})`);
+    ghostC.setAttribute('r',bodyR);
+    ghostM.setAttribute('x1',0);ghostM.setAttribute('y1',-bodyR*0.45);ghostM.setAttribute('x2',0);ghostM.setAttribute('y2',-bodyR*0.82);
+  } else ghost.style.opacity=0;
+
+  // readout
+  const anyF=Math.max(...fs.map(q=>q.op));
+  ro.box.style.opacity=anyF>0.05?1:0;
+  ro.fx.textContent=fmt(Rx,2); ro.fy.textContent=fmt(Ry,2); ro.m.textContent=fmt(Math.abs(M),2);
+  ro.mrow.style.display=V('showM')>0.5?'':'none';
+  const rb=R>0.05, mb=Math.abs(M)>0.05;
+  ro.badge.textContent = !rb&&!mb ? 'egyensúly' : rb&&mb ? 'gyorsul és forog' : rb ? 'gyorsul' : 'forog';
+  ro.badge.classList.toggle('bad', rb||mb);
+  resetBtn.disabled = !(rb||mb);
+
+  const live = {R:fmt(R,1), M:fmt(Math.abs(M),2), Sx:fmt(Rx,1), Sy:fmt(Ry,1)};
+  for (const q of fs){ live[q.f+'x']=fmt(q.fx,1); live[q.f+'y']=fmt(q.fy,1); }
+  for (const l of lives){ const v = live[l.dataset.live]; if (l.textContent!==v) l.textContent=v; }
+
+  requestAnimationFrame(frame);
+}
+enterStep(0);
+requestAnimationFrame(frame);
+})();
+</script>
+
+</body></html>

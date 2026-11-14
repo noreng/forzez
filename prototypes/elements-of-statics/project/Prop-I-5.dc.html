@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Book I, Proposition V</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Display&amp;family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#C2311F}a:hover{color:#8E2416}
+</style>
+</helmet>
+<div style="width: 720px; height: 1020px; box-sizing: border-box; padding: 56px 72px 48px; background: {{paper}}; color: #1B1A17; font-family: 'Libre Caslon Text', Georgia, serif; display: flex; flex-direction: column; gap: 20px">
+<div style="display: flex; justify-content: space-between; font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: #5C574C; border-bottom: 1px solid #1B1A17; padding-bottom: 10px">
+<span>Book I · Forces at a point</span>
+<span>Prop. V</span>
+</div>
+<h2 style="margin: 6px 0 0; font-family: 'Libre Caslon Display', Georgia, serif; font-weight: 400; font-size: 22px; letter-spacing: 0.2em; text-transform: uppercase; text-align: center">Proposition V. Theorem.</h2>
+<p style="margin: 0; font-style: italic; font-size: 17px; line-height: 1.6; text-align: center; padding: 0 24px">When three forces at a point are in balance, each is as the sine of the angle between the other two.</p>
+<svg width="100%" viewBox="40 90 430 230" role="img" aria-label="Three forces at a point, red, blue and yellow, in balance. Each force faces a wedge between the other two, painted in its own colour. Beside them the three forces close a triangle">
+<defs>
+<marker id="mr" viewBox="0 0 10 10" refX="3" refY="5" markerWidth="3.33" markerHeight="3.33" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#C2311F"></path></marker>
+<marker id="mb" viewBox="0 0 10 10" refX="3" refY="5" markerWidth="3.33" markerHeight="3.33" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#1F4E96"></path></marker>
+<marker id="my" viewBox="0 0 10 10" refX="3" refY="5" markerWidth="3.33" markerHeight="3.33" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#E3A81B"></path></marker>
+</defs>
+<path d="M170,190 L200.6,164.3 A40 40 0 0 1 170,230 Z" fill="#C2311F" fill-opacity="0.55"></path>
+<path d="M170,190 L170,230 A40 40 0 0 1 132.4,176.3 Z" fill="#1F4E96" fill-opacity="0.55"></path>
+<path d="M170,190 L132.4,176.3 A40 40 0 0 1 200.6,164.3 Z" fill="#E3A81B" fill-opacity="0.55"></path>
+<line x1="170" y1="190" x2="82.5" y2="158.1" stroke="#C2311F" stroke-width="6" marker-end="url(#mr)"></line>
+<line x1="170" y1="190" x2="260.1" y2="114.4" stroke="#1F4E96" stroke-width="6" marker-end="url(#mb)"></line>
+<line x1="170" y1="190" x2="170" y2="297.2" stroke="#E3A81B" stroke-width="6" marker-end="url(#my)"></line>
+<circle cx="170" cy="190" r="5" fill="#1B1A17"></circle>
+<line x1="450.1" y1="178.7" x2="450.1" y2="286" stroke="#E3A81B" stroke-width="6" marker-end="url(#my)"></line>
+<line x1="349.3" y1="263.3" x2="439.4" y2="187.7" stroke="#1F4E96" stroke-width="6" marker-end="url(#mb)"></line>
+<line x1="450" y1="300" x2="362.5" y2="268.1" stroke="#C2311F" stroke-width="6" marker-end="url(#mr)"></line>
+</svg>
+<div style="display: flex; flex-direction: column; gap: 12px; font-size: 15px; line-height: 1.5">
+<div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap">
+<svg width="40" height="14" viewBox="0 0 40 14" aria-hidden="true"><line x1="2" y1="7" x2="38" y2="7" stroke="#C2311F" stroke-width="5"></line></svg>
+<span>: sin</span>
+<svg width="26" height="18" viewBox="0 0 26 18" aria-hidden="true"><path d="M1,17 L25,17 A24 24 0 0 0 21.8,5 Z" fill="#C2311F" fill-opacity="0.55"></path></svg>
+<span>=</span>
+<svg width="40" height="14" viewBox="0 0 40 14" aria-hidden="true"><line x1="2" y1="7" x2="38" y2="7" stroke="#1F4E96" stroke-width="5"></line></svg>
+<span>: sin</span>
+<svg width="26" height="18" viewBox="0 0 26 18" aria-hidden="true"><path d="M1,17 L25,17 A24 24 0 0 0 21.8,5 Z" fill="#1F4E96" fill-opacity="0.55"></path></svg>
+<span>=</span>
+<svg width="40" height="14" viewBox="0 0 40 14" aria-hidden="true"><line x1="2" y1="7" x2="38" y2="7" stroke="#E3A81B" stroke-width="5"></line></svg>
+<span>: sin</span>
+<svg width="26" height="18" viewBox="0 0 26 18" aria-hidden="true"><path d="M1,17 L25,17 A24 24 0 0 0 21.8,5 Z" fill="#E3A81B" fill-opacity="0.55"></path></svg>
+</div>
+<p style="margin: 0">The three forces close a triangle (Prop. I). Each corner of that triangle is what its wedge leaves of a straight angle, and an angle and what it leaves have the same sine. The rule of sines in the triangle does the rest.</p>
+<p style="margin: 0; font-style: italic; color: #5C574C">Each force is painted on the angle it does not touch. Bernard Lamy, 1687.</p>
+</div>
+<div style="flex-grow: 1"></div>
+<div style="display: flex; justify-content: space-between; align-items: baseline; font-size: 12px; letter-spacing: 0.18em; color: #5C574C">
+<span style="width: 60px"></span>
+<span>5</span>
+<span style="width: 60px; text-align: right; font-family: 'Libre Caslon Display', Georgia, serif; font-size: 16px; letter-spacing: 0.1em; color: #1B1A17">Q.E.D.</span>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"paper":{"editor":"color","default":"#F4EEDF","options":["#F4EEDF","#FFFFFF","#EFE6CF"]},"$preview":{"width":720,"height":1020}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { paper: this.props.paper ?? '#F4EEDF' };
+  }
+}
+</script>
+</body>
+</html>

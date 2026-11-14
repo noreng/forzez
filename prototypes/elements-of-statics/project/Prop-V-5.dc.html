@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Book V, Proposition V</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Display&amp;family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#C2311F}a:hover{color:#8E2416}
+</style>
+</helmet>
+<div style="width: 720px; height: 1020px; box-sizing: border-box; padding: 56px 72px 48px; background: {{paper}}; color: #1B1A17; font-family: 'Libre Caslon Text', Georgia, serif; display: flex; flex-direction: column; gap: 20px">
+<div style="display: flex; justify-content: space-between; font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: #5C574C; border-bottom: 1px solid #1B1A17; padding-bottom: 10px">
+<span>Book V · Cables and arches</span>
+<span>Prop. V</span>
+</div>
+<h2 style="margin: 6px 0 0; font-family: 'Libre Caslon Display', Georgia, serif; font-weight: 400; font-size: 22px; letter-spacing: 0.2em; text-transform: uppercase; text-align: center">Proposition V. Theorem.</h2>
+<p style="margin: 0; font-style: italic; font-size: 17px; line-height: 1.6; text-align: center; padding: 0 24px">A half circle, hinged at its feet and its crown and loaded at the crown, carries the load along two straight chords, not along the circle. Where chord and circle part, the arch must bend.</p>
+<svg width="100%" viewBox="30 10 420 300" role="img" aria-label="A red semicircular arch with hinges at both feet and at the crown carries a yellow load at the crown. Dashed red chords run straight from each foot to the crown; the pale red crescents between chords and arch show where the arch bends, widest at the 45 degree points">
+<defs>
+<marker id="sy" viewBox="0 0 10 10" refX="3" refY="5" markerWidth="3.33" markerHeight="3.33" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#E3A81B"></path></marker>
+</defs>
+<path d="M70,260 A170 170 0 0 1 240,90 L70,260 Z" fill="#C2311F" fill-opacity="0.12"></path>
+<path d="M240,90 A170 170 0 0 1 410,260 L240,90 Z" fill="#C2311F" fill-opacity="0.12"></path>
+<line x1="70" y1="260" x2="240" y2="90" stroke="#F4EEDF" stroke-width="5"></line>
+<line x1="410" y1="260" x2="240" y2="90" stroke="#F4EEDF" stroke-width="5"></line>
+<line x1="70" y1="260" x2="240" y2="90" stroke="#C2311F" stroke-width="3" stroke-dasharray="8 6"></line>
+<line x1="410" y1="260" x2="240" y2="90" stroke="#C2311F" stroke-width="3" stroke-dasharray="8 6"></line>
+<line x1="119.8" y1="139.8" x2="155" y2="175" stroke="#1B1A17" stroke-width="1.5"></line>
+<line x1="116.3" y1="143.3" x2="123.3" y2="136.3" stroke="#1B1A17" stroke-width="1.5"></line>
+<line x1="151.5" y1="178.5" x2="158.5" y2="171.5" stroke="#1B1A17" stroke-width="1.5"></line>
+<line x1="360.2" y1="139.8" x2="325" y2="175" stroke="#1B1A17" stroke-width="1.5"></line>
+<line x1="356.7" y1="136.3" x2="363.7" y2="143.3" stroke="#1B1A17" stroke-width="1.5"></line>
+<line x1="321.5" y1="171.5" x2="328.5" y2="178.5" stroke="#1B1A17" stroke-width="1.5"></line>
+<path d="M70,260 A170 170 0 0 1 240,90 A170 170 0 0 1 410,260" fill="none" stroke="#C2311F" stroke-width="7"></path>
+<polygon points="70,268 56,292 84,292" fill="none" stroke="#1B1A17" stroke-width="2.5"></polygon>
+<polygon points="410,268 396,292 424,292" fill="none" stroke="#1B1A17" stroke-width="2.5"></polygon>
+<line x1="46" y1="295" x2="94" y2="295" stroke="#1B1A17" stroke-width="2.5"></line>
+<line x1="386" y1="295" x2="434" y2="295" stroke="#1B1A17" stroke-width="2.5"></line>
+<line x1="240" y1="20" x2="240" y2="69" stroke="#E3A81B" stroke-width="6" marker-end="url(#sy)"></line>
+<circle cx="70" cy="260" r="7" fill="#F4EEDF" stroke="#1B1A17" stroke-width="2.5"></circle>
+<circle cx="410" cy="260" r="7" fill="#F4EEDF" stroke="#1B1A17" stroke-width="2.5"></circle>
+<circle cx="240" cy="90" r="7" fill="#F4EEDF" stroke="#1B1A17" stroke-width="2.5"></circle>
+</svg>
+<div style="display: flex; flex-direction: column; gap: 12px; font-size: 15px; line-height: 1.5">
+<p style="margin: 0">Each half is hinged at both ends and loaded at neither, so it is a two-force body: the force runs straight from hinge to hinge (Ax. I), along the dashed chord. By symmetry each chord takes half the load upward, so it carries the load divided by √2.</p>
+<div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap">
+<span>At the foot and at the crown the circle runs at 45° to the chord, and the push along the arch is exactly half the load. Halfway up, the circle runs parallel to</span>
+<svg width="40" height="14" viewBox="0 0 40 14" aria-hidden="true"><line x1="2" y1="7" x2="38" y2="7" stroke="#C2311F" stroke-width="3" stroke-dasharray="8 6"></line></svg>
+<span>and carries all of it, but stands far from it: the gap times the force is the bending.</span>
+</div>
+<p style="margin: 0; font-style: italic; color: #5C574C">The circle is the shape the eye likes. The chords are the shape the load likes. An arch that follows the load needs no bending at all (Prop. III).</p>
+</div>
+<div style="flex-grow: 1"></div>
+<div style="display: flex; justify-content: space-between; align-items: baseline; font-size: 12px; letter-spacing: 0.18em; color: #5C574C">
+<span style="width: 60px"></span>
+<span>45</span>
+<span style="width: 60px; text-align: right; font-family: 'Libre Caslon Display', Georgia, serif; font-size: 16px; letter-spacing: 0.1em; color: #1B1A17">Q.E.D.</span>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"paper":{"editor":"color","default":"#F4EEDF","options":["#F4EEDF","#FFFFFF","#EFE6CF"]},"$preview":{"width":720,"height":1020}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { paper: this.props.paper ?? '#F4EEDF' };
+  }
+}
+</script>
+</body>
+</html>

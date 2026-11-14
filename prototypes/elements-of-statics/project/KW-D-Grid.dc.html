@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Plain modern D, the grid</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,400;0,500;1,400&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#C2311F}a:hover{color:#8E2416}
+</style>
+</helmet>
+<div style="width: 720px; height: 972px; box-sizing: border-box; padding: 56px 56px 48px; background: {{paper}}; color: #151515; font-family: 'Hanken Grotesk', 'Helvetica Neue', Arial, sans-serif; display: flex; flex-direction: column">
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: 24px; font-size: 12px; color: #8A8A8A">
+<span>The Elements of Statics</span>
+<span>Book 5, cables and arches</span>
+<span>Proposition 3</span>
+</div>
+<svg width="100%" viewBox="20 36 440 330" role="img" aria-label="A blue chain hangs between two abutments carrying seven equal yellow weights; above a dotted mirror line its mirror image is a red arch carrying the same seven loads" style="margin-top: 72px">
+<rect x="38" y="182" width="22" height="36" fill="#151515" fill-opacity="0.14"></rect>
+<rect x="420" y="182" width="22" height="36" fill="#151515" fill-opacity="0.14"></rect>
+<line x1="30" y1="200" x2="450" y2="200" stroke="#151515" stroke-width="0.8" stroke-dasharray="2 6"></line>
+<polyline points="60,200 105,248.1 150,282.5 195,303.1 240,310 285,303.1 330,282.5 375,248.1 420,200" fill="none" stroke="#1F4E96" stroke-width="5" stroke-linejoin="round"></polyline>
+<polyline points="60,200 105,151.9 150,117.5 195,96.9 240,90 285,96.9 330,117.5 375,151.9 420,200" fill="none" stroke="#C2311F" stroke-width="8" stroke-linejoin="round"></polyline>
+<line x1="105" y1="257.1" x2="105" y2="278.1" stroke="#DB9C0F" stroke-width="4.5"></line>
+<line x1="150" y1="291.5" x2="150" y2="312.5" stroke="#DB9C0F" stroke-width="4.5"></line>
+<line x1="195" y1="312.1" x2="195" y2="333.1" stroke="#DB9C0F" stroke-width="4.5"></line>
+<line x1="240" y1="319.0" x2="240" y2="340.0" stroke="#DB9C0F" stroke-width="4.5"></line>
+<line x1="285" y1="312.1" x2="285" y2="333.1" stroke="#DB9C0F" stroke-width="4.5"></line>
+<line x1="330" y1="291.5" x2="330" y2="312.5" stroke="#DB9C0F" stroke-width="4.5"></line>
+<line x1="375" y1="257.1" x2="375" y2="278.1" stroke="#DB9C0F" stroke-width="4.5"></line>
+<line x1="105" y1="107.9" x2="105" y2="130.9" stroke="#DB9C0F" stroke-width="4.5"></line>
+<line x1="150" y1="73.5" x2="150" y2="96.5" stroke="#DB9C0F" stroke-width="4.5"></line>
+<line x1="195" y1="52.9" x2="195" y2="75.9" stroke="#DB9C0F" stroke-width="4.5"></line>
+<line x1="240" y1="46.0" x2="240" y2="69.0" stroke="#DB9C0F" stroke-width="4.5"></line>
+<line x1="285" y1="52.9" x2="285" y2="75.9" stroke="#DB9C0F" stroke-width="4.5"></line>
+<line x1="330" y1="73.5" x2="330" y2="96.5" stroke="#DB9C0F" stroke-width="4.5"></line>
+<line x1="375" y1="107.9" x2="375" y2="130.9" stroke="#DB9C0F" stroke-width="4.5"></line>
+<polygon points="99,276.1 111,276.1 105,290.1" fill="#DB9C0F"></polygon>
+<polygon points="144,310.5 156,310.5 150,324.5" fill="#DB9C0F"></polygon>
+<polygon points="189,331.1 201,331.1 195,345.1" fill="#DB9C0F"></polygon>
+<polygon points="234,338.0 246,338.0 240,352.0" fill="#DB9C0F"></polygon>
+<polygon points="279,331.1 291,331.1 285,345.1" fill="#DB9C0F"></polygon>
+<polygon points="324,310.5 336,310.5 330,324.5" fill="#DB9C0F"></polygon>
+<polygon points="369,276.1 381,276.1 375,290.1" fill="#DB9C0F"></polygon>
+<polygon points="99,128.9 111,128.9 105,142.9" fill="#DB9C0F"></polygon>
+<polygon points="144,94.5 156,94.5 150,108.5" fill="#DB9C0F"></polygon>
+<polygon points="189,73.9 201,73.9 195,87.9" fill="#DB9C0F"></polygon>
+<polygon points="234,67.0 246,67.0 240,81.0" fill="#DB9C0F"></polygon>
+<polygon points="279,73.9 291,73.9 285,87.9" fill="#DB9C0F"></polygon>
+<polygon points="324,94.5 336,94.5 330,108.5" fill="#DB9C0F"></polygon>
+<polygon points="369,128.9 381,128.9 375,142.9" fill="#DB9C0F"></polygon>
+<circle cx="105" cy="248.1" r="4" fill="{{paper}}" stroke="#151515" stroke-width="1.5"></circle>
+<circle cx="150" cy="282.5" r="4" fill="{{paper}}" stroke="#151515" stroke-width="1.5"></circle>
+<circle cx="195" cy="303.1" r="4" fill="{{paper}}" stroke="#151515" stroke-width="1.5"></circle>
+<circle cx="240" cy="310" r="4" fill="{{paper}}" stroke="#151515" stroke-width="1.5"></circle>
+<circle cx="285" cy="303.1" r="4" fill="{{paper}}" stroke="#151515" stroke-width="1.5"></circle>
+<circle cx="330" cy="282.5" r="4" fill="{{paper}}" stroke="#151515" stroke-width="1.5"></circle>
+<circle cx="375" cy="248.1" r="4" fill="{{paper}}" stroke="#151515" stroke-width="1.5"></circle>
+<circle cx="105" cy="151.9" r="4" fill="{{paper}}" stroke="#151515" stroke-width="1.5"></circle>
+<circle cx="150" cy="117.5" r="4" fill="{{paper}}" stroke="#151515" stroke-width="1.5"></circle>
+<circle cx="195" cy="96.9" r="4" fill="{{paper}}" stroke="#151515" stroke-width="1.5"></circle>
+<circle cx="240" cy="90" r="4" fill="{{paper}}" stroke="#151515" stroke-width="1.5"></circle>
+<circle cx="285" cy="96.9" r="4" fill="{{paper}}" stroke="#151515" stroke-width="1.5"></circle>
+<circle cx="330" cy="117.5" r="4" fill="{{paper}}" stroke="#151515" stroke-width="1.5"></circle>
+<circle cx="375" cy="151.9" r="4" fill="{{paper}}" stroke="#151515" stroke-width="1.5"></circle>
+</svg>
+<div style="flex-grow: 1"></div>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: 24px; align-items: start">
+<p style="margin: 0; font-size: 15px; line-height: 1.45"><span style="font-weight: 500">Proposition 3.</span> As the chain hangs, so the arch stands, upside down. Every pull becomes a push of the same size.</p>
+<p style="margin: 0; font-size: 12.5px; line-height: 1.65; color: #3C3C3C">Each knot of the chain holds three forces in balance, so the chain is the string polygon of its weights. Turn the figure over and reverse every force: the <svg width="24" height="8" viewBox="0 0 24 8" aria-hidden="true" style="display: inline-block; vertical-align: middle"><line x1="1" y1="4" x2="23" y2="4" stroke="#1F4E96" stroke-width="3"></line></svg> becomes the <svg width="24" height="8" viewBox="0 0 24 8" aria-hidden="true" style="display: inline-block; vertical-align: middle"><line x1="1" y1="4" x2="23" y2="4" stroke="#C2311F" stroke-width="4.5"></line></svg>. A chain never bends; this arch is only ever pushed.&#8194;<svg width="7" height="7" viewBox="0 0 7 7" aria-hidden="true" style="display: inline-block; vertical-align: baseline"><rect x="0" y="0" width="7" height="7" fill="#151515"></rect></svg></p>
+<p style="margin: 0; font-size: 12.5px; line-height: 1.65; color: #8A8A8A">Ut pendet continuum flexile, sic stabit contiguum rigidum inversum. As hangs the flexible line, so but inverted will stand the rigid arch. Robert Hooke, 1675.</p>
+</div>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: 24px; margin-top: 48px; font-size: 12px; color: #8A8A8A">
+<span>43</span>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"paper":{"editor":"color","default":"#FFFFFF","options":["#FFFFFF","#FAFAF7","#F2EAD3"]},"$preview":{"width":720,"height":972}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { paper: this.props.paper ?? '#FFFFFF' };
+  }
+}
+</script>
+</body>
+</html>

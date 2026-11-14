@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Book II, Proposition V</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Display&amp;family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#C2311F}a:hover{color:#8E2416}
+</style>
+</helmet>
+<div style="width: 720px; height: 1020px; box-sizing: border-box; padding: 56px 72px 48px; background: {{paper}}; color: #1B1A17; font-family: 'Libre Caslon Text', Georgia, serif; display: flex; flex-direction: column; gap: 20px">
+<div style="display: flex; justify-content: space-between; font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: #5C574C; border-bottom: 1px solid #1B1A17; padding-bottom: 10px">
+<span>Book II · Forces in the plane</span>
+<span>Prop. V</span>
+</div>
+<h2 style="margin: 6px 0 0; font-family: 'Libre Caslon Display', Georgia, serif; font-weight: 400; font-size: 22px; letter-spacing: 0.2em; text-transform: uppercase; text-align: center">Proposition V. Problem.</h2>
+<p style="margin: 0; font-style: italic; font-size: 17px; line-height: 1.6; text-align: center; padding: 0 24px">To find the shape of a string carrying weights: stack the weights into a line, choose a pole, and draw rays. Every piece of the string runs parallel to a ray.</p>
+<svg width="100%" viewBox="16 40 500 185" role="img" aria-label="Left: a string hung between two supports carries a red, a blue and a yellow weight. Right: the three weights stacked into one vertical line, with four thin rays from a pole to its ends and joints; each piece of the string is parallel to one ray">
+<defs>
+<marker id="fr" viewBox="0 0 10 10" refX="3" refY="5" markerWidth="3.33" markerHeight="3.33" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#C2311F"></path></marker>
+<marker id="fb" viewBox="0 0 10 10" refX="3" refY="5" markerWidth="3.33" markerHeight="3.33" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#1F4E96"></path></marker>
+<marker id="fy" viewBox="0 0 10 10" refX="3" refY="5" markerWidth="3.33" markerHeight="3.33" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#E3A81B"></path></marker>
+</defs>
+<rect x="24" y="86" width="16" height="28" fill="#1B1A17" fill-opacity="0.25"></rect>
+<rect x="340" y="48" width="16" height="28" fill="#1B1A17" fill-opacity="0.25"></rect>
+<line x1="40" y1="100" x2="340" y2="62" stroke="#1B1A17" stroke-width="1.2" stroke-dasharray="5 5"></line>
+<polyline points="40,100 100,142 180,150 260,126 340,62" fill="none" stroke="#1B1A17" stroke-width="3" stroke-linejoin="round"></polyline>
+<line x1="100" y1="150" x2="100" y2="184" stroke="#C2311F" stroke-width="6" marker-end="url(#fr)"></line>
+<line x1="180" y1="158" x2="180" y2="176" stroke="#1F4E96" stroke-width="6" marker-end="url(#fb)"></line>
+<line x1="260" y1="134" x2="260" y2="160" stroke="#E3A81B" stroke-width="6" marker-end="url(#fy)"></line>
+<circle cx="100" cy="142" r="4.5" fill="#1B1A17"></circle>
+<circle cx="180" cy="150" r="4.5" fill="#1B1A17"></circle>
+<circle cx="260" cy="126" r="4.5" fill="#1B1A17"></circle>
+<line x1="500" y1="130" x2="400" y2="60" stroke="#1B1A17" stroke-width="1.5"></line>
+<line x1="500" y1="130" x2="400" y2="120" stroke="#1B1A17" stroke-width="1.5"></line>
+<line x1="500" y1="130" x2="400" y2="160" stroke="#1B1A17" stroke-width="1.5"></line>
+<line x1="500" y1="130" x2="400" y2="210" stroke="#1B1A17" stroke-width="1.5"></line>
+<line x1="400" y1="160" x2="400" y2="196" stroke="#E3A81B" stroke-width="6" marker-end="url(#fy)"></line>
+<line x1="400" y1="120" x2="400" y2="146" stroke="#1F4E96" stroke-width="6" marker-end="url(#fb)"></line>
+<line x1="400" y1="60" x2="400" y2="106" stroke="#C2311F" stroke-width="6" marker-end="url(#fr)"></line>
+<circle cx="500" cy="130" r="6" fill="#F4EEDF" stroke="#1B1A17" stroke-width="2.5"></circle>
+</svg>
+<div style="display: flex; flex-direction: column; gap: 12px; font-size: 15px; line-height: 1.5">
+<div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap">
+<span>Each knot holds three forces: a weight and two pulls of the string. By Prop. I they close a triangle, and here every triangle shares the pole.</span>
+</div>
+<div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap">
+<span>So</span>
+<svg width="40" height="14" viewBox="0 0 40 14" aria-hidden="true"><line x1="2" y1="7" x2="38" y2="7" stroke="#1B1A17" stroke-width="3"></line></svg>
+<span>in the string</span>
+<span>∥</span>
+<svg width="40" height="14" viewBox="0 0 40 14" aria-hidden="true"><line x1="2" y1="7" x2="38" y2="7" stroke="#1B1A17" stroke-width="1.5"></line></svg>
+<span>from the pole, and the length of the ray is the pull in that piece.</span>
+</div>
+<p style="margin: 4px 0 0">Move the pole and the string sags more or less; the weights are the same, only the pull changes.</p>
+<p style="margin: 0; font-style: italic; color: #5C574C">Corollary. Turn the figure upside down, and the string becomes an arch that stands in pure compression. Gaudí hung his churches this way. (Book V.)</p>
+</div>
+<div style="flex-grow: 1"></div>
+<div style="display: flex; justify-content: space-between; align-items: baseline; font-size: 12px; letter-spacing: 0.18em; color: #5C574C">
+<span style="width: 60px"></span>
+<span>13</span>
+<span style="width: 60px; text-align: right; font-family: 'Libre Caslon Display', Georgia, serif; font-size: 16px; letter-spacing: 0.1em; color: #1B1A17">Q.E.F.</span>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"paper":{"editor":"color","default":"#F4EEDF","options":["#F4EEDF","#FFFFFF","#EFE6CF"]},"$preview":{"width":720,"height":1020}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { paper: this.props.paper ?? '#F4EEDF' };
+  }
+}
+</script>
+</body>
+</html>

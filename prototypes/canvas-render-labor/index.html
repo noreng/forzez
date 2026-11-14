@@ -1,0 +1,492 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Canvas Render Labor</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: egy oszlopos labornapló, minden fejezet = magyarázat + élő próbapad + kód */
+:root {
+  --bg: #f3f5f8;
+  --panel: #ffffff;
+  --fg: #18202b;
+  --muted: #5b6676;
+  --line: #d5dbe4;
+  --grid: #e3e8ef;
+  --accent: #1f5fbf;
+  --chip: #e8eef7;
+  --flash: #f2a516;
+  --flash-fg: #1b1300;
+  --good: #1d7a4a;
+  --bad: #b8402f;
+  --code-bg: #eaeef4;
+  --sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f1318; --panel: #171d25; --fg: #e3e8ef; --muted: #93a0b2; --line: #2a3340;
+    --grid: #1e2630; --accent: #6ea2f0; --chip: #222b37; --flash: #f2a516; --flash-fg: #1b1300;
+    --good: #5cc48c; --bad: #ef8a78; --code-bg: #131920; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f1318; --panel: #171d25; --fg: #e3e8ef; --muted: #93a0b2; --line: #2a3340;
+  --grid: #1e2630; --accent: #6ea2f0; --chip: #222b37; --flash: #f2a516; --flash-fg: #1b1300;
+  --good: #5cc48c; --bad: #ef8a78; --code-bg: #131920; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--fg); font-family: var(--sans); font-size: 15px; line-height: 1.55;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 32px 64px;
+}
+main { max-width: 980px; margin: 0 auto; display: flex; flex-direction: column; gap: 48px; }
+header { display: flex; flex-direction: column; gap: 10px; }
+.eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+h1 { font-size: 30px; line-height: 1.15; margin: 0; text-wrap: balance; font-weight: 600; }
+h2 { font-size: 20px; margin: 0; text-wrap: balance; font-weight: 600; display: flex; gap: 10px; align-items: baseline; }
+h2 .num { font-family: var(--mono); font-size: 13px; color: var(--muted); font-weight: 500; }
+p { margin: 0; max-width: 68ch; }
+.lead { color: var(--muted); }
+code { font-family: var(--mono); font-size: .9em; background: var(--code-bg); padding: 1px 5px; border-radius: 3px; }
+section { display: flex; flex-direction: column; gap: 14px; }
+.legend { display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 13px; color: var(--muted); align-items: center; }
+
+.row { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 14px; }
+.bench { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.bench-h { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; font-family: var(--mono); font-size: 12px; }
+.bench-h .verdict { font-weight: 600; }
+.ok { color: var(--good); } .no { color: var(--bad); }
+
+.surface {
+  position: relative; height: 230px; overflow: hidden; border: 1px solid var(--line); border-radius: 6px;
+  background-color: var(--panel);
+  background-image: linear-gradient(var(--grid) 1px, transparent 1px), linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 20px 20px; cursor: grab; touch-action: none; user-select: none; -webkit-user-select: none;
+}
+.surface:active { cursor: grabbing; }
+.hud { position: absolute; top: 8px; left: 8px; right: 8px; z-index: 2; display: flex; justify-content: space-between; gap: 8px; pointer-events: none; }
+.hint { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+.world { position: absolute; inset: 0; will-change: transform; }
+.card {
+  position: absolute; background: var(--panel); border: 1px solid var(--line); border-radius: 5px;
+  padding: 8px 10px; display: flex; flex-direction: column; gap: 6px; font-size: 12px; min-width: 140px;
+  box-shadow: 0 1px 2px rgba(0,0,0,.06);
+}
+.card .name { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+.card .val { font-family: var(--mono); font-size: 12px; font-variant-numeric: tabular-nums; }
+
+.rc { display: inline-flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 11px; background: var(--chip); color: var(--fg); border-radius: 3px; padding: 2px 6px; width: fit-content; }
+.rc-n { font-weight: 600; font-variant-numeric: tabular-nums; min-width: 2ch; text-align: right; }
+.rc.flash { animation: flash .45s ease-out; }
+@keyframes flash { from { background: var(--flash); color: var(--flash-fg); } to { background: var(--chip); color: var(--fg); } }
+@media (prefers-reduced-motion: reduce) { .rc.flash { animation: none; outline: 2px solid var(--flash); } }
+
+.controls { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+button {
+  font-family: var(--mono); font-size: 12px; padding: 7px 12px; border-radius: 4px; cursor: pointer;
+  border: 1px solid var(--accent); background: var(--accent); color: var(--panel); font-weight: 500;
+}
+button.ghost { background: transparent; color: var(--accent); }
+button:focus-visible { outline: 2px solid var(--flash); outline-offset: 2px; }
+.items { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
+.item { background: var(--panel); border: 1px solid var(--line); border-radius: 5px; padding: 10px; display: flex; flex-direction: column; gap: 6px; font-size: 13px; min-width: 0; }
+
+details { border-top: 1px solid var(--line); padding-top: 8px; }
+summary { font-family: var(--mono); font-size: 12px; color: var(--accent); cursor: pointer; }
+pre { margin: 8px 0 0; background: var(--code-bg); border-radius: 5px; padding: 12px 14px; overflow-x: auto; font-family: var(--mono); font-size: 12.5px; line-height: 1.5; }
+.takeaway { border-left: 3px solid var(--accent); padding: 2px 0 2px 12px; max-width: 72ch; }
+ul.notes { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 8px; max-width: 72ch; }
+</style>
+
+<main id="app"></main>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/htm@3.1.1/dist/htm.umd.js"></script>
+<script>
+const { useState, useRef, useEffect, useMemo, useCallback, useContext, createContext, memo, useSyncExternalStore } = React;
+const html = htm.bind(React.createElement);
+
+/* ---------- mérőeszközök ---------- */
+function RC({ label }) {
+  const n = useRef(0); n.current += 1;
+  const el = useRef(null);
+  useEffect(() => {
+    const e = el.current; if (!e || n.current === 1) return;
+    e.classList.remove('flash'); void e.offsetWidth; e.classList.add('flash');
+  });
+  return html`<span class="rc" ref=${el}><span>${label}</span><span class="rc-n">${n.current}</span></span>`;
+}
+
+function useDrag(onDelta) {
+  const last = useRef(null);
+  const cb = useRef(onDelta); cb.current = onDelta;
+  return useMemo(() => {
+    const end = () => { if (!last.current) return; last.current = null; cb.current(0, 0, 'end'); };
+    return {
+      onPointerDown: e => {
+        if (e.target.closest('button')) return;
+        e.currentTarget.setPointerCapture(e.pointerId);
+        last.current = { x: e.clientX, y: e.clientY };
+        cb.current(0, 0, 'start');
+      },
+      onPointerMove: e => {
+        if (!last.current) return;
+        const dx = e.clientX - last.current.x, dy = e.clientY - last.current.y;
+        last.current = { x: e.clientX, y: e.clientY };
+        if (dx || dy) cb.current(dx, dy, 'move');
+      },
+      onPointerUp: end, onPointerCancel: end,
+    };
+  }, []);
+}
+
+function Surface({ o, h, name, children, surfRef, worldRef }) {
+  return html`<div class="surface" ref=${surfRef} ...${h} style=${{ backgroundPosition: o.x + 'px ' + o.y + 'px' }}>
+    <div class="hud"><${RC} label=${name} /><span class="hint">húzd ↔</span></div>
+    <div class="world" ref=${worldRef} style=${{ transform: 'translate(' + o.x + 'px,' + o.y + 'px)' }}>${children}</div>
+  </div>`;
+}
+
+function Card({ name, x = 20, y = 50, children }) {
+  return html`<div class="card" style=${{ left: x, top: y }}>
+    <span class="name">${name}</span><${RC} label="render" />${children}
+  </div>`;
+}
+const MemoCard = memo(Card);
+
+function useStateCanvas() {
+  const [o, setO] = useState({ x: 0, y: 0 });
+  const h = useDrag((dx, dy, phase) => { if (phase === 'move') setO(p => ({ x: p.x + dx, y: p.y + dy })); });
+  return [o, h];
+}
+
+function Bench({ title, verdict, good, children }) {
+  return html`<div class="bench">
+    <div class="bench-h"><span>${title}</span><span class=${'verdict ' + (good ? 'ok' : 'no')}>${verdict}</span></div>
+    ${children}
+  </div>`;
+}
+
+function Sec({ n, title, lead, code, children, take }) {
+  return html`<section>
+    <h2><span class="num">${n}</span>${title}</h2>
+    <p class="lead">${lead}</p>
+    ${children}
+    ${take && html`<p class="takeaway">${take}</p>`}
+    ${code && html`<details><summary>kód</summary><pre>${code}</pre></details>`}
+  </section>`;
+}
+
+/* ---------- 01: inline vs children vs render prop ---------- */
+function InlineCanvas() {
+  const [o, h] = useStateCanvas();
+  return html`<${Surface} o=${o} h=${h} name="Canvas">
+    <${Card} name="Toolbar" x=${16} y=${48} />
+    <${Card} name="Node" x=${70} y=${130} />
+  <//>`;
+}
+function SlotCanvas({ children }) {
+  const [o, h] = useStateCanvas();
+  return html`<${Surface} o=${o} h=${h} name="Canvas">${children}<//>`;
+}
+function RenderPropCanvas({ render }) {
+  const [o, h] = useStateCanvas();
+  return html`<${Surface} o=${o} h=${h} name="Canvas">${render(o)}<//>`;
+}
+
+function Demo1() {
+  return html`<${Sec} n="01" title="Children mint slot: a canvas nem tudja, mit renderel"
+    lead="Mindhárom canvas pontosan ugyanazt csinálja: pointermove-ra setState-tel tolja a kamerát. A különbség csak az, hogy KI hozza létre a UI elemeket."
+    take="A children React elemek (objektumok), amiket a szülő hozott létre a saját renderjében. Ha a Canvas a saját state-je miatt renderel újra, a props.children ugyanaz a referencia marad, és a React az azonos elemnél kiszáll (bailout). Nem a children-ség a varázs, hanem az, hogy az elem a canvas render-scope-ján kívül született."
+    code=${CODE1}>
+    <div class="row">
+      <${Bench} title="A · inline JSX a canvasban" verdict="minden move = render" good=${false}><${InlineCanvas} /><//>
+      <${Bench} title="B · children prop" verdict="children: 0 render" good=${true}>
+        <${SlotCanvas}>
+          <${Card} name="Toolbar" x=${16} y=${48} />
+          <${Card} name="Node" x=${70} y=${130} />
+        <//>
+      <//>
+      <${Bench} title="C · render prop" verdict="render(cam) = inline" good=${false}>
+        <${RenderPropCanvas} render=${cam => html`<${React.Fragment}>
+          <${Card} name="Toolbar" x=${16} y=${48} />
+          <${Card} name="Node" x=${70} y=${130}><span class="val">cam ${cam.x}, ${cam.y}</span><//>
+        <//>`} />
+      <//>
+    </div>
+  <//>`;
+}
+
+/* ---------- 02: ha a szülő renderel ---------- */
+function Demo2() {
+  const [tick, setTick] = useState(0);
+  const stableKid = useMemo(() => html`<${Card} name="useMemo-zott elem" x=${180} y=${130} />`, []);
+  return html`<${Sec} n="02" title="A csapda: amikor a szülő renderel"
+    lead="A children-trükk csak a canvas saját renderjei ellen véd. Ha a canvas szülője renderel (pl. egy toolbar state miatt), új children elemek születnek, és azok renderelnek. Kattints a gombra, aztán húzd a canvast."
+    take="Három kijárat: React.memo a gyerekre, useMemo-zott elem (azonos referencia → bailout memo nélkül is), vagy a state lejjebb vitele, hogy a canvas szülője ne rendereljen. A React Compiler az utóbbi kettőt automatikusan megcsinálja."
+    code=${CODE2}>
+    <div class="controls">
+      <button id="d2-tick" onClick=${() => setTick(t => t + 1)}>szülő setState (tick ${tick})</button>
+      <${RC} label="Szülő" />
+    </div>
+    <${SlotCanvas}>
+      <${Card} name="sima Card" x=${16} y=${48} />
+      <${MemoCard} name="React.memo(Card)" x=${190} y=${48} />
+      ${stableKid}
+    <//>
+  <//>`;
+}
+
+/* ---------- 03: context ---------- */
+const CamCtx = createContext({ x: 0, y: 0 });
+function CtxCanvas({ children }) {
+  const [o, h] = useStateCanvas();
+  return html`<${CamCtx.Provider} value=${o}><${Surface} o=${o} h=${h} name="Canvas">${children}<//><//>`;
+}
+function CamReadout() {
+  const cam = useContext(CamCtx);
+  return html`<div class="card" style=${{ left: 16, top: 48 }}>
+    <span class="name">useContext(Cam)</span><${RC} label="render" /><span class="val">${cam.x}, ${cam.y}</span></div>`;
+}
+
+function createStore(init) {
+  let s = init; const ls = new Set();
+  return {
+    get: () => s,
+    set: p => { s = { ...s, ...p }; ls.forEach(l => l()); },
+    subscribe: l => { ls.add(l); return () => ls.delete(l); },
+  };
+}
+const useSel = (store, sel) => useSyncExternalStore(store.subscribe, () => sel(store.get()));
+const StoreCtx = createContext(null);
+
+function StoreCanvas({ children }) {
+  const [store] = useState(() => createStore({ x: 0, y: 0, dragging: false }));
+  const x = useSel(store, s => s.x), y = useSel(store, s => s.y);
+  const h = useDrag((dx, dy, phase) => {
+    const s = store.get();
+    if (phase === 'start') store.set({ dragging: true });
+    else if (phase === 'end') store.set({ dragging: false });
+    else store.set({ x: s.x + dx, y: s.y + dy });
+  });
+  return html`<${StoreCtx.Provider} value=${store}><${Surface} o=${{ x, y }} h=${h} name="Canvas">${children}<//><//>`;
+}
+function DragFlag() {
+  const store = useContext(StoreCtx);
+  const d = useSel(store, s => s.dragging);
+  return html`<div class="card" style=${{ left: 16, top: 48 }}>
+    <span class="name">sel: s.dragging</span><${RC} label="render" /><span class="val">húzás: ${d ? 'igen' : 'nem'}</span></div>`;
+}
+function CellReadout() {
+  const store = useContext(StoreCtx);
+  const cx = useSel(store, s => Math.floor(s.x / 100));
+  const cy = useSel(store, s => Math.floor(s.y / 100));
+  return html`<div class="card" style=${{ left: 16, top: 140 }}>
+    <span class="name">sel: floor(x/100)</span><${RC} label="render" /><span class="val">cella ${cx}, ${cy}</span></div>`;
+}
+
+function Demo3() {
+  return html`<${Sec} n="03" title="Context: a hátsó ajtó a bailout mellett"
+    lead="A children-bailout alatt is renderel minden komponens, ami olyan contextet olvas, aminek változott az értéke. Ha a canvas a kamerát contextben adja le, az összes fogyasztó minden pointermove-ra fut."
+    take="Context-be stabil dolgot tegyél (egy store referenciát), az értéket pedig useSyncExternalStore + szelektor adja. Így a gyerek csak akkor renderel, ha a SZELEKTOR eredménye változik: a drag flag kétszer húzásonként, a cella-indexes 100 px-enként. Ez a zustand / jotai / R3F store mintája, könyvtár nélkül."
+    code=${CODE3}>
+    <div class="row">
+      <${Bench} title="A · value={camera}" verdict="fogyasztó: minden move" good=${false}>
+        <${CtxCanvas}>
+          <${CamReadout} />
+          <${Card} name="nem olvas contextet" x=${180} y=${130} />
+        <//>
+      <//>
+      <${Bench} title="B · value={store} + szelektor" verdict="csak ha a szelet változik" good=${true}>
+        <${StoreCanvas}>
+          <${DragFlag} />
+          <${CellReadout} />
+        <//>
+      <//>
+    </div>
+  <//>`;
+}
+
+/* ---------- 04: tranziens frissítés ---------- */
+function RefCanvas({ children }) {
+  const [store] = useState(() => createStore({ x: 0, y: 0 }));
+  const surfRef = useRef(null), worldRef = useRef(null);
+  useEffect(() => store.subscribe(() => {
+    const { x, y } = store.get();
+    worldRef.current.style.transform = 'translate(' + x + 'px,' + y + 'px)';
+    surfRef.current.style.backgroundPosition = x + 'px ' + y + 'px';
+  }), [store]);
+  const h = useDrag((dx, dy, phase) => {
+    if (phase !== 'move') return;
+    const s = store.get(); store.set({ x: s.x + dx, y: s.y + dy });
+  });
+  const zero = useMemo(() => ({ x: 0, y: 0 }), []);
+  return html`<${StoreCtx.Provider} value=${store}>
+    <div class="controls" style=${{ marginBottom: 8 }}>
+      <button id="d4-reset" class="ghost" onClick=${() => store.set({ x: 0, y: 0 })}>kamera reset</button>
+    </div>
+    <${Surface} o=${zero} h=${h} name="Canvas" surfRef=${surfRef} worldRef=${worldRef}>${children}<//>
+  <//>`;
+}
+function LiveCoords() {
+  const store = useContext(StoreCtx);
+  const out = useRef(null);
+  useEffect(() => {
+    const paint = () => { const { x, y } = store.get(); out.current.textContent = x + ', ' + y; };
+    paint(); return store.subscribe(paint);
+  }, [store]);
+  return html`<div class="card" style=${{ left: 16, top: 48 }}>
+    <span class="name">subscribe → textContent</span><${RC} label="render" /><span class="val" ref=${out}></span></div>`;
+}
+
+function Demo4() {
+  return html`<${Sec} n="04" title="Tranziens frissítés: a 60 Hz-es adat nem React state"
+    lead="Drag közben a pozíció nem state, hanem egy store. A canvas feliratkozik, és ref-en át közvetlenül a DOM-ba ír transformot. A koordináta-kijelző ugyanígy textContent-et állít. React render: 1, a kezdeti."
+    take="Szabály: ami framenként változik (kamera, drag offset, hover pozíció), az ref/store + direkt DOM vagy canvas-írás. Ami diszkrét (kijelölés, mód, eszköz), az React state. A határt szelektorral húzod meg, mint a 03-ban."
+    code=${CODE4}>
+    <${RefCanvas}>
+      <${LiveCoords} />
+      <${Card} name="Node" x=${200} y=${120} />
+    <//>
+  <//>`;
+}
+
+/* ---------- 05: memo + instabil propok ---------- */
+const MemoItem = memo(function MemoItem({ label, children }) {
+  return html`<div class="item"><span class="name">${label}</span><${RC} label="render" />${children}</div>`;
+});
+
+function Demo5() {
+  const [tick, setTick] = useState(0);
+  const stable = useCallback(() => {}, []);
+  const stableStyle = useMemo(() => ({}), []);
+  const stableKid = useMemo(() => html`<span class="hint">useMemo-zott children</span>`, []);
+  return html`<${Sec} n="05" title="React.memo, amit csendben eltörsz"
+    lead="Mind az öt elem React.memo. A szülő setState-je után megnézheted, melyik memo működik, és melyiket törte el egy minden renderben újonnan létrehozott prop."
+    take="A memo sekély összehasonlítást végez. Egy inline nyíl függvény, egy objektum literál, vagy a JSX children (az is új objektum minden renderben) mind új referencia. A children-slot minta ezért egy memo-zott komponensnél pont visszafelé sül el, ha a children-t a renderelő szülő hozza létre."
+    code=${CODE5}>
+    <div class="controls">
+      <button id="d5-tick" onClick=${() => setTick(t => t + 1)}>szülő setState (tick ${tick})</button>
+      <${RC} label="Szülő" />
+    </div>
+    <div class="items">
+      <${MemoItem} label=${'onPick={() => {}}'} onPick=${() => {}} />
+      <${MemoItem} label=${'onPick={useCallback}'} onPick=${stable} />
+      <${MemoItem} label=${'style={{}}'} style=${{}} />
+      <${MemoItem} label=${'style={useMemo}'} style=${stableStyle} />
+      <${MemoItem} label=${'children: inline <span/>'}><span class="hint">inline children</span><//>
+      <${MemoItem} label=${'children: useMemo'}>${stableKid}<//>
+    </div>
+  <//>`;
+}
+
+/* ---------- jegyzetek ---------- */
+function Notes() {
+  return html`<section>
+    <h2><span class="num">06</span>További eszközök canvas UI-hoz</h2>
+    <ul class="notes">
+      <li><b>createPortal overlay réteg.</b> A UI elem a React fában a canvas alatt marad (megkapja a contextet, eventek a React fán buborékolnak), de a DOM-ban egy külön overlay div-be kerül. Így a pointer-capture rétegtől és a transformtól függetlenül pozicionálható.</li>
+      <li><b>Egy listener a canvason, nem elemenként.</b> Event delegation: <code>onPointerMove</code> csak a felületen, a találatot hit-testtel vagy <code>data-id</code>-val oldod fel. Kevesebb handler-referencia, kevesebb memo-törés.</li>
+      <li><b>useDeferredValue / startTransition</b> nehéz panelekre (pl. inspector, ami a kijelölésből számol). A drag interaktív marad, a panel lemaradhat egy-két framet.</li>
+      <li><b>React Compiler (React 19).</b> Automatikusan memoizálja az elemeket és a callbackeket, így a 02 és 05 csapdáinak nagy része eltűnik. A 03 és 04 problémáját viszont nem oldja meg: ott az adatfolyam a gond, nem a referencia.</li>
+      <li><b>key mint reset.</b> <code>&lt;Canvas key={docId}&gt;</code> dokumentumváltáskor eldobja a teljes belső state-et, és nem kell useEffect-tel takarítanod.</li>
+      <li><b>Mérés:</b> React DevTools → Profiler → „Record why each component rendered”, plusz a „Highlight updates” kapcsoló. Ez a lap is ugyanezt csinálja kézzel: a sárgán villanó számláló egy render.</li>
+    </ul>
+  </section>`;
+}
+
+/* ---------- kódrészletek ---------- */
+const CODE1 = `// A: a canvas hozza létre az elemeket -> minden setState újrarendereli őket
+function Canvas() {
+  const [cam, setCam] = useState({ x: 0, y: 0 });
+  return <Surface cam={cam}><Toolbar /><Node /></Surface>;
+}
+
+// B: az elemeket a szülő hozta létre -> props.children referencia stabil
+function Canvas({ children }) {
+  const [cam, setCam] = useState({ x: 0, y: 0 });
+  return <Surface cam={cam}>{children}</Surface>;
+}
+<Canvas><Toolbar /><Node /></Canvas>
+
+// C: render prop -> a függvény a canvas renderjében fut, ugyanaz mint A
+<Canvas render={cam => <Node cam={cam} />} />`;
+
+const CODE2 = `function Editor() {
+  const [tool, setTool] = useState('select');   // ez rendereli az Editort
+  const panel = useMemo(() => <Panel />, []);     // stabil elem -> bailout
+  return (
+    <Canvas>
+      <Panel />            {/* új elem minden Editor renderben -> renderel */}
+      <MemoPanel />        {/* React.memo -> props sekély egyezés -> kiszáll */}
+      {panel}              {/* azonos referencia -> memo nélkül is kiszáll */}
+    </Canvas>
+  );
+}`;
+
+const CODE3 = `function createStore(init) {
+  let s = init; const ls = new Set();
+  return {
+    get: () => s,
+    set: p => { s = { ...s, ...p }; ls.forEach(l => l()); },
+    subscribe: l => { ls.add(l); return () => ls.delete(l); },
+  };
+}
+const useSel = (store, sel) =>
+  useSyncExternalStore(store.subscribe, () => sel(store.get()));
+
+// Canvas: <StoreCtx.Provider value={store}>  (a referencia sosem változik)
+function DragFlag() {
+  const store = useContext(StoreCtx);
+  const dragging = useSel(store, s => s.dragging); // primitív -> Object.is
+  return <Badge on={dragging} />;
+}
+// figyelem: a szelektor primitívet vagy stabil referenciát adjon vissza,
+// egy új objektum minden hívásnál végtelen render-loopot okoz.`;
+
+const CODE4 = `function Canvas({ children }) {
+  const [store] = useState(() => createStore({ x: 0, y: 0 }));
+  const world = useRef(null);
+
+  useEffect(() => store.subscribe(() => {
+    const { x, y } = store.get();
+    world.current.style.transform = 'translate(' + x + 'px,' + y + 'px)';
+  }), [store]);
+
+  const onPointerMove = e => {
+    if (!dragging.current) return;
+    const s = store.get();
+    store.set({ x: s.x + e.movementX, y: s.y + e.movementY }); // nincs setState
+  };
+  return <StoreCtx.Provider value={store}>
+    <div onPointerMove={onPointerMove}><div ref={world}>{children}</div></div>
+  </StoreCtx.Provider>;
+}`;
+
+const CODE5 = `const Item = memo(function Item({ onPick, style, children }) { ... });
+
+<Item onPick={() => pick(id)} />          // új fn minden render -> memo halott
+<Item onPick={onPickStable} />            // useCallback -> memo él
+<Item style={{ left: 10 }} />             // új objektum -> memo halott
+<Item><Icon /></Item>                     // children új elem -> memo halott
+<Item>{iconEl}</Item>                     // useMemo-zott elem -> memo él`;
+
+function App() {
+  return html`<${React.Fragment}>
+    <header>
+      <span class="eyebrow">React 18.3 · élő render-számlálók</span>
+      <h1>Canvas render labor</h1>
+      <p class="lead">Minden komponens mutatja, hányszor renderelt; a szám sárgán villan, ha épp most futott. Húzd a vásznakat, nyomkodd a gombokat, és figyeld, mi villan.</p>
+      <div class="legend"><${RC} label="Komponens" /> <span>= render-számláló</span></div>
+    </header>
+    <${Demo1} /><${Demo2} /><${Demo3} /><${Demo4} /><${Demo5} /><${Notes} />
+  <//>`;
+}
+
+ReactDOM.createRoot(document.getElementById('app')).render(html`<${App} />`);
+</script>
+
+</body></html>

@@ -1,0 +1,272 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Funicular Truss Editor</title>
+<style>
+/* Layout: Byrne-style plate. One cream sheet: truss on the left, force polygon (pole diagram) on the right; stacked on phones.
+   Single deliberate visual world (Oliver Byrne, 1847): no dark variant. */
+:root{
+  --paper:#f3ead3; --page:#e9dfc4; --ink:#1b1b1b; --red:#c8372d; --blue:#1d5aa6; --yellow:#e8ae22; --faint:#b8ab8a;
+  color-scheme:light;
+}
+html,body{background:var(--page)}
+body{color:var(--ink);font-family:Georgia,"Times New Roman",serif}
+.wrap{max-width:1200px;margin:0 auto;padding-block:18px 28px;padding-inline:16px;display:grid;gap:12px}
+.bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.bar .sep{width:14px}
+@media (max-width:520px){.bar{gap:6px}.bar .sep{width:4px}.bar button{width:40px;height:40px}.bar button svg{width:26px;height:26px}}
+.bar button{width:46px;height:46px;border-radius:50%;border:2px solid var(--ink);background:var(--paper);padding:0;display:grid;place-items:center;cursor:pointer;transition:transform .12s}
+.bar button:hover{transform:translateY(-1px)}
+.bar button:active{transform:translateY(1px)}
+.bar button:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.bar button svg{width:30px;height:30px;overflow:visible}
+.plate{background:var(--paper);border:2px solid var(--ink);border-radius:2px;box-shadow:0 1px 0 #0001, 0 10px 30px -18px #3a2a0055}
+#v{display:block;width:100%;touch-action:none;user-select:none;-webkit-user-select:none}
+#v [data-h]{cursor:grab}
+#v.drag,#v.drag [data-h]{cursor:grabbing}
+.pulse{transform-box:fill-box;transform-origin:center;animation:pulse 1.6s ease-out 3}
+@keyframes pulse{0%{transform:scale(1);opacity:.9}100%{transform:scale(3.2);opacity:0}}
+@media (prefers-reduced-motion:reduce){.pulse{animation:none;opacity:0}.bar button{transition:none}}
+#code[hidden]{display:none}
+#code{display:block;width:100%;box-sizing:border-box;height:130px;font:11px/1.4 ui-monospace,Menlo,Consolas,monospace;padding:10px;border:2px solid var(--ink);background:var(--paper);color:var(--ink)}
+</style>
+
+<div class="wrap">
+  <div class="bar" role="toolbar" aria-label="Funikuláris tartó eszközök">
+    <button id="b-par" aria-label="Parabola: egyenlő terhek, egyenlő vízszintes osztás" title="Parabola">
+      <svg viewBox="0 0 30 30"><path d="M3 24 Q15 0 27 24" fill="none" stroke="var(--blue)" stroke-width="3"/><path d="M3 26H27" stroke="var(--red)" stroke-width="2.4"/><path d="M9 26v3M15 26v3M21 26v3" stroke="var(--ink)" stroke-width="2"/></svg>
+    </button>
+    <button id="b-cat" aria-label="Láncgörbe: egyenlő terhek, egyenlő rúdhosszak" title="Láncgörbe">
+      <svg viewBox="0 0 30 30"><path d="M3 24L7 14L12.5 8.5L17.5 8.5L23 14L27 24" fill="none" stroke="var(--blue)" stroke-width="3" stroke-linejoin="round"/><g fill="var(--paper)" stroke="var(--ink)" stroke-width="1.6"><circle cx="7" cy="14" r="2.2"/><circle cx="12.5" cy="8.5" r="2.2"/><circle cx="17.5" cy="8.5" r="2.2"/><circle cx="23" cy="14" r="2.2"/></g><path d="M3 26H27" stroke="var(--ink)" stroke-width="2.4"/></svg>
+    </button>
+    <button id="b-rnd" aria-label="Véletlen terhek" title="Véletlen terhek">
+      <svg viewBox="0 0 30 30"><path d="M6 4v13M13 4v19M19 4v9M25 4v15" stroke="var(--ink)" stroke-width="2.4"/><path d="M3 15l3 4 3-4M10 21l3 4 3-4M16 11l3 4 3-4M22 17l3 4 3-4" fill="var(--ink)"/></svg>
+    </button>
+    <span class="sep"></span>
+    <button id="b-snap" aria-label="Igazítás a kötélsokszögre" title="Igazítás">
+      <svg viewBox="0 0 30 30"><path d="M3 20 Q15 -2 27 20" fill="none" stroke="var(--ink)" stroke-width="2.2" stroke-dasharray="3 3"/><path d="M3 26 Q15 10 27 26" fill="none" stroke="var(--blue)" stroke-width="3"/><path d="M15 8v8" stroke="var(--yellow)" stroke-width="3"/><path d="M11 13l4 5 4-5" fill="var(--yellow)"/></svg>
+    </button>
+    <span class="sep"></span>
+    <button id="b-minus" aria-label="Kevesebb mező" title="Kevesebb mező">
+      <svg viewBox="0 0 30 30"><path d="M4 22L15 9L26 22Z" fill="none" stroke="var(--ink)" stroke-width="2.4" stroke-linejoin="round"/><path d="M10 26h10" stroke="var(--red)" stroke-width="3.4"/></svg>
+    </button>
+    <button id="b-plus" aria-label="Több mező" title="Több mező">
+      <svg viewBox="0 0 30 30"><path d="M3 22L9 12L15 9L21 12L27 22Z" fill="none" stroke="var(--ink)" stroke-width="2.4" stroke-linejoin="round"/><path d="M15 2v8" stroke="var(--blue)" stroke-width="0"/><path d="M10 26h10M15 21v10" stroke="var(--blue)" stroke-width="3.4"/></svg>
+    </button>
+    <span class="sep"></span>
+    <button id="b-copy" aria-label="Truzme Project code másolása" title="Másolás Truzme-ba">
+      <svg viewBox="0 0 30 30" id="g-copy"><rect x="6" y="6" width="15" height="19" fill="var(--paper)" stroke="var(--ink)" stroke-width="2.2"/><rect x="10" y="2" width="15" height="19" fill="var(--paper)" stroke="var(--ink)" stroke-width="2.2"/><path d="M13 10L17.5 5.5L22 10Z" fill="var(--red)"/><path d="M13 16H22" stroke="var(--blue)" stroke-width="2.4"/></svg>
+    </button>
+  </div>
+
+  <div class="plate"><svg id="v" role="img" aria-label="Szerkeszthető ívtartó és a hozzá tartozó erősokszög. A felső csomópontok és a teher nyilak vége húzható."></svg></div>
+  <textarea id="code" hidden readonly aria-label="Truzme Project code"></textarea>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const L=12, YMIN=1.0, YMAX=6.5, PMAX=40, P0=20;
+// húzás piros, nyomás kék; a vonalvastagság az erő nagyságával arányos
+const sgnCol=f=>f>0?'var(--red)':'var(--blue)';
+const st={N:8,xs:[],ys:[],P:[]};
+
+/* ---------- statika ---------- */
+function loadsW(){let w=0;for(let k=1;k<st.N;k++)w+=st.P[k];return w;}
+function reactionA(xs=st.xs){let r=0;for(let k=1;k<st.N;k++)r+=st.P[k]*(L-xs[k])/L;return r;}
+function moments(xs=st.xs){const RA=reactionA(xs),M=[0];
+  for(let k=1;k<=st.N;k++){let m=RA*xs[k];for(let i=1;i<k;i++)m-=st.P[i]*(xs[k]-xs[i]);M.push(k===st.N?0:m);}return M;}
+// a kötélsokszög adott magassággal: y_k = M_k / H
+function funicular(rise,xs=st.xs){const M=moments(xs),mx=Math.max(...M);if(mx<=1e-9)return null;const H=mx/rise;return {H,ys:M.map(m=>m/H)};}
+function ghost(){return funicular(Math.max(...st.ys),st.xs);}
+
+function model(){
+  const N=st.N, nodes=[], mem=[], T=[], B=[];
+  nodes.push([0,0]); const S0=1;
+  for(let k=1;k<N;k++){nodes.push([st.xs[k],st.ys[k]]);T[k]=nodes.length;}
+  for(let k=1;k<N;k++){nodes.push([st.xs[k],0]);B[k]=nodes.length;}
+  nodes.push([L,0]); const SN=nodes.length; T[0]=B[0]=S0; T[N]=B[N]=SN;
+  for(let k=0;k<N;k++)mem.push({a:T[k],b:T[k+1],kind:'top',k});
+  for(let k=0;k<N;k++)mem.push({a:B[k],b:B[k+1],kind:'tie',k});
+  for(let k=1;k<N;k++)mem.push({a:T[k],b:B[k],kind:'web'});
+  for(let k=1;k<N-1;k++){const left=(st.xs[k]+st.xs[k+1])/2<L/2;
+    mem.push(left?{a:T[k],b:B[k+1],kind:'web'}:{a:B[k],b:T[k+1],kind:'web'});}
+  return {nodes,mem,T,B,S0,SN};
+}
+function solve(m){
+  const {nodes,mem}=m, n0=nodes.length, nd=2*n0, K=[...Array(nd)].map(()=>new Float64Array(nd)), f=new Float64Array(nd);
+  const geo=mem.map(({a,b})=>{const p=nodes[a-1],q=nodes[b-1],l=Math.hypot(q[0]-p[0],q[1]-p[1]);return [l,(q[0]-p[0])/l,(q[1]-p[1])/l];});
+  mem.forEach(({a,b},k)=>{const [l,c,s]=geo[k],mm=[[c*c,c*s],[c*s,s*s]],ix=[2*a-2,2*a-1,2*b-2,2*b-1],sg=[1,1,-1,-1];
+    for(let u=0;u<4;u++)for(let v=0;v<4;v++)K[ix[u]][ix[v]]+=sg[u]*sg[v]*mm[u%2][v%2]/l;});
+  for(let k=1;k<st.N;k++)f[2*m.T[k]-1]=-st.P[k];
+  const fixed=new Set([0,1,2*m.SN-1]), fr=[...Array(nd).keys()].filter(i=>!fixed.has(i)), n=fr.length;
+  const A=fr.map(i=>{const r=new Float64Array(n+1);fr.forEach((j,c)=>r[c]=K[i][j]);r[n]=f[i];return r;});
+  for(let c=0;c<n;c++){let p=c;for(let r=c+1;r<n;r++)if(Math.abs(A[r][c])>Math.abs(A[p][c]))p=r;[A[c],A[p]]=[A[p],A[c]];
+    if(Math.abs(A[c][c])<1e-12)return null;
+    for(let r=0;r<n;r++)if(r!==c&&A[r][c]!==0){const q=A[r][c]/A[c][c];for(let k=c;k<=n;k++)A[r][k]-=q*A[c][k];}}
+  const u=new Float64Array(nd);fr.forEach((g,i)=>u[g]=A[i][n]/A[i][i]);
+  return mem.map(({a,b},k)=>{const [l,c,s]=geo[k];return ((u[2*b-2]-u[2*a-2])*c+(u[2*b-1]-u[2*a-1])*s)/l;});
+}
+
+/* ---------- előbeállítások ---------- */
+function uniformX(){st.xs=[...Array(st.N+1).keys()].map(k=>k*L/st.N);}
+function setParabola(rise){const pm=meanP();uniformX();st.P=[0,...Array(st.N-1).fill(pm)];st.ys=funicular(rise).ys;}
+function setCatenary(rise){
+  const N=st.N, pm=meanP(), shape=c=>{const t=[...Array(N).keys()].map(k=>c*((N-1)/2-k)), w=t.map(v=>1/Math.hypot(1,v)), s=L/w.reduce((a,b)=>a+b);
+    const xs=[0],ys=[0];t.forEach((v,k)=>{xs.push(xs[k]+s*w[k]);ys.push(ys[k]+s*v*w[k]);});xs[N]=L;ys[N]=0;return {xs,ys};};
+  let lo=1e-4,hi=50;for(let i=0;i<80;i++){const m=(lo+hi)/2;if(Math.max(...shape(m).ys)<rise)lo=m;else hi=m;}
+  const s=shape((lo+hi)/2);st.xs=s.xs;st.ys=s.ys;st.P=[0,...Array(N-1).fill(pm)];}
+function meanP(){return st.P.length>1?Math.max(4,loadsW()/(st.N-1)):P0;}
+const rise=()=>st.ys.length?Math.max(...st.ys):0.3*L;
+
+/* ---------- elrendezés ---------- */
+let lay;
+function layout(){
+  const W=$('v').parentElement.clientWidth, pad=Math.max(16,W*0.03), wide=W>=720;
+  let H,R1,R2;
+  if(wide){H=Math.round(Math.min(640,Math.max(380,W*0.52)));
+    R1={x:pad,y:pad,w:W*0.63-pad*1.5,h:H-2*pad}; R2={x:W*0.63+pad*0.5,y:pad,w:W*0.37-pad*1.5,h:H-2*pad};}
+  else{const w=W-2*pad, h1=w*0.82, h2=w*0.9; H=Math.round(h1+h2+3*pad);
+    R1={x:pad,y:pad,w,h:h1}; R2={x:pad,y:2*pad+h1,w,h:h2};}
+  const g=Math.min(R1.w/(L+0.8),R1.h/(YMAX+2.8+0.9));
+  const ox=R1.x+(R1.w-L*g)/2, oy=R1.y+R1.h-0.9*g;
+  const Wcap=P0*(st.N-1)*1.3, Hcap=Wcap*L/(7*YMIN);
+  const kF=Math.min(2.6*g/PMAX,0.92*R2.h/Wcap,(R2.w-24)/Hcap*2.6);
+  lay={W,H,R1,R2,g,ox,oy,kF,Wcap,wide};
+  const v=$('v');v.setAttribute('viewBox',`0 0 ${W} ${H}`);v.style.height=H+'px';
+}
+const X=x=>lay.ox+x*lay.g, Y=y=>lay.oy-y*lay.g;
+
+/* ---------- rajz ---------- */
+const f1=v=>v.toFixed(1);
+function sector(cx,cy,a0,da,r){const k=Math.max(4,Math.ceil(Math.abs(da)/0.06));let s=`M${f1(cx)} ${f1(cy)}`;
+  for(let i=0;i<=k;i++){const a=a0+da*i/k;s+=`L${f1(cx+r*Math.cos(a))} ${f1(cy+r*Math.sin(a))}`;}return s+'Z';}
+const wrapA=a=>Math.atan2(Math.sin(a),Math.cos(a));
+let pulseOnce=true;
+
+function render(){
+  const N=st.N, m=model(), F=solve(m), Wt=loadsW(), gh=ghost(), {kF,g}=lay;
+  const Fmax=F?Math.max(1e-9,...F.map(Math.abs)):1, wF=f=>1.2+10*Math.abs(f)/Fmax;
+  const P=k=>[X(st.xs[k]),Y(st.ys[k])];
+  let s='';
+  // támaszvonal finom alapvonala
+  s+=`<path d="M${f1(X(-0.3))} ${f1(Y(0)+0.62*g)}H${f1(X(L+0.3))}" stroke="var(--faint)" stroke-width="1.5"/>`;
+  // kötélsokszög (szellem)
+  let dev=0; if(gh)for(let k=1;k<N;k++)dev=Math.max(dev,Math.abs(gh.ys[k]-st.ys[k]));
+  if(gh&&dev>1e-3)s+=`<path d="M${st.xs.map((x,k)=>f1(X(x))+' '+f1(Y(gh.ys[k]))).join('L')}" fill="none" stroke="var(--ink)" stroke-width="1.6" stroke-dasharray="5 5" opacity=".55"/>`;
+  // rácsrudak: nulla erő pontozva, különben vastagság ~ |N|
+  m.mem.forEach((mb,i)=>{if(mb.kind!=='web')return;const a=m.nodes[mb.a-1],b=m.nodes[mb.b-1],fv=F?Math.abs(F[i]):0;
+    const zero=!F||fv<1e-6*Math.max(1,Wt);
+    s+=zero?`<line x1="${f1(X(a[0]))}" y1="${f1(Y(a[1]))}" x2="${f1(X(b[0]))}" y2="${f1(Y(b[1]))}" stroke="var(--ink)" stroke-width="1.4" stroke-dasharray="1.5 5" stroke-linecap="round" opacity=".6"/>`
+      :`<line x1="${f1(X(a[0]))}" y1="${f1(Y(a[1]))}" x2="${f1(X(b[0]))}" y2="${f1(Y(b[1]))}" stroke="${sgnCol(F[i])}" stroke-width="${f1(wF(fv))}" stroke-linecap="round"/>`;});
+  // vonóvas (fekete) – párja a pólustávolság H
+  m.mem.forEach((mb,i)=>{if(mb.kind!=='tie')return;const a=m.nodes[mb.a-1],b=m.nodes[mb.b-1],fv=F?F[i]:0;
+    s+=`<line x1="${f1(X(a[0]))}" y1="${f1(Y(a[1]))}" x2="${f1(X(b[0]))}" y2="${f1(Y(b[1]))}" stroke="${sgnCol(fv)}" stroke-width="${f1(wF(fv))}" stroke-linecap="round"/>`;});
+  for(let k=1;k<N;k++)s+=`<circle cx="${f1(X(st.xs[k]))}" cy="${f1(Y(0))}" r="2.6" fill="var(--paper)"/>`;
+  // törésszögek a felső csomópontokban (sárga) – párjuk a pólusnál
+  const turn=[];
+  for(let k=1;k<N;k++){const a=P(k-1),b=P(k),c=P(k+1),u=[b[0]-a[0],b[1]-a[1]],w=[c[0]-b[0],c[1]-b[1]];
+    const a0=Math.atan2(u[1],u[0]),da=wrapA(Math.atan2(w[1],w[0])-a0),r=Math.min(0.5*Math.min(Math.hypot(...u),Math.hypot(...w)),48);
+    turn[k]=da;
+    s+=`<path d="M${f1(b[0])} ${f1(b[1])}L${f1(b[0]+r*1.18*Math.cos(a0))} ${f1(b[1]+r*1.18*Math.sin(a0))}" stroke="var(--ink)" stroke-width="1.2" stroke-dasharray="2 2.5"/>`;
+    s+=`<path d="${sector(b[0],b[1],a0,da,r)}" fill="var(--yellow)" stroke="var(--ink)" stroke-width="1"/>`;}
+  // felső öv: rúdjai váltakozó színűek – párjuk a pólussugár
+  m.mem.forEach((mb,i)=>{if(mb.kind!=='top')return;const a=P(mb.k),b=P(mb.k+1),fv=F?F[i]:0;
+    s+=`<line x1="${f1(a[0])}" y1="${f1(a[1])}" x2="${f1(b[0])}" y2="${f1(b[1])}" stroke="${sgnCol(fv)}" stroke-width="${f1(wF(fv))}" stroke-linecap="round"/>`;});
+  // támaszok
+  const sx=X(0),sy=Y(0),ex=X(L);
+  s+=`<path d="M${f1(sx)} ${f1(sy+4)}l-11 ${f1(0.55*g)}h22Z" fill="var(--ink)"/>`;
+  s+=`<path d="M${f1(ex)} ${f1(sy+4)}l-10 ${f1(0.4*g)}h20Z" fill="var(--ink)"/><circle cx="${f1(ex-6)}" cy="${f1(sy+4+0.4*g+4)}" r="3.4" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.6"/><circle cx="${f1(ex+6)}" cy="${f1(sy+4+0.4*g+4)}" r="3.4" fill="var(--paper)" stroke="var(--ink)" stroke-width="1.6"/>`;
+  s+=`<circle cx="${f1(sx)}" cy="${f1(sy)}" r="4.5" fill="var(--paper)" stroke="var(--ink)" stroke-width="2"/><circle cx="${f1(ex)}" cy="${f1(sy)}" r="4.5" fill="var(--paper)" stroke="var(--ink)" stroke-width="2"/>`;
+  // terhek (fekete nyilak) – párjuk a teherlánc szakaszai
+  for(let k=1;k<N;k++){const [x,y]=P(k),len=st.P[k]*kF,top=y-10-len;
+    if(len>1)s+=`<line x1="${f1(x)}" y1="${f1(top)}" x2="${f1(x)}" y2="${f1(y-16)}" stroke="var(--ink)" stroke-width="2.6"/><path d="M${f1(x-5.5)} ${f1(y-19)}L${f1(x)} ${f1(y-9)}L${f1(x+5.5)} ${f1(y-19)}Z" fill="var(--ink)"/>`;
+    s+=`<circle cx="${f1(x)}" cy="${f1(top)}" r="5" fill="var(--ink)"/><circle data-h="p:${k}" cx="${f1(x)}" cy="${f1(top)}" r="15" fill="transparent"/>`;}
+  // húzható felső csomópontok
+  const mid=Math.floor(N/2);
+  for(let k=1;k<N;k++){const [x,y]=P(k);
+    if(pulseOnce&&k===mid)s+=`<circle class="pulse" cx="${f1(x)}" cy="${f1(y)}" r="7" fill="none" stroke="var(--ink)" stroke-width="2"/>`;
+    s+=`<circle cx="${f1(x)}" cy="${f1(y)}" r="7" fill="var(--paper)" stroke="var(--ink)" stroke-width="2.6"/><circle data-h="n:${k}" cx="${f1(x)}" cy="${f1(y)}" r="17" fill="transparent"/>`;}
+
+  // ---------- erősokszög (pólusábra) ----------
+  if(gh&&Wt>1e-9){
+    const R=lay.R2, RA=reactionA(), Hpx=gh.H*kF, llx=Math.min(R.x+R.w-14,R.x+(R.w+Hpx)/2), y0=R.y+(R.h-Wt*kF)/2;
+    const px=llx-Hpx, py=y0+RA*kF, pts=[y0];
+    for(let k=1;k<N;k++)pts.push(pts[k-1]+st.P[k]*kF);
+    // sugarak = felső öv rúdjai (azonos szín, párhuzamos)
+    for(let k=0;k<N;k++)s+=`<line x1="${f1(px)}" y1="${f1(py)}" x2="${f1(llx)}" y2="${f1(pts[k])}" stroke="var(--blue)" stroke-width="3" stroke-linecap="round"/>`;
+    // szögek a pólusnál = törésszögek a kötélsokszögben
+    const rr=Math.min(64,0.4*Math.min(...pts.map(y=>Math.hypot(llx-px,y-py))));
+    for(let k=1;k<N;k++){const a0=Math.atan2(pts[k-1]-py,llx-px),a1=Math.atan2(pts[k]-py,llx-px);
+      s+=`<path d="${sector(px,py,a0,a1-a0,rr*(k%2?1:0.82))}" fill="var(--yellow)" stroke="var(--ink)" stroke-width="1"/>`;}
+    // H (fekete) = vonóvas ereje
+    s+=`<path d="M${f1(px)} ${f1(py)}H${f1(llx)}" stroke="var(--red)" stroke-width="5" stroke-linecap="round"/>`;
+    // teherlánc
+    s+=`<path d="M${f1(llx)} ${f1(y0)}V${f1(y0+Wt*kF)}" stroke="var(--ink)" stroke-width="2.6"/>`;
+    pts.concat([y0+Wt*kF]).forEach(y=>{s+=`<path d="M${f1(llx-7)} ${f1(y)}h14" stroke="var(--ink)" stroke-width="2.6"/>`;});
+    s+=`<circle cx="${f1(px)}" cy="${f1(py)}" r="5.5" fill="var(--paper)" stroke="var(--ink)" stroke-width="2.6"/>`;
+  }
+  $('v').innerHTML=s;
+}
+
+/* ---------- húzás ---------- */
+let drag=null, anim=null;
+const v=$('v');
+function svgPt(e){const r=v.getBoundingClientRect();return [(e.clientX-r.left)*lay.W/r.width,(e.clientY-r.top)*lay.H/r.height];}
+v.addEventListener('pointerdown',e=>{const h=e.target.dataset&&e.target.dataset.h;if(!h)return;
+  const [t,k]=h.split(':');drag={t,k:+k};pulseOnce=false;cancelAnim();v.setPointerCapture(e.pointerId);v.classList.add('drag');e.preventDefault();});
+v.addEventListener('pointermove',e=>{if(!drag)return;const [,y]=svgPt(e),k=drag.k;
+  if(drag.t==='n'){st.ys[k]=Math.min(YMAX,Math.max(YMIN,(lay.oy-y)/lay.g));}
+  else{const ny=Y(st.ys[k]);let p=(ny-10-y)/lay.kF;const others=loadsW()-st.P[k];
+    st.P[k]=Math.max(0,Math.min(PMAX,lay.Wcap-others,p));}
+  render();});
+const end=e=>{if(!drag)return;drag=null;v.classList.remove('drag');try{v.releasePointerCapture(e.pointerId);}catch(_){}}
+v.addEventListener('pointerup',end);v.addEventListener('pointercancel',end);
+
+/* ---------- animált átmenet ---------- */
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+function cancelAnim(){if(anim){cancelAnimationFrame(anim);anim=null;}}
+function tweenTo(target){cancelAnim();
+  const from={xs:st.xs.slice(),ys:st.ys.slice(),P:st.P.slice()}, to={xs:target.xs||st.xs,ys:target.ys,P:target.P||st.P};
+  if(reduce||from.xs.length!==to.xs.length){Object.assign(st,{xs:to.xs.slice(),ys:to.ys.slice(),P:to.P.slice()});render();return;}
+  const t0=performance.now(),D=480,ease=t=>t<.5?2*t*t:1-(-2*t+2)**2/2;
+  const step=now=>{const t=Math.min(1,(now-t0)/D),e=ease(t),lerp=(a,b)=>a.map((x,i)=>x+(b[i]-x)*e);
+    st.xs=lerp(from.xs,to.xs);st.ys=lerp(from.ys,to.ys);st.P=lerp(from.P,to.P);render();
+    anim=t<1?requestAnimationFrame(step):null;};
+  anim=requestAnimationFrame(step);}
+function withPreset(fn){const save={xs:st.xs.slice(),ys:st.ys.slice(),P:st.P.slice()},r=rise();fn(r);
+  const target={xs:st.xs.slice(),ys:st.ys.slice(),P:st.P.slice()};Object.assign(st,save);tweenTo(target);}
+
+$('b-par').onclick=()=>withPreset(r=>setParabola(r));
+$('b-cat').onclick=()=>withPreset(r=>setCatenary(r));
+$('b-snap').onclick=()=>{const g=ghost();if(g)tweenTo({ys:g.ys});};
+$('b-rnd').onclick=()=>withPreset(r=>{const pm=meanP();for(let k=1;k<st.N;k++)st.P[k]=Math.round(pm*(0.25+1.5*Math.random()));
+  if(loadsW()<1)st.P[1]=pm;st.ys=funicular(r).ys;});
+function setN(n){n=Math.max(3,Math.min(14,n));if(n===st.N)return;cancelAnim();const r=rise(),pm=meanP();st.N=n;st.P=[0,...Array(n-1).fill(pm)];
+  st.ys=[];setParabola(r);layout();render();}
+$('b-minus').onclick=()=>setN(st.N-1);$('b-plus').onclick=()=>setN(st.N+1);
+
+/* ---------- Truzme Project code ---------- */
+const r4=x=>Math.round(x*1e4)/1e4;
+function projectCode(){const m=model(),ymax=Math.max(...st.ys),top=m.T[st.ys.indexOf(ymax)],bot=m.B[st.ys.indexOf(ymax)];
+  return JSON.stringify({units:{length:"m",sectionLength:"mm",force:"kN",materialStrength:"MPa",area:"mm²",density:"kg/m³"},
+    nodes:m.nodes.map(([x,y],i)=>({id:i+1,x:r4(x),y:r4(y)})),
+    members:m.mem.map((mb,i)=>({id:i+1,from:mb.a,to:mb.b,section:mb.kind==='web'?2:1,material:1})),
+    supports:[{id:1,node:m.S0,x:true,y:true},{id:2,node:m.SN,x:false,y:true}],
+    nodalLoads:[...Array(st.N-1).keys()].map(i=>({id:i+1,node:m.T[i+1],x:0,y:-r4(st.P[i+1])})).filter(l=>l.y!==0),
+    materials:[{id:1,name:"S235",EModulus:210000,fMax:235,density:7850,color:"#1D5AA6"}],
+    sections:[{id:1,name:"CHS 114.3×6",sectionType:"pipe",outerDiameter:114.3,thickness:6,color:"#C8372D"},
+              {id:2,name:"CHS 48.3×3",sectionType:"pipe",outerDiameter:48.3,thickness:3,color:"#1B1B1B"}],
+    dimensions:[{id:1,from:m.S0,to:m.SN,kind:"horizontal",anchor:{x:L/2,y:-0.9}},
+                {id:2,from:bot,to:top,kind:"vertical",anchor:{x:r4(st.xs[st.ys.indexOf(ymax)]+0.8),y:r4(ymax/2)}}]});}
+const copyGlyph=$('g-copy').innerHTML;
+$('b-copy').onclick=()=>{const code=projectCode();
+  const ok=()=>{$('g-copy').innerHTML='<path d="M5 16l7 7L26 7" fill="none" stroke="var(--blue)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>';
+    setTimeout(()=>$('g-copy').innerHTML=copyGlyph,1600);};
+  const fallback=()=>{const t=$('code');t.value=code;t.hidden=false;t.focus();t.select();};
+  try{navigator.clipboard.writeText(code).then(ok,fallback);}catch(_){fallback();}};
+
+/* ---------- indulás ---------- */
+st.N=8; st.P=[]; st.ys=[]; setParabola(0.32*L);
+layout(); render();
+new ResizeObserver(()=>{const w=$('v').parentElement.clientWidth;if(lay&&Math.abs(w-lay.W)<1)return;layout();render();}).observe($('v').parentElement);
+</script>
+
+</body></html>

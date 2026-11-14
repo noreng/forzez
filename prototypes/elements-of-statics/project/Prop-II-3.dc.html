@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Book II, Proposition III</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Display&amp;family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#C2311F}a:hover{color:#8E2416}
+</style>
+</helmet>
+<div style="width: 720px; height: 1020px; box-sizing: border-box; padding: 56px 72px 48px; background: {{paper}}; color: #1B1A17; font-family: 'Libre Caslon Text', Georgia, serif; display: flex; flex-direction: column; gap: 20px">
+<div style="display: flex; justify-content: space-between; font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: #5C574C; border-bottom: 1px solid #1B1A17; padding-bottom: 10px">
+<span>Book II · Forces in the plane</span>
+<span>Prop. III</span>
+</div>
+<h2 style="margin: 6px 0 0; font-family: 'Libre Caslon Display', Georgia, serif; font-weight: 400; font-size: 22px; letter-spacing: 0.2em; text-transform: uppercase; text-align: center">Proposition III. Theorem.</h2>
+<p style="margin: 0; font-style: italic; font-size: 17px; line-height: 1.6; text-align: center; padding: 0 24px">Two equal, opposite, parallel forces have no resultant; they only turn. Their turning is the rectangle of one force and the distance between them, wherever the pair is placed.</p>
+<svg width="100%" viewBox="0 30 480 375" role="img" aria-label="A body pushed up by a red force at its left end and down by an equal red force at its right end; a curved black arrow shows the turn, and a red rectangle below spans the distance between the two forces">
+<defs>
+<marker id="cr" viewBox="0 0 10 10" refX="3" refY="5" markerWidth="3.33" markerHeight="3.33" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#C2311F"></path></marker>
+<marker id="ck" viewBox="0 0 10 10" refX="3" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#1B1A17"></path></marker>
+</defs>
+<rect x="80" y="150" width="320" height="60" fill="#1B1A17" fill-opacity="0.08"></rect>
+<rect x="120" y="352" width="240" height="46" fill="#C2311F"></rect>
+<line x1="120" y1="40" x2="120" y2="346" stroke="#F4EEDF" stroke-width="3"></line>
+<line x1="360" y1="40" x2="360" y2="346" stroke="#F4EEDF" stroke-width="3"></line>
+<line x1="120" y1="40" x2="120" y2="346" stroke="#1B1A17" stroke-width="1.2" stroke-dasharray="5 5"></line>
+<line x1="360" y1="40" x2="360" y2="346" stroke="#1B1A17" stroke-width="1.2" stroke-dasharray="5 5"></line>
+<path d="M179.4,145 A70 70 0 0 1 293.6,135" fill="none" stroke="#1B1A17" stroke-width="3" marker-end="url(#ck)"></path>
+<line x1="120" y1="300" x2="120" y2="222" stroke="#C2311F" stroke-width="6" marker-end="url(#cr)"></line>
+<line x1="360" y1="58" x2="360" y2="136" stroke="#C2311F" stroke-width="6" marker-end="url(#cr)"></line>
+</svg>
+<div style="display: flex; flex-direction: column; gap: 12px; font-size: 15px; line-height: 1.5">
+<div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap">
+<svg width="16" height="40" viewBox="0 0 16 40" aria-hidden="true"><line x1="8" y1="38" x2="8" y2="12" stroke="#C2311F" stroke-width="5"></line><polygon points="8,2 1,15 15,15" fill="#C2311F"></polygon></svg>
+<span>+</span>
+<svg width="16" height="40" viewBox="0 0 16 40" aria-hidden="true"><line x1="8" y1="2" x2="8" y2="28" stroke="#C2311F" stroke-width="5"></line><polygon points="8,38 1,25 15,25" fill="#C2311F"></polygon></svg>
+<span>= nothing that pushes, for they are equal and opposite;</span>
+</div>
+<div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap">
+<span>yet not on one line</span>
+<span><i style="color: #5C574C">(Ax. I fails)</i>, so they leave a turn:</span>
+<svg width="30" height="20" viewBox="0 0 30 20" aria-hidden="true"><path d="M3,17 A13 13 0 0 1 25,9" fill="none" stroke="#1B1A17" stroke-width="2.5"></path><polygon points="28,15 20,9 28,5" fill="#1B1A17"></polygon></svg>
+<span>=</span>
+<svg width="36" height="12" viewBox="0 0 36 12" aria-hidden="true"><rect x="0" y="0" width="36" height="12" fill="#C2311F"></rect></svg>
+</div>
+<p style="margin: 4px 0 0">Slide the pair along the body, turn it, or trade force for distance: as long as the rectangle keeps its size, the body cannot tell the difference.</p>
+<p style="margin: 0; font-style: italic; color: #5C574C">Every steering wheel and every screwdriver knows this proposition.</p>
+</div>
+<div style="flex-grow: 1"></div>
+<div style="display: flex; justify-content: space-between; align-items: baseline; font-size: 12px; letter-spacing: 0.18em; color: #5C574C">
+<span style="width: 60px"></span>
+<span>11</span>
+<span style="width: 60px; text-align: right; font-family: 'Libre Caslon Display', Georgia, serif; font-size: 16px; letter-spacing: 0.1em; color: #1B1A17">Q.E.D.</span>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"paper":{"editor":"color","default":"#F4EEDF","options":["#F4EEDF","#FFFFFF","#EFE6CF"]},"$preview":{"width":720,"height":1020}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return { paper: this.props.paper ?? '#F4EEDF' };
+  }
+}
+</script>
+</body>
+</html>
