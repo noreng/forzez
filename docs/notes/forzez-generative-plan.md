@@ -2,7 +2,8 @@
 
 Companion to `forzez-roadmap.md`. Collects everything from the Truzme Art spec review, the net1/net2 prototypes and the "what makes it T-shirt / wallpaper worthy" brainstorm.
 
-Prototype (private artifact): https://claude.ai/artifact/8UXW91s8vFDmE2mRZ2xo18
+Prototype (private artifact): https://claude.ai/artifact/8UXW91s8vFDmE2mRZ2xo18 · repo copy: `prototypes/truzme-art-net/`
+Origin spec (Truzme Art, pts1, determinism rules): `docs/specs/truzme-art-spec.md`
 
 ## Thesis
 **The physics designs it, not just paints it.** A piece is only Forzez if the solver decides something nobody could fake with a shader: where the compression arch and the tension chain emerge, which members survive, what fails.
