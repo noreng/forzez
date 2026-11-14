@@ -36,6 +36,8 @@ Next.js here is v16 — read `apps/web/AGENTS.md` and the docs in `node_modules/
   - `wheel-sketches-session.md`: bicycle wheel, wagon wheel, half-wheel bridge, spider web, spoked roof, Pantheon,
     Cremona, hanging chain — formulas, checks, mistakes, an open half-wheel geometry fix. Widgets: `prototypes/wheel-sketches/`.
   - `forzez-films.md`: films as live code (`frame(recipe, t)`), synth, render tool, frame QA.
+  - `forzez-sitemap.md`: site structure: Editions / Articles / Studio / Films, URLs, the menu by stage, home order.
+    Articles are stand-alone interactive essays and never mix with Editions (book-like, with proofs).
   - `forzez-site-models.md`: catalogue structure (Studio / Editions / Custom × formats), product vocabulary, business models.
   - `brand-naming.md`, `forzez-puns-and-logo.md`: brand copy, microcopy, taglines, logo variants.
 - When a decision changes, update the note in the repo. The repo copy is the source of truth.

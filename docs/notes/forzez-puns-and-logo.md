@@ -44,7 +44,8 @@
 Favourites: Form follows Forzez (manifesto), Hold your forzez (launch), Meet the Workforzez (about), For every Forzez, an equal and opposite wall.
 
 ## Z-words on the site (proposal, 2026-10-15)
-Not decided. Conflicts with the navigation in `forzez-site-models.md` (Studio · Editions · Make your own · Shop · Notes · About, 2026-10-26), which is newer; reconcile before building the nav.
+**Decided 2026-11-14:** the menu uses plain names (Studio, not Seriez); see `forzez-sitemap.md`. Z-words stay in titles and copy, at most one per screen.
+Originally not decided. Conflicts with the navigation in `forzez-site-models.md` (Studio · Editions · Make your own · Shop · Notes · About, 2026-10-26), which is newer; reconcile before building the nav.
 
 **Rule:** a z only goes where English already says "z" (plural -es / -ies). Say it aloud and the pun is invisible, like Forzez itself ("forces"). Spoken, nobody hears the joke; written, it carries the brand.
 

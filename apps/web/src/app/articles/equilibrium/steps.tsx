@@ -50,10 +50,8 @@ const H2 = ({ children }: { children: ReactNode }) => (
 export const CONTENT: Record<string, ReactNode> = {
   title: (
     <>
-      <Eyebrow>Statics · Chapter 1</Eyebrow>
-      <h1 className="mt-3 mb-4 font-display text-3xl leading-none min-[860px]:text-4xl">
-        <span className="mr-[0.2em] text-force-1">I.</span>Equilibrium
-      </h1>
+      <Eyebrow>Articles · Balance</Eyebrow>
+      <h1 className="mt-3 mb-4 font-display text-3xl leading-none min-[860px]:text-4xl">Equilibrium of forces</h1>
       <p className="text-muted italic">From a single force to the force triangle, up to the doorstep of the method of joints.</p>
       <p>Scroll down. The diagram follows the text, and wherever a slider appears, you are in control.</p>
     </>

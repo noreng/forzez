@@ -106,7 +106,7 @@ A reader must tell a link from text without hovering, on a phone too.
 - `font-data` is for numbers, labels and buttons; links in text use the text face.
 - Links use ink, not `accent`: blue means tension.
 
-Reference pages: `/lab/equilibrium` (scroll explainer) and `/elements` (the book).
+Reference pages: `/articles/equilibrium` (scroll explainer) and `/elements` (the book).
 
 ## The Elements pages
 

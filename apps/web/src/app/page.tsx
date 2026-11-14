@@ -1,48 +1,13 @@
-import type { ReactNode } from "react";
 import Link from "next/link";
 import { Eyebrow, Pending, Sym, buttonClass, linkClass } from "@forzez/ui";
+import { ContentsRow as Row } from "./_components/contents-row";
 import { PAGES, findPage } from "./elements/_lib/content";
+import { PUBLISHED } from "./articles/_lib/articles";
 
 // Copy: docs/notes/brand-naming.md and forzez-puns-and-logo.md. The figure is the hero
 // (DESIGN.md): the chain and the arch from Elements V.3, the same drawing as its plate.
 const hero = findPage("v-3")!.page;
 const plates = PAGES.length;
-
-/**
- * One line of "on forzez": what it is, a sentence, and where it goes. A linked row shows its
- * underline and arrow at every width; a row that is not there yet says so with a tag, not with grey.
- */
-function Row({ kicker, title, children, href, status }: { kicker: string; title: string; children: ReactNode; href?: string; status?: string }) {
-  const inner = (
-    <>
-      <span className="font-data text-sm text-muted">{kicker}</span>
-      <span>
-        <span className="font-display text-xl">
-          {href ? (
-            <>
-              <span className="underline decoration-muted decoration-1 underline-offset-4 group-hover:decoration-ink">{title}</span>
-              <span aria-hidden className="ml-2 inline-block font-data text-lg transition-transform duration-150 ease-fz group-hover:translate-x-1">→</span>
-            </>
-          ) : (
-            title
-          )}
-        </span>
-        <span className="mt-1 block text-muted">{children}</span>
-      </span>
-      {status ? <Pending className="justify-self-start">{status}</Pending> : null}
-    </>
-  );
-  const row = "grid grid-cols-1 gap-x-8 gap-y-2 py-5 sm:grid-cols-[11rem_minmax(0,1fr)_auto] sm:items-baseline";
-  return (
-    <li className="border-b border-rule first:border-t">
-      {href ? (
-        <Link href={href} className={`group -mx-3 rounded-sm px-3 transition-colors duration-150 ease-fz hover:bg-sunken ${row}`}>{inner}</Link>
-      ) : (
-        <div className={row}>{inner}</div>
-      )}
-    </li>
-  );
-}
 
 export default function Home() {
   return (
@@ -57,7 +22,6 @@ export default function Home() {
           </p>
           <div className="mt-2 flex flex-wrap items-center gap-x-6 gap-y-3">
             <Link href="/elements" className={buttonClass("primary")}>Read The Elements of Statics</Link>
-            <Link href="/lab/equilibrium" className={buttonClass("secondary")}>See forces in balance</Link>
           </div>
         </div>
         <figure className="m-0">
@@ -92,11 +56,14 @@ export default function Home() {
           <Row kicker="Editions, No. 1" title="The Elements of Statics" href="/elements">
             Statics in the manner of Byrne’s Euclid: five books, {plates} plates, colours in place of letters.
           </Row>
-          <Row kicker="The lab" title="Equilibrium of forces" href="/lab/equilibrium">
-            From one force to the force triangle, one scroll at a time.
+          <Row kicker="Articles" title="Statics you can play with" href="/articles">
+            One structure per article, with a diagram you can push. {PUBLISHED[0].title} is up; the bicycle wheel and the hanging rope are next.
           </Row>
           <Row kicker="Studio" title="Series 01: Arches" status="in the works">
             Real structures, calculated by the engine behind Truzme and plotted in ink by our family.
+          </Row>
+          <Row kicker="Films" title="Forzez Films No. 001" status="in the works">
+            Films that run as code. The first: thirteen minutes of ink in thirty seconds.
           </Row>
         </ol>
       </section>
