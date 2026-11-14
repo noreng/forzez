@@ -12,10 +12,10 @@ export function RunHead({ children, className }: { children: ReactNode; classNam
  * into layout A: the figure first, the text under it.
  */
 export function Spread({
-  left, right, headLeft, headRight,
-}: { left: ReactNode; right: ReactNode; headLeft: ReactNode; headRight: ReactNode }) {
+  left, right, headLeft, headRight, dark,
+}: { left: ReactNode; right: ReactNode; headLeft: ReactNode; headRight: ReactNode; dark?: boolean }) {
   return (
-    <main className="grid flex-1 min-[1000px]:grid-cols-2">
+    <main data-theme={dark ? "dark" : undefined} className="grid flex-1 bg-bg text-ink min-[1000px]:grid-cols-2">
       <section className="order-2 flex min-w-0 flex-col px-5 pt-6 pb-2 min-[1000px]:order-1 min-[1000px]:min-h-svh min-[1000px]:pt-16 min-[1000px]:pr-[clamp(32px,4vw,72px)] min-[1000px]:pl-[clamp(32px,8vw,140px)]">
         <RunHead className="hidden min-[1000px]:block">{headLeft}</RunHead>
         <div className="flex max-w-[34rem] flex-1 flex-col">{left}</div>

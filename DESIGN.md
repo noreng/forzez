@@ -97,14 +97,30 @@ Reference pages: `/lab/equilibrium` (scroll explainer) and `/elements` (the book
 
 ## The Elements pages
 
-`/elements` is *The Elements of Statics*, one page per proposition, in layout **B · the spread**
-(chosen in `design/elements/`): text and proof on the left page, the figure alone on the right.
-Below 1000px it folds into layout A, with the figure first and the text under it.
+`/elements` is *The Elements of Statics*: the axioms, Books I–V and two plates, one spread
+per page, in layout **B · the spread** (chosen in `design/elements/`): text and proof on the
+left page, the figure alone on the right. Below 1000px it folds into layout A, with the figure
+first and the text under it. Paging (← →, also the arrow keys) is pinned to the bottom.
 
-- Content lives in `apps/web/src/app/elements/_lib/content.tsx`: statement, figure, proof, refs.
-- Proofs use `Sym` in place of letters, `(Ax. II)`-style `Ref` links, and end in Q.E.D.
-- Figures keep the prototypes' coordinates (`prototypes/elements-of-statics`); draw with
-  `Arrow`, `Dash`, `Dot` from `_lib/figure.tsx` so colours stay on tokens.
+Everything is built from shared pieces, so a change in one place changes every page:
+
+| Where | What |
+| --- | --- |
+| `_lib/books/book-N.tsx`, `plates.tsx` | content only: a `Page` per proposition or plate (see `_lib/types.ts`) |
+| `_lib/figure.tsx` | every figure part: `Arrow`, `Turn`, `Stroke`, `Path`, `Curve`, `Dash`, `LinesOfAction`, `Knockout`, `Dot`, `Beads`, `Body`, `Weight`, `Area`, `Wedge`, `Grid`, `Member`, `Joint`, `Pin`, `Roller`, `Ground`, `Wheel`, `Spokes`, `RightAngle` |
+| `_lib/proof.tsx` | `Ref`, `Cor`, `Note`, `Cite`, `NW`, and `S` (the four forces as symbols) |
+| `@forzez/ui` `Sym` | Byrne symbols in text: bar, dashed, square, rect, triangle, wedge, cone, arc, dot, arrow |
+| `_lib/spread.tsx`, `page-nav.tsx` | the layout and the paging |
+
+Rules for new pages:
+
+- Figures use only `figure.tsx` parts, never a raw `<line>` or a hex colour. Copy the prototype's
+  `viewBox` and coordinates (`prototypes/elements-of-statics`). Need a new shape? Add a part to
+  `figure.tsx`, not a local helper.
+- Forces use the Byrne colours (`c="r" | "b" | "y" | "k"`); truss and arch members use their
+  meaning (`Member kind="tension" | "compression"`).
+- Theorems end in Q.E.D., problems in Q.E.F. (the page adds it). `refs` lists what the proof cites;
+  the page quotes them under the proof.
 
 ## Anti-slop
 

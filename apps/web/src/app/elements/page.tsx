@@ -1,15 +1,32 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Sym } from "@forzez/ui";
-import { AXIOMS, BOOKS, PROPS, roman } from "./_lib/content";
+import { AXIOMS, BOOKS, PLATES, propsOf, roman } from "./_lib/content";
 import { Spread } from "./_lib/spread";
+import type { Page } from "./_lib/types";
 
 export const metadata: Metadata = {
   title: "The Elements of Statics",
   description: "Statics in the manner of Byrne's Euclid: coloured diagrams in place of letters.",
 };
 
+/** One line of the contents: number, short name, and the enunciation under it. */
+function Entry({ page, mark }: { page: Page; mark: string }) {
+  return (
+    <li className="border-b border-rule first:border-t">
+      <Link href={`/elements/${page.slug}`} className="group grid grid-cols-[3.5ch_minmax(0,1fr)] gap-3 py-2.5">
+        <span className="font-display">{mark}</span>
+        <span>
+          <span className="group-hover:underline">{page.kind === "Plate" ? (page.title ?? page.short) : page.short}</span>
+          <span className="block text-sm text-muted">{page.statement}</span>
+        </span>
+      </Link>
+    </li>
+  );
+}
+
 export default function ElementsIndex() {
+  const books = BOOKS.map((book) => ({ book, props: propsOf(book.n) })).filter((b) => b.props.length);
   return (
     <Spread
       headLeft="The Elements of Statics"
@@ -33,31 +50,28 @@ export default function ElementsIndex() {
               </li>
             ))}
           </ol>
-          <p className="mt-8 text-muted italic">Everything that follows is built from these four, and from nothing else.</p>
+          <p className="mt-8 mb-12 text-muted italic">Everything that follows is built from these four, and from nothing else.</p>
         </>
       }
       right={
-        <div className="mx-auto w-full max-w-[30rem]">
-          {BOOKS.map((book) => (
+        <div className="mx-auto flex w-full max-w-[30rem] flex-col gap-10 min-[1000px]:max-h-[calc(100svh-10rem)] min-[1000px]:overflow-y-auto min-[1000px]:pr-2">
+          {books.map(({ book, props }) => (
             <section key={book.n}>
               <h2 className="font-display text-xl">{book.name}.</h2>
               <p className="text-muted italic">{book.subject}.</p>
-              <ol className="mt-5 flex list-none flex-col p-0">
-                {PROPS.filter((p) => p.book === book.n).map((p) => (
-                  <li key={p.slug} className="border-b border-rule first:border-t">
-                    <Link href={`/elements/${p.slug}`} className="group grid grid-cols-[3ch_minmax(0,1fr)] gap-3 py-2.5">
-                      <span className="font-display">{roman(p.n)}.</span>
-                      <span>
-                        <span className="group-hover:underline">{p.short}</span>
-                        <span className="block text-sm text-muted">{p.statement}</span>
-                      </span>
-                    </Link>
-                  </li>
-                ))}
+              <ol className="mt-4 flex list-none flex-col p-0">
+                {props.map((p) => <Entry key={p.slug} page={p} mark={`${roman(p.n)}.`} />)}
               </ol>
             </section>
           ))}
-          <p className="mt-6 text-sm text-muted italic">Books II to V are still being set.</p>
+          {PLATES.length ? (
+            <section>
+              <h2 className="font-display text-xl">Plates.</h2>
+              <ol className="mt-4 flex list-none flex-col p-0">
+                {PLATES.map((p) => <Entry key={p.slug} page={p} mark="" />)}
+              </ol>
+            </section>
+          ) : null}
         </div>
       }
     />
