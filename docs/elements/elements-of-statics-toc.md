@@ -3,7 +3,7 @@
 ✅ = written (a page on forzez.com/elements; the first 24 were drafted on the canvas) · ✏️ = sketched in chat, not on the canvas yet · ⬜ = not started
 Canvas: https://claude.ai/artifact/KrD89rVzRxVRh55MxfujWw · Plan and rules: `elements-of-statics.md`
 
-**Progress: 53 of 65** (+5 sketched in chat, 2026-11-14). Books I–V are complete; front matter and side plates remain.
+**Progress: 53 of 65** (+10 sketched in chat, 2026-11-14; cable sketches A–E not yet counted in the 65). Books I–V are complete; front matter and side plates remain.
 
 The site's contents page is built from `apps/web/src/app/elements/_lib/plan.ts`; keep the two in step.
 
@@ -68,6 +68,12 @@ The site's contents page is built from `apps/web/src/app/elements/_lib/plan.ts`;
 - ✅ VI. Four hinges: how an arch fails
 - ✅ VII. Gaudí's hanging model
 - ✅ VIII. The funicular truss: chain and arch in one, no thrust on the supports (Brunel's Royal Albert Bridge, 1859)
+- Proposed cable plates (✏️, placement open — see `cable-plates.md`):
+  - ✏️ C. Like triangles: each segment and its ray make like triangles, run : drop = H : V (Euclid VI.4). The lemma the others cite.
+  - ✏️ A. Where nothing hangs, the rope is straight: zero step on the load line → one ray → one line (Euclid I.14).
+  - ✏️ B. The chain is the limit of its polygons: 1, 3, 7, 15 equal beads closing on the catenary, measured gap under each (Euclid XII.2).
+  - ✏️ D. The parabola drawn by its tangents: end tangents meet at twice the sag; crossed equal divisions wrap the curve (pairs with V.II).
+  - ✏️ E. The heavy side sinks: unequal loads tip the rope; one H within each state, but H changes between states.
 ## Side plates
 - ⬜ Maxwell, 1864: reciprocal figures
 - ⬜ Culmann's crane and the femur
