@@ -23,3 +23,6 @@ Next.js here is v16 — read `apps/web/AGENTS.md` and the docs in `node_modules/
 - `prototypes/` are frozen reference HTML from claude.ai artifacts. Don't edit them; port them into `apps/web` instead.
 - `design/directions/` holds the direction study that chose "Euclid × Erők".
 - `docs/specs/` holds product specs.
+- `docs/elements/` is the plan for *The Elements of Statics*: `elements-of-statics.md` (decisions, colour rule,
+  rendering rules, roadmap) and `elements-of-statics-toc.md` (the full contents). Read both before Elements work;
+  the site's contents page mirrors the toc in `apps/web/src/app/elements/_lib/plan.ts`.

@@ -1,32 +1,51 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Sym } from "@forzez/ui";
-import { AXIOMS, BOOKS, PLATES, propsOf, roman } from "./_lib/content";
+import { Sym, cx } from "@forzez/ui";
+import { AXIOMS, PAGES, roman } from "./_lib/content";
+import { PLAN, type PlanEntry } from "./_lib/plan";
 import { Spread } from "./_lib/spread";
-import type { Page } from "./_lib/types";
 
 export const metadata: Metadata = {
   title: "The Elements of Statics",
   description: "Statics in the manner of Byrne's Euclid: coloured diagrams in place of letters.",
 };
 
-/** One line of the contents: number, short name, and the enunciation under it. */
-function Entry({ page, mark }: { page: Page; mark: string }) {
+const written = new Set(["contents", ...PAGES.map((p) => p.slug)]);
+const isWritten = (e: PlanEntry) => !!e.slug && written.has(e.slug);
+const all = PLAN.flatMap((s) => s.entries);
+const count = {
+  written: all.filter(isWritten).length,
+  sketched: all.filter((e) => !isWritten(e) && e.status === "sketched").length,
+  total: all.length,
+};
+
+/** One line of the contents. Written entries link; the rest are muted and say how far they are. */
+function Entry({ entry }: { entry: PlanEntry }) {
+  const done = isWritten(entry);
+  const row = "grid grid-cols-[3.5ch_minmax(0,1fr)_auto] items-baseline gap-3 py-2";
+  const inner = (
+    <>
+      <span className="font-display">{entry.mark ? `${entry.mark}.` : ""}</span>
+      <span className={done ? "group-hover:underline" : "text-muted"}>{entry.title}</span>
+      {done ? null : (
+        <span className="font-data text-xs whitespace-nowrap text-muted">
+          {entry.status === "sketched" ? "sketched" : "not yet written"}
+        </span>
+      )}
+    </>
+  );
   return (
     <li className="border-b border-rule first:border-t">
-      <Link href={`/elements/${page.slug}`} className="group grid grid-cols-[3.5ch_minmax(0,1fr)] gap-3 py-2.5">
-        <span className="font-display">{mark}</span>
-        <span>
-          <span className="group-hover:underline">{page.kind === "Plate" ? (page.title ?? page.short) : page.short}</span>
-          <span className="block text-sm text-muted">{page.statement}</span>
-        </span>
-      </Link>
+      {done && entry.slug !== "contents" ? (
+        <Link href={`/elements/${entry.slug}`} className={cx("group", row)}>{inner}</Link>
+      ) : (
+        <div className={row} aria-disabled={!done || undefined}>{inner}</div>
+      )}
     </li>
   );
 }
 
 export default function ElementsIndex() {
-  const books = BOOKS.map((book) => ({ book, props: propsOf(book.n) })).filter((b) => b.props.length);
   return (
     <Spread
       headLeft="The Elements of Statics"
@@ -55,23 +74,18 @@ export default function ElementsIndex() {
       }
       right={
         <div className="mx-auto flex w-full max-w-[30rem] flex-col gap-10 min-[1000px]:max-h-[calc(100svh-10rem)] min-[1000px]:overflow-y-auto min-[1000px]:pr-2">
-          {books.map(({ book, props }) => (
-            <section key={book.n}>
-              <h2 className="font-display text-xl">{book.name}.</h2>
-              <p className="text-muted italic">{book.subject}.</p>
+          <p className="font-data text-sm text-muted">
+            {count.written} of {count.total} written · {count.sketched} sketched
+          </p>
+          {PLAN.map((section) => (
+            <section key={section.id} aria-labelledby={`toc-${section.id}`}>
+              <h2 id={`toc-${section.id}`} className="font-display text-xl">{section.title}.</h2>
+              {section.subject ? <p className="text-muted italic">{section.subject}.</p> : null}
               <ol className="mt-4 flex list-none flex-col p-0">
-                {props.map((p) => <Entry key={p.slug} page={p} mark={`${roman(p.n)}.`} />)}
+                {section.entries.map((entry) => <Entry key={`${section.id}-${entry.mark}-${entry.title}`} entry={entry} />)}
               </ol>
             </section>
           ))}
-          {PLATES.length ? (
-            <section>
-              <h2 className="font-display text-xl">Plates.</h2>
-              <ol className="mt-4 flex list-none flex-col p-0">
-                {PLATES.map((p) => <Entry key={p.slug} page={p} mark="" />)}
-              </ol>
-            </section>
-          ) : null}
         </div>
       }
     />
