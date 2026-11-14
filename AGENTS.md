@@ -26,3 +26,11 @@ Next.js here is v16 — read `apps/web/AGENTS.md` and the docs in `node_modules/
 - `docs/elements/` is the plan for *The Elements of Statics*: `elements-of-statics.md` (decisions, colour rule,
   rendering rules, roadmap) and `elements-of-statics-toc.md` (the full contents). Read both before Elements work;
   the site's contents page mirrors the toc in `apps/web/src/app/elements/_lib/plan.ts`.
+- `docs/notes/` holds the product and brand notes from the claude.ai "Forzez.com" project. Open the one that fits the task:
+  - `forzez-roadmap.md`: next steps and guardrails (Truzme stays school-safe, no shop before demand).
+  - `forzez-stack.md`: proposed stack (Cloudflare, Stripe, plotter station). Says Astro; the repo is Next.js, and the repo wins.
+  - `forzez-generative-plan.md`: generative art thesis, net1/net2 recipes, determinism rules, ideas backlog.
+  - `forzez-films.md`: films as live code (`frame(recipe, t)`), synth, render tool, frame QA.
+  - `forzez-site-models.md`: catalogue structure (Studio / Editions / Custom × formats), product vocabulary, business models.
+  - `brand-naming.md`, `forzez-puns-and-logo.md`: brand copy, microcopy, taglines, logo variants.
+- When a decision changes, update the note in the repo. The repo copy is the source of truth.
